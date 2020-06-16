@@ -40,6 +40,21 @@ public extension PKImageExtensions {
     static func placeholderImage(with image: UIImage, size: CGSize, backgroundColor: UIColor = UIColor.pk.rgb(same: 245)) -> UIImage? {
         guard !image.size.equalTo(.zero), size.pk.isValid else { return nil }
        
+        /**
+        * - image的物理尺寸大小等于 image.size * image.scale
+        * - image.scale表示缩小因子，屏幕的scale表示放大因子
+        * - image.scale这个值的获取就是简单的通过@2x这个后缀的数字获得的，
+        *   比如把一个@3x图片的@3x的后缀删掉，则输出image.scale是1，而不是3，
+        *   因此图片命名需要以@2x/@3x结尾，得到的image.scale才是正确的，
+        *   这样可以保证在不同分辨率的机型上读取适合的image以节省内存
+        */
+        let pathURL = URL(fileURLWithPath: NSHomeDirectory() + "/Library/Caches/MakePlaceholder")
+        let fileName = String(format: "pk_image_w%.0f_h%.0f@%@x.png", size.width, size.height, UIScreen.main.scale)
+        let fileURL = pathURL.appendingPathComponent(fileName)
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            return UIImage(data: try! Data(contentsOf: fileURL)) // read cache
+        }
+        
         var width = image.size.width
         var height = image.size.height
         let scale = image.size.width / image.size.height
@@ -57,16 +72,11 @@ public extension PKImageExtensions {
         } else if image.size.height >  size.height {
             width = size.height * scale
             height = size.height
+        } else {
+            // image的宽高同时小于指定宽高时，不做任何处理，保持原图
         }
         width = floor(width)
         height = floor(height)
-        
-        let pathURL = URL(fileURLWithPath: NSHomeDirectory() + "/Library/Caches/MakePlaceholder")
-        let fileName = String(format: "pk_image_w%.0f_h%.0f.png", width, height)
-        let fileURL = pathURL.appendingPathComponent(fileName)
-        if FileManager.default.fileExists(atPath: fileURL.path) {
-            return UIImage(data: try! Data(contentsOf: fileURL)) // read cache
-        }
         
         UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
         backgroundColor.set()
@@ -247,7 +257,7 @@ public extension PKImageExtensions {
     }
 }
 
-public extension PKImageExtensions {
+public extension PKImageExtensions { // source: https://github.com/hucool/WXImageCompress
     
     enum WechatCompressType {
         case session

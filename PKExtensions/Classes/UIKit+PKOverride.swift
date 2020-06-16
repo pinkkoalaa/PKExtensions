@@ -8,10 +8,10 @@
 
 import UIKit
 
-// MARK: - PKInsetLabel
+// MARK: - PKTextInsetLabel
 
 /// 调整UILabel文本内边距
-public class PKInsetLabel: UILabel {
+public class PKTextInsetLabel: UILabel {
     
     /// 设置文本内边距
     public var textInsets: UIEdgeInsets = .zero

@@ -193,11 +193,11 @@
 				3EFF8E372434582800185885 /* UIFont+PKExtensions.swift */,
 				3EFF8E422434582800185885 /* UIGestureRecognizer+PKExtensions.swift */,
 				3EFF8E432434582800185885 /* UIImage+PKExtensions.swift */,
-				3EFF8E462434582800185885 /* UIKit+PKOverride.swift */,
 				3EFF8E3B2434582800185885 /* UILabel+PKExtensions.swift */,
 				3EFF8E3D2434582800185885 /* UIScreen+PKExtensions.swift */,
 				3EFF8E362434582800185885 /* UIView+PKExtensions.swift */,
 				3EFF8E382434582800185885 /* UIViewController+PKExtensions.swift */,
+				3EFF8E462434582800185885 /* UIKit+PKOverride.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

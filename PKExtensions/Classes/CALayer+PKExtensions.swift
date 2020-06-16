@@ -49,6 +49,7 @@ public extension CALayer {
     static var pk: PKLayerExtensions.Type { PKLayerExtensions.self }
 }
 
+/// 直接扩展CALayer
 public extension CALayer {
     
     var left: CGFloat {

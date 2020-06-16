@@ -270,6 +270,105 @@ public extension PKViewExtensions where Base: UIView {
 
 public extension PKViewExtensions where Base: UIView {
     
+    /// 提示窗是否显示中
+    var isToastShowing: Bool {
+        return base.pk_toastVisible
+    }
+
+    /// 显示提示窗
+    /// - Parameters:
+    ///   - text: 提示文本
+    ///   - delay: 显示时长
+    ///   - offset: 位置偏移
+    func showToast(text: String?, delay: TimeInterval = 1.5, offset: CGFloat = -15) {
+        guard !isToastShowing else { return }
+        guard let message = text else { return }
+        
+        let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+        
+        let label = UILabel()
+        label.text = message
+        label.textColor = .white
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 15)
+        let size = label.sizeThatFits(CGSize(width: 200, height: 200))
+        label.frame = CGRect(origin: .zero, size: size.pk.ceiled())
+
+        let hud = UIView()
+        hud.backgroundColor = .darkGray
+        hud.clipsToBounds = true
+        hud.layer.cornerRadius = 2
+        hud.frame = CGRect(origin: .zero, size: CGSize(width: size.width + insets.left + insets.right, height: size.height + insets.top + insets.bottom))
+        label.center = CGPoint(x: hud.bounds.width * 0.5, y: hud.bounds.height * 0.5)
+        hud.center = CGPoint(x: base.bounds.width * 0.5, y: base.bounds.height * 0.5 + offset)
+        hud.addSubview(label)
+        base.addSubview(hud)
+        
+        hud.alpha = 0
+        UIView.animate(withDuration: 0.4) {
+            hud.alpha = 1
+        }
+        
+        base.pk_toastVisible = true
+        Timer.pk.gcdAsyncAfter(delay: delay) {
+            UIView.animate(withDuration: 0.4, animations: {
+                hud.alpha = 0
+            }) { (_) in
+                hud.removeFromSuperview()
+                self.base.pk_toastVisible = false
+            }
+        }
+    }
+}
+
+public extension PKViewExtensions where Base: UIView {
+    
+    /// 指示器是否加载中
+    var isIndicatorLoading: Bool {
+        return (base.pk_loadingViewSet != nil)
+    }
+    
+    /// 开启指示器加载效果
+    func beginIndicatorLoading(text: String? = nil, tintColor: UIColor = .gray, offset: CGFloat = 0) {
+        guard base.pk_loadingViewSet == nil else { return }
+        base.pk_loadingViewSet = Set()
+        
+        let indicatorView = UIActivityIndicatorView(style: .gray)
+        indicatorView.hidesWhenStopped = false
+        indicatorView.color = tintColor
+        indicatorView.startAnimating()
+        base.addSubview(indicatorView)
+        base.pk_loadingViewSet?.insert(indicatorView)
+        
+        if let message = text {
+            let textLabel = UILabel()
+            textLabel.font = UIFont.systemFont(ofSize: 11)
+            textLabel.textColor = tintColor
+            textLabel.text = message
+            base.addSubview(textLabel)
+            base.pk_loadingViewSet?.insert(textLabel)
+            
+            let size = textLabel.sizeThatFits(base.bounds.size)
+            textLabel.frame = CGRect(origin: .zero, size: size.pk.ceiled())
+            textLabel.center = CGPoint(x: base.bounds.width / 2, y: base.bounds.height / 2 + offset)
+            indicatorView.center = CGPoint(x: base.bounds.width / 2, y: textLabel.frame.minY - indicatorView.bounds.height / 2 - 8)
+        } else {
+            indicatorView.center = CGPoint(x: base.bounds.width / 2, y: base.bounds.height / 2 + offset)
+        }
+    }
+    
+    /// 结束指示器加载效果
+    func endIndicatorLoading() {
+        guard base.pk_loadingViewSet != nil else { return }
+        base.pk_loadingViewSet?.forEach({ $0.removeFromSuperview() })
+        base.pk_loadingViewSet?.removeAll()
+        base.pk_loadingViewSet = nil
+    }
+}
+
+public extension PKViewExtensions where Base: UIView {
+    
     /// 为视图添加轻按手势
     @discardableResult
     func addTapGesture(numberOfTaps: Int = 1, action: @escaping (UITapGestureRecognizer) -> Void) -> UITapGestureRecognizer {
@@ -344,6 +443,8 @@ public extension PKViewExtensions where Base: UIView {
 
 private var UIViewAssociatedPKMakeBorderLineKey: Void?
 private var UIViewAssociatedPKMakeGradientKey: Void?
+private var UIViewAssociatedPKToastVisibleKey: Void?
+private var UIViewAssociatedPKLoadingViewsKey: Void?
 
 private extension UIView {
     var pk_borderLayer: CAShapeLayer? {
@@ -359,6 +460,22 @@ private extension UIView {
             return objc_getAssociatedObject(self, &UIViewAssociatedPKMakeGradientKey) as? CAGradientLayer
         } set {
             objc_setAssociatedObject(self, &UIViewAssociatedPKMakeGradientKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    var pk_toastVisible: Bool {
+        get {
+            return objc_getAssociatedObject(self, &UIViewAssociatedPKToastVisibleKey) as? Bool ?? false
+        } set {
+            objc_setAssociatedObject(self, &UIViewAssociatedPKToastVisibleKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    var pk_loadingViewSet: Set<UIView>? {
+        get {
+            return objc_getAssociatedObject(self, &UIViewAssociatedPKLoadingViewsKey) as? Set
+        } set {
+            objc_setAssociatedObject(self, &UIViewAssociatedPKLoadingViewsKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
@@ -377,6 +494,7 @@ public extension PKViewExtensionsCompatible {
 
 extension UIView: PKViewExtensionsCompatible {}
 
+/// 直接扩展UIView
 public extension UIView {
     
     var left: CGFloat {

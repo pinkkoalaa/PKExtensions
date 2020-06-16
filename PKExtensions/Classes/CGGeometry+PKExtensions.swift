@@ -40,6 +40,33 @@ extension PKCGFloatExtensions {
 
 extension PKCGPointExtensions {
     
+    /// 获取圆上任意点坐标
+    ///
+    /// - Parameters:
+    ///   - center: 圆心点坐标
+    ///   - radius: 圆的半径
+    ///   - radian: 该点所对应的弧度 (顺时针方向，水平第一象限开始)
+    ///
+    /// - Returns: 该点对应的坐标
+    static func pointOnCircle(center: CGPoint, radius: CGFloat, radian: CGFloat) -> CGPoint {
+        var result = CGPoint.zero
+        let rad = radian + .pi / 2
+        if rad < .pi / 2 {
+            result.x = center.x + radius * sin(radian)
+            result.y = center.y - radius * cos(radian)
+        } else if rad < .pi {
+            result.x = center.x + radius * sin(.pi - radian)
+            result.y = center.y + radius * cos(.pi - radian)
+        } else if rad < (.pi + .pi / 2) {
+            result.x = center.x - radius * cos((.pi + .pi / 2) - radian)
+            result.y = center.y + radius * sin((.pi + .pi / 2) - radian)
+        } else {
+            result.x = center.x - radius * sin(.pi * 2 - radian)
+            result.y = center.y - radius * cos(.pi * 2 - radian)
+        }
+        return result
+    }
+    
     /// 返回两个点之间的距离
     static func distance(_ from: CGPoint, _ to: CGPoint) -> CGFloat {
         return sqrt(pow(to.x - from.x, 2) + pow(to.y - from.y, 2))

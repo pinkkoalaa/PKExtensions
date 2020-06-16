@@ -45,7 +45,7 @@ public extension PKScreenExtensions {
     }
     
     /// 获取导航栏+状态栏高度
-    static var totalNavigationHeight: CGFloat {
+    static var totalNavHeight: CGFloat {
         return 44 + safeInsets.top
     }
     
