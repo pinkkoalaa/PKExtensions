@@ -27,8 +27,8 @@ public extension PKStringExtensions {
     /// 字符串查找子串返回NSRange
     func range(of subString: String?) -> NSRange {
         guard let subValue = subString else { return NSRange(location: 0, length: 0) }
-        let swRange = base.range(of: subValue)
-        return NSRange(swRange!, in: base)
+        let swiftRange = base.range(of: subValue)
+        return NSRange(swiftRange!, in: base)
     }
     
     /// 计算文本所对应的视图大小
@@ -53,6 +53,21 @@ public extension PKStringExtensions {
     func height(constraint width: CGFloat, font: UIFont, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
         let size = CGSize(width: width, height: CGFloat(Double.greatestFiniteMagnitude))
         return self.size(constraint: size, font: font, lineBreakMode: lineBreakMode).height
+    }
+}
+
+public extension PKStringExtensions {
+    
+    /// 将String转为Int
+    func toInt() -> Int? { Int(base) }
+    
+    /// 将String转为Double
+    func toDouble() -> Double? { Double(base) }
+    
+    /// 将浮点数转CGFloat
+    func toCGFloat() -> CGFloat? {
+        guard let doubleValue = Double(base) else { return nil }
+        return CGFloat(doubleValue)
     }
 }
 

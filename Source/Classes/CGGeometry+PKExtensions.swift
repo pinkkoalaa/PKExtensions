@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension PKCGFloatExtensions {
+public extension PKCGFloatExtensions {
     
     /// 将CGFloat转Int
     func toInt() -> Int { Int(base) }
@@ -38,7 +38,7 @@ extension PKCGFloatExtensions {
     func radiansToDegrees() -> CGFloat { (180.0 * base) / .pi }
 }
 
-extension PKCGPointExtensions {
+public extension PKCGPointExtensions {
     
     /// 获取圆上任意点坐标
     ///
@@ -107,7 +107,7 @@ extension PKCGPointExtensions {
     }
 }
 
-extension PKCGSizeExtensions {
+public extension PKCGSizeExtensions {
     
     /// 将CGSize放大指定的倍数
     func scaled(_ scale: CGFloat) -> CGSize {
@@ -135,7 +135,7 @@ extension PKCGSizeExtensions {
     }
 }
 
-extension PKCGRectExtensions {
+public extension PKCGRectExtensions {
     
     /// 将CGRect放大指定的倍数
     func scaled(_ scale: CGFloat) -> CGRect {

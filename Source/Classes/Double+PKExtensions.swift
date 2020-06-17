@@ -11,28 +11,28 @@ import UIKit
 public extension PKIntExtensions {
     
     /// 是否为偶数
-    var isEven: Bool { return (base & 1 == 0) }
+    var isEven: Bool { (base & 1 == 0) }
     
     /// 是否为奇数
-    var isOdd: Bool { return (base & 1 != 0) }
+    var isOdd: Bool { (base & 1 != 0) }
     
     /// 转为Double
-    var toDouble: Double { return Double(base) }
+    func toDouble() -> Double { Double(base) }
 
     /// 转为Float
-    var toFloat: Float { return Float(base) }
+    func toFloat() -> Float { Float(base) }
 
     /// 转为CGFloat
-    var toCGFloat: CGFloat { return CGFloat(base) }
+    func toCGFloat() -> CGFloat { CGFloat(base) }
 
     /// 转为String
-    var toString: String { return String(base) }
+    func toString() -> String { String(base) }
 
     /// 转为UInt
-    var toUInt: UInt { return UInt(base) }
+    func toUInt() -> UInt { UInt(base) }
 
     /// 转为Int32
-    var toInt32: Int32 { return Int32(base) }
+    func toInt32() -> Int32 { Int32(base) }
 }
 
 public extension PKDoubleExtensions {
@@ -53,7 +53,7 @@ public extension PKDoubleExtensions {
     func half() -> Double { multiplied(0.5) }
     
     /// 返回乘以scale后浮点数
-    func multiplied(_ scale: Double) -> Double { return base * scale }
+    func multiplied(_ scale: Double) -> Double { (base * scale) }
     
     /// 将浮点数四舍五入，自定义小数点后保留的位数
     ///
