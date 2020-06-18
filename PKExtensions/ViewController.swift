@@ -36,6 +36,18 @@ class ViewController: UIViewController {
         
         let sd = values.pk.toCGFloat()
         print("fls is: \(sd ?? 0)")
+        
+        colorView()
+    }
+    
+    func colorView() {
+        let aView = UIView()
+        aView.backgroundColor = .white
+        aView.frame = CGRect.init(x: 50, y: 400, width: 200, height: 60)
+        aView.layer.cornerRadius = 30
+        
+        view.addSubview(aView)
+        aView.pk.addShadow(radius: 10, opacity: 0.5, color: .gray)
     }
 
 }

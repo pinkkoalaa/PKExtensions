@@ -161,15 +161,14 @@ public extension PKViewExtensions where Base: UIView {
     /// 通过设置阴影路径为视图添加四周阴影效果，显示效果更加均匀
     ///
     ///     let aView = UIView()
-    ///     aView.pk.addShadowPath(radius: 5, opacity: 0.7, offset: 5, color: .red)
+    ///     aView.pk.addShadowPath(radius: 5, opacity: 0.2, color:.gray)
     ///     // 注：需要在视图布局后调用此方法
     ///
     /// - Parameters:
-    ///   - radius: 阴影半径
+    ///   - radius: 阴影半径，默认为5
     ///   - opacity: 阴影透明度，取值范围0至1
-    ///   - offset: 阴影偏移量，CGFloat类型默认为5
     ///   - color: 阴影颜色，默认灰色
-    func addShadowPath(radius: CGFloat = 0, opacity: Float, offset: CGFloat = 5, color: UIColor = .gray) {
+    func addShadowPath(radius: CGFloat = 5, opacity: Float, color: UIColor = .gray) {
         base.layer.shadowRadius = radius
         base.layer.shadowOpacity = opacity
         base.layer.shadowColor = color.cgColor
@@ -177,14 +176,7 @@ public extension PKViewExtensions where Base: UIView {
             
         base.superview?.layoutIfNeeded()
         guard base.bounds.size.pk.isValid else { return }
-        
-        let width = base.bounds.width, height = base.bounds.height
-        let path = UIBezierPath()
-        path.move(to: CGPoint.init(x: -offset, y: -offset))
-        path.addLine(to: CGPoint.init(x: width + offset, y: -offset))
-        path.addLine(to: CGPoint.init(x: width + offset, y: height + offset))
-        path.addLine(to: CGPoint.init(x: -offset, y: height + offset))
-        path.close()
+        let path = UIBezierPath(roundedRect: base.bounds, cornerRadius: base.layer.cornerRadius)
         base.layer.shadowPath = path.cgPath
     }
     
