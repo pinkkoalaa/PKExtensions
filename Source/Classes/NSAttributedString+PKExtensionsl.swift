@@ -328,7 +328,7 @@ public extension PKAttributedStringExtensions where Base: NSMutableAttributedStr
     /// 设置下划线样式并指定范围
     func setUnderlineStyle(_ lineStyle: NSUnderlineStyle, range: NSRange) {
         let style = lineStyle.rawValue == 0 ? nil : lineStyle
-        setAttribute(.underlineStyle, value: style, range: range)
+        setAttribute(.underlineStyle, value: style?.rawValue, range: range)
     }
 
     /// 设置下划线颜色并指定范围
