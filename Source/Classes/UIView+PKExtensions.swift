@@ -153,22 +153,22 @@ public extension PKViewExtensions where Base: UIView {
     ///   - color: 阴影颜色，默认灰色
     func addShadow(radius: CGFloat, opacity: Float, offset: CGSize = .zero, color: UIColor = .gray) {
         base.layer.shadowRadius = radius
-        base.layer.shadowOpacity = 0.2
-        base.layer.shadowOffset = .zero
+        base.layer.shadowOpacity = opacity
+        base.layer.shadowOffset = offset
         base.layer.shadowColor = color.cgColor
     }
     
     /// 通过设置阴影路径为视图添加四周阴影效果，显示效果更加均匀
     ///
     ///     let aView = UIView()
-    ///     aView.pk.addShadowPath(radius: 5, opacity: 0.2, color:.gray)
+    ///     aView.pk.setShadowPath(radius: 5, opacity: 0.2, color:.gray)
     ///     // 注：需要在视图布局后调用此方法
     ///
     /// - Parameters:
     ///   - radius: 阴影半径，默认为5
     ///   - opacity: 阴影透明度，取值范围0至1
     ///   - color: 阴影颜色，默认灰色
-    func addShadowPath(radius: CGFloat = 5, opacity: Float, color: UIColor = .gray) {
+    func setShadowPath(radius: CGFloat = 5, opacity: Float, color: UIColor = .gray) {
         base.layer.shadowRadius = radius
         base.layer.shadowOpacity = opacity
         base.layer.shadowColor = color.cgColor
