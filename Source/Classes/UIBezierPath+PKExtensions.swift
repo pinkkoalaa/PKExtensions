@@ -20,7 +20,7 @@ public extension PKBezierPathExtensions {
     ///   - center: 圆心点坐标 (正多形的外接圆)
     ///   - radius: 正多边形的半径
     ///   - sides: 边数 (至少为3)
-    ///   - start: 起始绘制点
+    ///   - origin: 起始绘制点
     ///
     /// - Returns: 正多边形路径
     static func NGon(center: CGPoint, radius: CGFloat, sides: Int, origin: NGonOrigin)  -> UIBezierPath {
