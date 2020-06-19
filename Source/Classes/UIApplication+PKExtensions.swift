@@ -3,7 +3,7 @@
 //  PKExtensions
 //
 //  Created by zhanghao on 2020/2/23.
-//  Copyright © 2020 zhanghao. All rights reserved.
+//  Copyright © 2020 Psychokinesis. All rights reserved.
 //
 
 import UIKit
@@ -54,6 +54,62 @@ public extension PKApplicationExtensions {
             closure()
             self.base.endBackgroundTask(taskID)
         }
+    }
+}
+
+public extension PKApplicationExtensions {
+    
+    enum Environment {
+        /// 应用程序在调试模式下运行
+        case debug
+        /// 应用程序从TestFlight安装
+        case testFlight
+        /// 应用程序从AppStore安装
+        case appStore
+    }
+    
+    /// 获取应用程序运行环境
+    func inferredEnvironment() -> Environment {
+        #if DEBUG
+        return .debug
+
+        #elseif targetEnvironment(simulator)
+        return .debug
+
+        #else
+        if Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") != nil {
+            return .testFlight
+        }
+
+        guard let appStoreReceiptUrl = Bundle.main.appStoreReceiptURL else {
+            return .debug
+        }
+
+        if appStoreReceiptUrl.lastPathComponent.lowercased() == "sandboxreceipt" {
+            return .testFlight
+        }
+
+        if appStoreReceiptUrl.path.lowercased().contains("simulator") {
+            return .debug
+        }
+
+        return .appStore
+        #endif
+    }
+    
+    /// 获取应用名称
+    var displayName: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+    }
+
+    /// 获取应用构建版本号(包括发布与未发布)
+    var buildNumber: String? {
+        return Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
+    }
+
+    /// 获取应用当前版本号(发布版本号)
+    var version: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
     }
 }
 

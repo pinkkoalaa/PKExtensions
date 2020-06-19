@@ -30,6 +30,8 @@
 		3E35ABDE249A0FE700AFCAA3 /* UIDevice+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABC8249A0FE700AFCAA3 /* UIDevice+PKExtensions.swift */; };
 		3E35ABDF249A0FE700AFCAA3 /* UIKit+PKOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABC9249A0FE700AFCAA3 /* UIKit+PKOverride.swift */; };
 		3E35ABE1249A109300AFCAA3 /* UIBezierPath+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABE0249A109300AFCAA3 /* UIBezierPath+PKExtensions.swift */; };
+		3E3CD5B4249CBE8500F089A3 /* UIEdgeInsets+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3CD5B3249CBE8500F089A3 /* UIEdgeInsets+PKExtensions.swift */; };
+		3E3CD5B6249CC71000F089A3 /* Dictionary+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3CD5B5249CC71000F089A3 /* Dictionary+PKExtensions.swift */; };
 		3EFF8E01243456E600185885 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E00243456E600185885 /* AppDelegate.swift */; };
 		3EFF8E03243456E600185885 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E02243456E600185885 /* SceneDelegate.swift */; };
 		3EFF8E05243456E600185885 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E04243456E600185885 /* ViewController.swift */; };
@@ -81,6 +83,8 @@
 		3E35ABC8249A0FE700AFCAA3 /* UIDevice+PKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevice+PKExtensions.swift"; sourceTree = "<group>"; };
 		3E35ABC9249A0FE700AFCAA3 /* UIKit+PKOverride.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+PKOverride.swift"; sourceTree = "<group>"; };
 		3E35ABE0249A109300AFCAA3 /* UIBezierPath+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBezierPath+PKExtensions.swift"; sourceTree = "<group>"; };
+		3E3CD5B3249CBE8500F089A3 /* UIEdgeInsets+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIEdgeInsets+PKExtensions.swift"; sourceTree = "<group>"; };
+		3E3CD5B5249CC71000F089A3 /* Dictionary+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+PKExtensions.swift"; sourceTree = "<group>"; };
 		3EFF8DFD243456E600185885 /* PKExtensions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PKExtensions.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EFF8E00243456E600185885 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3EFF8E02243456E600185885 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -134,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				3E35ABC4249A0FE700AFCAA3 /* Array+PKExtensions.swift */,
+				3E3CD5B5249CC71000F089A3 /* Dictionary+PKExtensions.swift */,
 				3E35ABC3249A0FE700AFCAA3 /* CALayer+PKExtensions.swift */,
 				3E35ABB8249A0FE700AFCAA3 /* CGGeometry+PKExtensions.swift */,
 				3E35ABB7249A0FE700AFCAA3 /* Date+PKExtensions.swift */,
@@ -156,6 +161,7 @@
 				3E35ABC0249A0FE700AFCAA3 /* UIScreen+PKExtensions.swift */,
 				3E35ABB9249A0FE700AFCAA3 /* UIView+PKExtensions.swift */,
 				3E35ABBB249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift */,
+				3E3CD5B3249CBE8500F089A3 /* UIEdgeInsets+PKExtensions.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -352,10 +358,12 @@
 				3E35ABD7249A0FE700AFCAA3 /* UIControl+PKExtensions.swift in Sources */,
 				3E35ABD3249A0FE700AFCAA3 /* Timer+PKExtensions.swift in Sources */,
 				3E35ABD4249A0FE700AFCAA3 /* UILabel+PKExtensions.swift in Sources */,
+				3E3CD5B6249CC71000F089A3 /* Dictionary+PKExtensions.swift in Sources */,
 				3E35ABDF249A0FE700AFCAA3 /* UIKit+PKOverride.swift in Sources */,
 				3E35ABDD249A0FE700AFCAA3 /* Double+PKExtensions.swift in Sources */,
 				3E35ABDC249A0FE700AFCAA3 /* UIImage+PKExtensions.swift in Sources */,
 				3E35ABDE249A0FE700AFCAA3 /* UIDevice+PKExtensions.swift in Sources */,
+				3E3CD5B4249CBE8500F089A3 /* UIEdgeInsets+PKExtensions.swift in Sources */,
 				3E35ABD1249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift in Sources */,
 				3E35ABD0249A0FE700AFCAA3 /* UIFont+PKExtensions.swift in Sources */,
 				3E35ABCF249A0FE700AFCAA3 /* UIView+PKExtensions.swift in Sources */,

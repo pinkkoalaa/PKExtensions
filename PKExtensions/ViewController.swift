@@ -38,6 +38,17 @@ class ViewController: UIViewController {
         print("fls is: \(sd ?? 0)")
         
         colorView()
+        
+        var dict: [String : String] = Dictionary()
+        dict.updateValue("hahapI", forKey: "pq")
+        dict.updateValue("hKJtestValue", forKey: "testKey")
+        dict.updateValue("sd", forKey: "902ll")
+        
+//        dict.pk.jsonString(prettify: false)
+//        let res = dict.pk.jsonString(prettify: true)!
+        
+        let infs = UIApplication.shared.pk.inferredEnvironment()
+        print("infs is: \(infs)")
     }
     
     func colorView() {

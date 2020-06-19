@@ -3,7 +3,7 @@
 //  PKExtensions
 //
 //  Created by zhanghao on 2020/2/23.
-//  Copyright © 2020 zhanghao. All rights reserved.
+//  Copyright © 2020 Psychokinesis. All rights reserved.
 //
 
 import UIKit

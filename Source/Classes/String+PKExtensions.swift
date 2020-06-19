@@ -3,7 +3,7 @@
 //  PKExtensions
 //
 //  Created by zhanghao on 2020/2/24.
-//  Copyright © 2020 zhanghao. All rights reserved.
+//  Copyright © 2020 Psychokinesis. All rights reserved.
 //
 
 import UIKit
@@ -14,6 +14,11 @@ public extension PKStringExtensions {
     var isBlank: Bool {
         let trimmed = base.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.isEmpty
+    }
+    
+    /// 检查字符串是否是一个有效的URL
+    var isValidURL: Bool {
+        return URL(string: base) != nil
     }
     
     /// 返回字符串中出现指定字符的第一个索引
@@ -88,6 +93,23 @@ public extension PKStringExtensions {
             }
         }
         return false
+    }
+    
+    /// 转为驼峰式字符串 source: https://github.com/SwifterSwift/SwifterSwift
+    ///
+    ///        "sOme vAriable naMe".camelCased -> "someVariableName"
+    ///
+    func camelCased() -> String {
+        let source = base.lowercased()
+        let first = source[..<source.index(after: source.startIndex)]
+        if source.contains(" ") {
+            let connected = source.capitalized.replacingOccurrences(of: " ", with: "")
+            let camel = connected.replacingOccurrences(of: "\n", with: "")
+            let rest = String(camel.dropFirst())
+            return first + rest
+        }
+        let rest = String(source.dropFirst())
+        return first + rest
     }
 }
 

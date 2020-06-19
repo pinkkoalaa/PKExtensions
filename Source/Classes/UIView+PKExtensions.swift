@@ -3,7 +3,7 @@
 //  PKExtensions
 //
 //  Created by zhanghao on 2020/2/24.
-//  Copyright © 2020 zhanghao. All rights reserved.
+//  Copyright © 2020 Psychokinesis. All rights reserved.
 //
 
 import UIKit
@@ -326,7 +326,12 @@ public extension PKViewExtensions where Base: UIView {
         guard base.pk_loadingViewSet == nil else { return }
         base.pk_loadingViewSet = Set()
         
-        let indicatorView = UIActivityIndicatorView(style: .gray)
+        let indicatorView: UIActivityIndicatorView!
+        if #available(iOS 13.0, *) {
+            indicatorView = UIActivityIndicatorView(style: .medium)
+        } else {
+            indicatorView = UIActivityIndicatorView(style: .gray)
+        }
         indicatorView.hidesWhenStopped = false
         indicatorView.color = tintColor
         indicatorView.startAnimating()
