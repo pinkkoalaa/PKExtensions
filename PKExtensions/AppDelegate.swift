@@ -3,7 +3,7 @@
 //  PKExtensions
 //
 //  Created by ahong on 2020/4/1.
-//  Copyright © 2020 Pink Koala. All rights reserved.
+//  Copyright © 2020 Psychokinesis. All rights reserved.
 //
 
 import UIKit

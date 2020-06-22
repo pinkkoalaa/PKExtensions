@@ -248,8 +248,6 @@ public extension PKImageExtensions {
             let x = contentSize.width - size.width - padding
             let y = contentSize.height - size.height - padding
             attrib.draw(at: CGPoint(x: x, y: y))
-//            UIColor.white.withAlphaComponent(0.7).setFill()
-//            UIRectFill(CGRect.init(x: x, y: y, width: size.width, height: size.height))
         }
         let resImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -257,7 +255,8 @@ public extension PKImageExtensions {
     }
 }
 
-public extension PKImageExtensions { // source: https://github.com/hucool/WXImageCompress
+public extension PKImageExtensions {
+    // Original Source: https://github.com/hucool/WXImageCompress
     
     enum WechatCompressType {
         case session

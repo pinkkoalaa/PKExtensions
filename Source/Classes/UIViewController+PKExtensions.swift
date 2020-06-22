@@ -1,6 +1,6 @@
 //
 //  UIViewControllerExtensions.swift
-//  AirTraffic_swift
+//  PKExtensions
 //
 //  Created by zhanghao on 2020/2/26.
 //  Copyright © 2020 Psychokinesis. All rights reserved.
@@ -20,11 +20,25 @@ public extension PKViewControllerExtensions where Base: UIViewController {
         return String(describing: Base.self)
     }
     
-    /// 添加自控制器及其视图
-    func addChild(_ childController: UIViewController, toView: UIView) {
-        base.addChild(childController)
-        toView.addSubview(childController.view)
-        childController.didMove(toParent: base)
+    /// 检查ViewController是否在屏幕上显示
+    var isVisible: Bool {
+        // http://stackoverflow.com/questions/2777438/how-to-tell-if-uiviewcontrollers-view-is-visible
+        return base.isViewLoaded && base.view.window != nil
+    }
+    
+    /// 添加子控制器及视图
+    func addChildViewController(_ child: UIViewController, toContainerView containerView: UIView) {
+        base.addChild(child)
+        containerView.addSubview(child.view)
+        child.didMove(toParent: base)
+    }
+
+    /// 移除子控制器及视图
+    func removeViewAndControllerFromParentViewController() {
+        guard base.parent != nil else { return }
+        base.willMove(toParent: nil)
+        base.removeFromParent()
+        base.view.removeFromSuperview()
     }
     
     /// 添加背景图

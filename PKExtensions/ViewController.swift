@@ -49,6 +49,27 @@ class ViewController: UIViewController {
         
         let infs = UIApplication.shared.pk.inferredEnvironment()
         print("infs is: \(infs)")
+        
+        buttonTest()
+    }
+    
+    func buttonTest() {
+        
+        let button = UIButton(type: .custom)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.backgroundColor = .brown
+        view.addSubview(button)
+        button.pk.addAction(for: .touchUpInside) { (sender) in
+            print("addAction")
+        }
+        
+        button.setImage(UIImage(named: "sheet_Collection"), for: .normal)
+        button.setTitle("Next", for: .normal)
+        button.width = 170
+        button.height = 70
+        button.top = 550
+        button.centerX = view.width / 2
     }
     
     func colorView() {

@@ -16,11 +16,6 @@ public extension PKStringExtensions {
         return trimmed.isEmpty
     }
     
-    /// 检查字符串是否是一个有效的URL
-    var isValidURL: Bool {
-        return URL(string: base) != nil
-    }
-    
     /// 返回字符串中出现指定字符的第一个索引
     func index(of char: Character) -> Int? {
         for (index, c) in base.enumerated() where c == char {
@@ -37,8 +32,8 @@ public extension PKStringExtensions {
     }
     
     /// 计算文本所对应的视图大小
-    func size(constraint size: CGSize, font: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize), lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGSize {
-        var attrib: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: font]
+    func size(constraint size: CGSize, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGSize {
+        var attrib: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)]
         if lineBreakMode != nil {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineBreakMode = lineBreakMode!
@@ -49,13 +44,13 @@ public extension PKStringExtensions {
     }
     
     /// 计算文本宽度 (约束高度)
-    func width(constraint height: CGFloat, font: UIFont, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
+    func width(constraint height: CGFloat, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
         let size = CGSize(width: CGFloat(Double.greatestFiniteMagnitude), height: height)
         return self.size(constraint: size, font: font, lineBreakMode: lineBreakMode).width
     }
     
     /// 计算文本高度 (约束宽度)
-    func height(constraint width: CGFloat, font: UIFont, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
+    func height(constraint width: CGFloat, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
         let size = CGSize(width: width, height: CGFloat(Double.greatestFiniteMagnitude))
         return self.size(constraint: size, font: font, lineBreakMode: lineBreakMode).height
     }
@@ -69,10 +64,15 @@ public extension PKStringExtensions {
     /// 将String转为Double
     func toDouble() -> Double? { Double(base) }
     
-    /// 将浮点数转CGFloat
+    /// 将String转CGFloat
     func toCGFloat() -> CGFloat? {
         guard let doubleValue = Double(base) else { return nil }
         return CGFloat(doubleValue)
+    }
+    
+    /// 将String转NSString
+    func toNSString() -> NSString {
+        return NSString(string: base)
     }
 }
 
@@ -95,10 +95,9 @@ public extension PKStringExtensions {
         return false
     }
     
-    /// 转为驼峰式字符串 source: https://github.com/SwifterSwift/SwifterSwift
+    /// 转为驼峰式字符串
     ///
-    ///        "sOme vAriable naMe".camelCased -> "someVariableName"
-    ///
+    ///     "sOme vAriable naMe".pk.camelCased() -> "someVariableName"
     func camelCased() -> String {
         let source = base.lowercased()
         let first = source[..<source.index(after: source.startIndex)]
@@ -110,6 +109,45 @@ public extension PKStringExtensions {
         }
         let rest = String(source.dropFirst())
         return first + rest
+    }
+    
+    /// 返回给定长度的随机字符串
+    ///
+    ///     String.pk.random(ofLength: 18) -> "u7MMZYvGo9obcOcPj8"
+    static func random(ofLength length: Int) -> String {
+        guard length > 0 else { return "" }
+        let base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        var randomString = ""
+        for _ in 1...length {
+            randomString.append(base.randomElement()!)
+        }
+        return randomString
+    }
+}
+
+public extension PKStringExtensions {
+    
+    /// 检查字符串是否是有效的URL
+    var isValidURL: Bool {
+        return URL(string: base) != nil
+    }
+    
+    /// 检查字符串是否是有效的https URL
+    var isValidHttpsURL: Bool {
+        guard let url = URL(string: base) else { return false }
+        return url.scheme == "https"
+    }
+    
+    /// 检查字符串是否是有效的文件URL
+    var isValidFileURL: Bool {
+        return URL(string: base)?.isFileURL ?? false
+    }
+    
+    /// 检查字符串是否是有效的邮件格式
+    var isValidEmail: Bool {
+        // http://emailregex.com/
+        let regex = "^(?:[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[\\p{L}0-9](?:[a-z0-9-]*[\\p{L}0-9])?\\.)+[\\p{L}0-9](?:[\\p{L}0-9-]*[\\p{L}0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[\\p{L}0-9-]*[\\p{L}0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
+        return base.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
     }
 }
 

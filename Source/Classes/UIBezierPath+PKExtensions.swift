@@ -10,11 +10,23 @@ import UIKit
 
 public extension PKBezierPathExtensions {
     
+    /// 通过CGPoint数组绘制多边形路径
+    static func NGon(points: [CGPoint]) -> UIBezierPath? {
+        guard points.count > 2 else {return nil}
+        let path = UIBezierPath()
+        path.move(to: points[0])
+        for point in points[1...] {
+            path.addLine(to: point)
+        }
+        path.close()
+        return path
+    }
+    
     enum NGonOrigin {
         case top, bottom, left, right
     }
     
-    /// 绘制正多边形
+    /// 绘制正多边形路径
     ///
     /// - Parameters:
     ///   - center: 圆心点坐标 (正多形的外接圆)

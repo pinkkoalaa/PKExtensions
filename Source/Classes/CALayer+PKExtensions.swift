@@ -19,17 +19,18 @@ public extension PKLayerExtensions {
     
     /// 返回对当前Layer的截图
     func screenshots() -> UIImage? {
-        guard base.bounds.width > 0, base.bounds.height > 0 else { return nil }
+        guard base.bounds.size.pk.isValid else { return nil }
+        UIGraphicsBeginImageContextWithOptions(base.frame.size, false, UIScreen.main.scale)
+        defer {
+            UIGraphicsEndImageContext()
+        }
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        UIGraphicsBeginImageContextWithOptions(base.bounds.size, false, UIScreen.main.scale)
         base.render(in: context)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
     
     /// 为layer添加fade动画，当图层内容变化时将以淡入淡出动画使内容渐变
-    func fadeContent(_ duration: TimeInterval = 0.25, curve: CAMediaTimingFunctionName) {
+    func fade(_ duration: TimeInterval = 0.25, curve: CAMediaTimingFunctionName) {
         let animation = CATransition()
         animation.timingFunction = CAMediaTimingFunction(name: curve)
         animation.type = .fade
