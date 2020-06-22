@@ -48,21 +48,18 @@ public extension PKViewExtensions where Base: UIView {
     ///
     ///     let aView = UIView()
     ///     aView.pk.addCorner(radius: 5, byRoundingCorners: [.topLeft, .bottomLeft])
-    ///     // 注：使用此方法设置圆角，超出父图层部分的子图层将被裁减掉，且需要在视图布局后调用
+    ///     // 注：使用此方法设置圆角，超出父图层部分的子图层将被裁减掉，且在视图得到位置大小后调用生效
+    ///     // 若视图必须等Auto Layout算出元件的大小后，再计算cornerRadius，推荐两种写法：
+    ///     // 1. 在controller的 viewDidLayoutSubviews() 里计算 cornerRadius
+    ///     // 该方法执行时controller内的视图都已依 auto layout 的约束得到位置大小
+    ///     // 2. 在自定义view的 layoutSubviews() 里计算 cornerRadius
+    ///     // 该方法执行时视图自身和它的子视图都已依 auto layout 的约束得到位置大小
     ///
     /// - Parameters:
     ///   - radius: 圆角半径
     ///   - corners: 添加圆角的位置，默认四周
     func addCorner(radius: CGFloat, byRoundingCorners corners: UIRectCorner = .allCorners) {
-        if corners == .allCorners {
-            base.layer.cornerRadius = radius
-            base.layer.masksToBounds = true
-            return
-        }
-        
-        base.superview?.layoutIfNeeded()
         guard base.bounds.size.pk.isValid else { return }
-        
         let path = UIBezierPath(roundedRect: base.bounds,
                                 byRoundingCorners: corners,
                                 cornerRadii: CGSize(width: radius, height: radius))
@@ -76,7 +73,7 @@ public extension PKViewExtensions where Base: UIView {
     ///
     ///     let aView = UIView()
     ///     aView.pk.addBorder(width: 1 / UIScreen.main.scale, color: .red, byRectEdge: [.left, .bottom])
-    ///     // 注：需要在视图布局后调用此方法
+    ///     // 注：在视图得到位置大小后调用生效
     ///
     /// - Parameters:
     ///   - width: 边框线宽度 (设置width = 0 可以删除已经添加的边框)
@@ -89,7 +86,6 @@ public extension PKViewExtensions where Base: UIView {
             return removeBorderLayers()
         }
         
-        base.superview?.layoutIfNeeded()
         guard base.bounds.size.pk.isValid else { return }
         
         let path = UIBezierPath()
@@ -162,7 +158,7 @@ public extension PKViewExtensions where Base: UIView {
     ///
     ///     let aView = UIView()
     ///     aView.pk.setShadowPath(radius: 5, opacity: 0.2, color:.gray)
-    ///     // 注：需要在视图布局后调用此方法
+    ///     // 注：在视图得到位置大小后调用生效
     ///
     /// - Parameters:
     ///   - radius: 阴影半径，默认为5
@@ -173,8 +169,7 @@ public extension PKViewExtensions where Base: UIView {
         base.layer.shadowOpacity = opacity
         base.layer.shadowColor = color.cgColor
         base.layer.shadowOffset = .zero
-            
-        base.superview?.layoutIfNeeded()
+        
         guard base.bounds.size.pk.isValid else { return }
         let path = UIBezierPath(roundedRect: base.bounds, cornerRadius: base.layer.cornerRadius)
         base.layer.shadowPath = path.cgPath
@@ -204,13 +199,12 @@ public extension PKViewExtensions where Base: UIView {
     ///
     ///     let aView = UIView()
     ///     aView.pk.addGradient(colors: [.red, .orange], direction: .leftToRight)
-    ///     // 注：使用此方法设置渐变色，且需要在视图布局后调用
+    ///     // 注：在视图得到位置大小后调用生效
     ///
     /// - Parameters:
     ///   - colors: 渐变颜色数组
     ///   - direction: 渐变方向
     func addGradient(colors: [UIColor], direction: GradientDirection = .leftToRight) {
-        base.superview?.layoutIfNeeded()
         guard base.bounds.size.pk.isValid else { return }
         
         var gradientLayer: CAGradientLayer!
