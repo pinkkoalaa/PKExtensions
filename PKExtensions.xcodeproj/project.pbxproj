@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E2A476E24A1A4120021F184 /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2A476D24A1A4120021F184 /* NextViewController.swift */; };
+		3E2A477024A1E3B70021F184 /* UIView+PKToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */; };
 		3E35ABCA249A0FE700AFCAA3 /* UIColor+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABB4249A0FE700AFCAA3 /* UIColor+PKExtensions.swift */; };
 		3E35ABCB249A0FE700AFCAA3 /* NSAttributedString+PKExtensionsl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABB5249A0FE700AFCAA3 /* NSAttributedString+PKExtensionsl.swift */; };
 		3E35ABCC249A0FE700AFCAA3 /* UIButton+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABB6249A0FE700AFCAA3 /* UIButton+PKExtensions.swift */; };
@@ -65,6 +67,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3E2A476D24A1A4120021F184 /* NextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
+		3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+PKToast.swift"; sourceTree = "<group>"; };
 		3E35ABB4249A0FE700AFCAA3 /* UIColor+PKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+PKExtensions.swift"; sourceTree = "<group>"; };
 		3E35ABB5249A0FE700AFCAA3 /* NSAttributedString+PKExtensionsl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+PKExtensionsl.swift"; sourceTree = "<group>"; };
 		3E35ABB6249A0FE700AFCAA3 /* UIButton+PKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+PKExtensions.swift"; sourceTree = "<group>"; };
@@ -148,10 +152,10 @@
 			isa = PBXGroup;
 			children = (
 				3E35ABC4249A0FE700AFCAA3 /* Array+PKExtensions.swift */,
-				3E3CD5B5249CC71000F089A3 /* Dictionary+PKExtensions.swift */,
 				3E35ABC3249A0FE700AFCAA3 /* CALayer+PKExtensions.swift */,
 				3E35ABB8249A0FE700AFCAA3 /* CGGeometry+PKExtensions.swift */,
 				3E35ABB7249A0FE700AFCAA3 /* Date+PKExtensions.swift */,
+				3E3CD5B5249CC71000F089A3 /* Dictionary+PKExtensions.swift */,
 				3E35ABC7249A0FE700AFCAA3 /* Double+PKExtensions.swift */,
 				3E35ABB5249A0FE700AFCAA3 /* NSAttributedString+PKExtensionsl.swift */,
 				3E35ABBF249A0FE700AFCAA3 /* String+PKExtensions.swift */,
@@ -160,6 +164,7 @@
 				3E35ABBC249A0FE700AFCAA3 /* UIBarButtonItem+PKExtensions.swift */,
 				3E35ABE0249A109300AFCAA3 /* UIBezierPath+PKExtensions.swift */,
 				3E35ABB6249A0FE700AFCAA3 /* UIButton+PKExtensions.swift */,
+				3E3C52C7249F9C8E0056C22E /* UICollectionView+PKExtensions.swift */,
 				3E35ABB4249A0FE700AFCAA3 /* UIColor+PKExtensions.swift */,
 				3E35ABC1249A0FE700AFCAA3 /* UIControl+PKExtensions.swift */,
 				3E35ABC8249A0FE700AFCAA3 /* UIDevice+PKExtensions.swift */,
@@ -168,15 +173,15 @@
 				3E35ABC6249A0FE700AFCAA3 /* UIImage+PKExtensions.swift */,
 				3E35ABC9249A0FE700AFCAA3 /* UIKit+PKOverride.swift */,
 				3E35ABBE249A0FE700AFCAA3 /* UILabel+PKExtensions.swift */,
+				3E3C52BF249F3B580056C22E /* UINavigationBar+PKExtensions.swift */,
 				3E35ABC0249A0FE700AFCAA3 /* UIScreen+PKExtensions.swift */,
+				3E3C52C3249F9C6C0056C22E /* UIScrollView+PKExtensions.swift */,
+				3E3C52C1249F4DC80056C22E /* UITabBar+PKExtensions.swift */,
+				3E3C52C5249F9C800056C22E /* UITableView+PKExtensions.swift */,
 				3E35ABB9249A0FE700AFCAA3 /* UIView+PKExtensions.swift */,
+				3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */,
 				3E35ABBB249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift */,
 				3E3CD5B3249CBE8500F089A3 /* UIWindow+PKExtensions.swift */,
-				3E3C52BF249F3B580056C22E /* UINavigationBar+PKExtensions.swift */,
-				3E3C52C1249F4DC80056C22E /* UITabBar+PKExtensions.swift */,
-				3E3C52C3249F9C6C0056C22E /* UIScrollView+PKExtensions.swift */,
-				3E3C52C5249F9C800056C22E /* UITableView+PKExtensions.swift */,
-				3E3C52C7249F9C8E0056C22E /* UICollectionView+PKExtensions.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -208,6 +213,7 @@
 				3EFF8E00243456E600185885 /* AppDelegate.swift */,
 				3EFF8E02243456E600185885 /* SceneDelegate.swift */,
 				3EFF8E04243456E600185885 /* ViewController.swift */,
+				3E2A476D24A1A4120021F184 /* NextViewController.swift */,
 				3EFF8E06243456E600185885 /* Main.storyboard */,
 				3EFF8E09243456E700185885 /* Assets.xcassets */,
 				3EFF8E0B243456E700185885 /* LaunchScreen.storyboard */,
@@ -382,6 +388,7 @@
 				3E35ABDE249A0FE700AFCAA3 /* UIDevice+PKExtensions.swift in Sources */,
 				3E3C52C4249F9C6C0056C22E /* UIScrollView+PKExtensions.swift in Sources */,
 				3E3CD5B4249CBE8500F089A3 /* UIWindow+PKExtensions.swift in Sources */,
+				3E2A476E24A1A4120021F184 /* NextViewController.swift in Sources */,
 				3E3C52C6249F9C800056C22E /* UITableView+PKExtensions.swift in Sources */,
 				3E35ABD1249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift in Sources */,
 				3E3C52C0249F3B580056C22E /* UINavigationBar+PKExtensions.swift in Sources */,
@@ -398,6 +405,7 @@
 				3EFF8E01243456E600185885 /* AppDelegate.swift in Sources */,
 				3EFF8E03243456E600185885 /* SceneDelegate.swift in Sources */,
 				3E35ABD5249A0FE700AFCAA3 /* String+PKExtensions.swift in Sources */,
+				3E2A477024A1E3B70021F184 /* UIView+PKToast.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

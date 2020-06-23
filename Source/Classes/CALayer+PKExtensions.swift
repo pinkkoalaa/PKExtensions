@@ -28,6 +28,9 @@ public extension PKLayerExtensions {
         base.render(in: context)
         return UIGraphicsGetImageFromCurrentImageContext()
     }
+}
+
+public extension PKLayerExtensions {
     
     /// 为layer添加fade动画，当图层内容变化时将以淡入淡出动画使内容渐变
     func fade(_ duration: TimeInterval = 0.25, curve: CAMediaTimingFunctionName) {
@@ -36,6 +39,19 @@ public extension PKLayerExtensions {
         animation.type = .fade
         animation.duration = duration
         base.add(animation, forKey: "_pkExtensions.anim.fade")
+    }
+    
+    /// 为layer添加自旋转动画
+    func spin(_ duration: TimeInterval = 0.75, curve: CAMediaTimingFunctionName = .linear, clockwise: Bool = true) {
+        let animation = CABasicAnimation(keyPath: "transform.rotation.z")
+        animation.fromValue = 0
+        animation.toValue = (clockwise ? CGFloat.pi : -CGFloat.pi) * 2
+        animation.duration = duration
+        animation.repeatCount = Float.greatestFiniteMagnitude
+        animation.isRemovedOnCompletion = false
+        animation.fillMode = .forwards
+        animation.timingFunction = CAMediaTimingFunction(name: curve)
+        base.add(animation, forKey: "_pkExtensions.anim.spin")
     }
 }
 

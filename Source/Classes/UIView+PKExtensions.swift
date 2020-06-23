@@ -257,17 +257,17 @@ public extension PKViewExtensions where Base: UIView {
 public extension PKViewExtensions where Base: UIView {
     
     /// 提示窗是否显示中
-    var isToastShowing: Bool {
-        return base.pk_toastVisible
+    var isAlerting: Bool {
+        return base.pk_alertVisible
     }
 
-    /// 显示提示窗
+    /// 显示提示文本框
     /// - Parameters:
     ///   - text: 提示文本
     ///   - delay: 显示时长
     ///   - offset: 位置偏移
-    func showToast(text: String?, delay: TimeInterval = 1.5, offset: CGFloat = -15) {
-        guard !isToastShowing else { return }
+    func showAlert(text: String?, delay: TimeInterval = 1.5, offset: CGFloat = -15) {
+        guard !isAlerting else { return }
         guard let message = text else { return }
         
         let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
@@ -296,13 +296,13 @@ public extension PKViewExtensions where Base: UIView {
             hud.alpha = 1
         }
         
-        base.pk_toastVisible = true
+        base.pk_alertVisible = true
         Timer.pk.gcdAsyncAfter(delay: delay) {
             UIView.animate(withDuration: 0.4, animations: {
                 hud.alpha = 0
             }) { (_) in
                 hud.removeFromSuperview()
-                self.base.pk_toastVisible = false
+                self.base.pk_alertVisible = false
             }
         }
     }
@@ -434,7 +434,7 @@ public extension PKViewExtensions where Base: UIView {
 
 private var UIViewAssociatedPKMakeBorderLineKey: Void?
 private var UIViewAssociatedPKMakeGradientKey: Void?
-private var UIViewAssociatedPKToastVisibleKey: Void?
+private var UIViewAssociatedPKAlertVisibleKey: Void?
 private var UIViewAssociatedPKLoadingViewsKey: Void?
 
 private extension UIView {
@@ -454,11 +454,11 @@ private extension UIView {
         }
     }
     
-    var pk_toastVisible: Bool {
+    var pk_alertVisible: Bool {
         get {
-            return objc_getAssociatedObject(self, &UIViewAssociatedPKToastVisibleKey) as? Bool ?? false
+            return objc_getAssociatedObject(self, &UIViewAssociatedPKAlertVisibleKey) as? Bool ?? false
         } set {
-            objc_setAssociatedObject(self, &UIViewAssociatedPKToastVisibleKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &UIViewAssociatedPKAlertVisibleKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     

@@ -62,6 +62,8 @@ class ViewController: UIViewController {
         view.addSubview(button)
         button.pk.addAction(for: .touchUpInside) { (sender) in
             print("addAction")
+            let nextVC = NextViewController()
+            self.navigationController?.pushViewController(nextVC, animated: true)
         }
         
         button.setImage(UIImage(named: "sheet_Collection"), for: .normal)
