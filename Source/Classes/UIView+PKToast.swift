@@ -19,7 +19,7 @@ public class PKToastStyle {
     /// 文本颜色
     public var messageColor: UIColor = .white
     
-    /// 图片颜色 (若为nil则使用图片原色)
+    /// 图片颜色 (若为nil则使用原图片)
     public var imageColor: UIColor? = .white
     
     /// 文本字体
@@ -60,7 +60,7 @@ public extension PKViewExtensions where Base: UIView {
         case top, left, bottom, right
     }
     
-    /// Toast位置
+    /// Toast显示位置
     enum ToastPosition {
         case top(offset: CGFloat)
         case center(offset: CGFloat)
@@ -279,7 +279,7 @@ public extension PKViewExtensions where Base: UIView {
     
     private func _hideToast(_ toast: UIView) {
         guard base.pk_activeToasts.contains(toast) else { return }
-        UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseIn, .beginFromCurrentState], animations: {
+        UIView.animate(withDuration: PKToastStyle.shared.fadeDuration, delay: 0, options: [.curveEaseIn, .beginFromCurrentState], animations: {
             toast.alpha = 0.0
         }) { _ in
             toast.removeFromSuperview()

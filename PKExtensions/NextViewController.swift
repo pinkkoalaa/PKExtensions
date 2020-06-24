@@ -30,11 +30,11 @@ class NextViewController: UIViewController {
         
         
         
-        view.pk.showToast(message: "正在加载", image: UIImage(named: "jiazaizhong的副本"), isSpin: true, layout: .left, position: .center(offset: 0))
-        Timer.pk.gcdAsyncAfter(delay: 1) {
+        view.pk.showToast(message: "正在加载", image: UIImage(named: "jiazaizhong的副本"), isSpin: true, layout: .top, position: .center(offset: 0))
+        Timer.pk.gcdAsyncAfter(delay: 2.5) {
             
             self.view.pk.hideToast()
-            self.view.pk.showToast(message: "加载成功", image: UIImage(named: "shibai"), layout: .left, position: .center(offset: 0))
+            self.view.pk.showToast(message: "加载成功", image: UIImage(named: "chenggong-3"), layout: .top, position: .center(offset: 0))
         }
         
     }
