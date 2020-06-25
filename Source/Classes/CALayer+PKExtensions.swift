@@ -32,6 +32,14 @@ public extension PKLayerExtensions where Base: CALayer {
 
 public extension PKLayerExtensions where Base: CALayer {
     
+    /// 禁止layer的隐式动画
+    static func disableActions<T: CALayer>(layer: T, work: ((T) -> Void)? = nil) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        work?(layer)
+        CATransaction.commit()
+    }
+    
     /// 为layer添加fade动画，当图层内容变化时将以淡入淡出动画使内容渐变
     func fade(_ duration: TimeInterval = 0.25, curve: CAMediaTimingFunctionName) {
         let animation = CATransition()
