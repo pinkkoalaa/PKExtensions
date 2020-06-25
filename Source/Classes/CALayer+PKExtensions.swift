@@ -8,7 +8,7 @@
 
 import UIKit
 
-public extension PKLayerExtensions {
+public extension PKLayerExtensions where Base: CALayer {
     
     /// 删除layer的所有子图层
     func removeAllSublayers() {
@@ -30,7 +30,7 @@ public extension PKLayerExtensions {
     }
 }
 
-public extension PKLayerExtensions {
+public extension PKLayerExtensions where Base: CALayer {
     
     /// 为layer添加fade动画，当图层内容变化时将以淡入淡出动画使内容渐变
     func fade(_ duration: TimeInterval = 0.25, curve: CAMediaTimingFunctionName) {
@@ -53,20 +53,61 @@ public extension PKLayerExtensions {
         animation.timingFunction = CAMediaTimingFunction(name: curve)
         base.add(animation, forKey: "_pkExtensions.anim.spin")
     }
+    
+    /// 为layer添加透明度变化动画
+    func opacity(from origin: Float,
+                 to target: Float,
+                 duration: TimeInterval = 0.5,
+                 completion: ((Bool) -> Void)? = nil) {
+        let basic = CABasicAnimation(keyPath: "opacity")
+        basic.fromValue = origin
+        basic.toValue = target
+        basic.duration = duration
+        basic.fillMode = .forwards
+        basic.isRemovedOnCompletion = false
+        base.add(basic, forKey: nil)
+        
+        Timer.pk.gcdAsyncAfter(delay: duration) { completion?(true) }
+    }
 }
 
-public struct PKLayerExtensions {
-    fileprivate static var Base: CALayer.Type { CALayer.self }
-    fileprivate var base: CALayer
-    fileprivate init(_ base: CALayer) { self.base = base }
+public extension PKLayerExtensions where Base: CAShapeLayer {
+
+    /// 自定义shapeLayer路径改变动画
+    func path(from origin: CGPath?,
+              to target: CGPath?,
+              duration: TimeInterval = 0.5,
+              completion: ((Bool) -> Void)? = nil) {
+        guard
+            let fromPath = origin,
+            let toPath = target else { return }
+        
+        let basic = CABasicAnimation(keyPath: "path")
+        basic.fromValue = fromPath
+        basic.toValue = toPath
+        basic.duration = duration
+        basic.fillMode = .forwards
+        basic.isRemovedOnCompletion = false
+        base.add(basic, forKey: nil)
+        
+        Timer.pk.gcdAsyncAfter(delay: duration) { completion?(true) }
+    }
 }
 
-public extension CALayer {
-    var pk: PKLayerExtensions { PKLayerExtensions(self) }
-    static var pk: PKLayerExtensions.Type { PKLayerExtensions.self }
+public struct PKLayerExtensions<Base> {
+    var base: Base
+    fileprivate init(_ base: Base) { self.base = base }
 }
 
-/// 直接扩展CALayer
+public protocol PKLayerExtensionsCompatible {}
+
+public extension PKLayerExtensionsCompatible {
+    static var pk: PKLayerExtensions<Self>.Type { PKLayerExtensions<Self>.self }
+    var pk: PKLayerExtensions<Self> { get{ PKLayerExtensions(self) } set{} }
+}
+
+extension CALayer: PKLayerExtensionsCompatible {}
+
 public extension CALayer {
     
     var left: CGFloat {
