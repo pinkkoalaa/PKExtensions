@@ -205,15 +205,20 @@ public extension PKViewExtensions where Base: UIView {
     ///   - colors: 渐变颜色数组
     ///   - direction: 渐变方向
     func addGradient(colors: [UIColor], direction: GradientDirection = .leftToRight) {
-        guard base.bounds.size.pk.isValid else { return }
+        return addGradient(colors: colors, direction: direction, size: base.bounds.size)
+    }
+    
+    /// 为视图添加线性渐变图层 (自定义渐变图层大小)
+    func addGradient(colors: [UIColor], direction: GradientDirection = .leftToRight, size: CGSize) {
+        guard size.pk.isValid else { return }
         
         var gradientLayer: CAGradientLayer!
         if let layer = base.pk_gradientLayer {
             gradientLayer = layer
-            gradientLayer.frame = base.bounds
+            gradientLayer.frame = CGRect(origin: .zero, size: size)
         } else {
             gradientLayer = CAGradientLayer()
-            gradientLayer.frame = base.bounds
+            gradientLayer.frame = CGRect(origin: .zero, size: size)
             gradientLayer.colors = colors.map{( $0.cgColor )}
             base.layer.insertSublayer(gradientLayer, at: 0)
             base.pk_gradientLayer = gradientLayer
