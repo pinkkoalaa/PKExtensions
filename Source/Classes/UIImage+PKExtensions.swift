@@ -119,20 +119,20 @@ public extension PKImageExtensions {
     }
     
     /// 根据颜色和方向返回渐变色图像，`[Any]` 为十六进制字符串或十六进制数值
-    static func gradientImage(with hexValues: [Any], direction: GradientDirection, size: CGSize) -> UIImage? {
+    static func gradientImage(with hexValues: [Any], size: CGSize, direction: GradientDirection = .leftToRight) -> UIImage? {
         if let ints = hexValues as? [Int] {
             let values = ints.map({ UIColor.pk.hex($0) })
-            return gradientImage(with: values, direction: direction, size: size)
+            return gradientImage(with: values, size: size, direction: direction)
         } else if let strings = hexValues as? [String] {
             let values = strings.map({ (UIColor.pk.hex($0) ?? .clear) })
-            return gradientImage(with: values, direction: direction, size: size)
+            return gradientImage(with: values, size: size, direction: direction)
         } else {
             return nil
         }
     }
     
     /// 根据颜色和方向返回渐变色图像
-    static func gradientImage(with colors: [UIColor], direction: GradientDirection, size: CGSize) -> UIImage? {
+    static func gradientImage(with colors: [UIColor], size: CGSize, direction: GradientDirection = .leftToRight) -> UIImage? {
         guard !colors.isEmpty, size.pk.isValid else { return nil }
         
         var startPoint = CGPoint.zero
