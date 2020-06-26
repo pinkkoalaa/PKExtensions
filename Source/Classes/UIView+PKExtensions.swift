@@ -72,20 +72,14 @@ public extension PKViewExtensions where Base: UIView {
     /// 为视图指定位置添加边框线
     ///
     ///     let aView = UIView()
-    ///     aView.pk.addBorder(width: 1 / UIScreen.main.scale, color: .red, byRectEdge: [.left, .bottom])
+    ///     aView.pk.addBorderLayer(width: 1 / UIScreen.main.scale, color: .red, byRectEdge: [.left, .bottom])
     ///     // 注：在视图得到位置大小后调用生效
     ///
     /// - Parameters:
-    ///   - width: 边框线宽度 (设置width = 0 可以删除已经添加的边框)
+    ///   - width: 边框线宽度
     ///   - color: 边框线颜色
     ///   - edges: 添加边框线的位置，默认四周
-    func addBorder(width: CGFloat, color: UIColor = .gray, byRectEdge edges: UIRectEdge = .all) {
-        if edges == .all {
-            base.layer.borderWidth = width
-            base.layer.borderColor = color.cgColor
-            return removeBorderLayers()
-        }
-        
+    func addBorderLayer(width: CGFloat, color: UIColor = .gray, byRectEdge edges: UIRectEdge = .left) {
         guard base.bounds.size.pk.isValid else { return }
         
         let path = UIBezierPath()
@@ -126,8 +120,8 @@ public extension PKViewExtensions where Base: UIView {
         }
     }
     
-    /// 删除视图边框线 (对应-addBorder:方法)
-    func removeBorderLayers() {
+    /// 删除视图边框线 (对应-addBorder:方法)dddd
+    func removeBorderLayer() {
         base.pk_borderLayer?.removeFromSuperlayer()
         base.pk_borderLayer = nil
     }
@@ -198,18 +192,18 @@ public extension PKViewExtensions where Base: UIView {
     /// 为视图添加线性渐变图层
     ///
     ///     let aView = UIView()
-    ///     aView.pk.addGradient(colors: [.red, .orange], direction: .leftToRight)
+    ///     aView.pk.addGradientLayer(colors: [.red, .orange], direction: .leftToRight)
     ///     // 注：在视图得到位置大小后调用生效
     ///
     /// - Parameters:
     ///   - colors: 渐变颜色数组
     ///   - direction: 渐变方向
-    func addGradient(colors: [UIColor], direction: GradientDirection = .leftToRight) {
-        return addGradient(colors: colors, direction: direction, size: base.bounds.size)
+    func addGradientLayer(colors: [UIColor], direction: GradientDirection = .leftToRight) {
+        return addGradientLayer(colors: colors, direction: direction, size: base.bounds.size)
     }
     
     /// 为视图添加线性渐变图层 (自定义渐变图层大小)
-    func addGradient(colors: [UIColor], direction: GradientDirection = .leftToRight, size: CGSize) {
+    func addGradientLayer(colors: [UIColor], direction: GradientDirection = .leftToRight, size: CGSize) {
         guard size.pk.isValid else { return }
         
         var gradientLayer: CAGradientLayer!
@@ -252,8 +246,8 @@ public extension PKViewExtensions where Base: UIView {
         }
     }
     
-    /// 删除渐变图层 (对应-addGradient:方法)
-    func removeGradientLayers() {
+    /// 删除渐变图层 (对应-addGradientLayer:方法)
+    func removeGradientLayer() {
         base.pk_gradientLayer?.removeFromSuperlayer()
         base.pk_gradientLayer = nil
     }
