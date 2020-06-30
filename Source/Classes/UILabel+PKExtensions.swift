@@ -19,7 +19,7 @@ public extension PKViewExtensions where Base: UILabel {
         return label as! Base
     }
     
-    /// 设置文本时显示渐变动画
+    /// 设置文本时显示淡出动画
     func set(text string: String?, duration: TimeInterval = 0.25) {
         let transition = CATransition()
         transition.duration = duration
