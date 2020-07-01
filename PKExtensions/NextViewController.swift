@@ -27,7 +27,7 @@ class NextViewController: UIViewController {
     func example5() {
         let color: UIColor? = UIColor.blue
         let image = UIImage(named: "Success-Small")
-        let button = WrapButton()
+        let button = IngenuityButton(type: .custom)
         button.setTitleColor(color, for: .normal)
         button.setTitle("返回", for: .normal)
         if let _ = color {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-// MARK: - WrapButton
+// MARK: - IngenuityButton
 
 /**
 *  主要提供子视图布局调整功能：
@@ -17,11 +17,12 @@ import UIKit
 *  3. 支持自定义图片尺寸大小 (imageSpecifiedSize)
 *  4. 支持图片和 titleLabel 居中对齐或边缘对齐
 *  5. 支持 Auto Layout 以上设置可根据内容自适应
+*  6. 支持 Object-C 语法调用
 */
-public class WrapButton: UIButton {
+@objc public class IngenuityButton: UIButton {
     
     /// 图片与文字布局位置
-    public enum ImagePosition {
+    @objc public enum ImagePosition: Int {
         /// 图片在上，文字在下
         case top
         /// 图片在左，文字在右
@@ -33,21 +34,21 @@ public class WrapButton: UIButton {
     }
     
     /// 设置按图标和文字的相对位置，默认为ImagePosition.left
-    public var imagePosition: ImagePosition = .left {
+    @objc public var imagePosition: ImagePosition = .left {
         didSet {
             setNeedsLayout()
         }
     }
     
     /// 设置图标和文字之间的间隔，默认为10
-    public var imageAndTitleSpacing: CGFloat = 10 {
+    @objc public var imageAndTitleSpacing: CGFloat = 10 {
         didSet {
             setNeedsLayout()
         }
     }
     
     /// 设置图标大小为指定尺寸，默认为zero使用图片自身尺寸
-    public var imageSpecifiedSize: CGSize = .zero {
+    @objc public var imageSpecifiedSize: CGSize = .zero {
         didSet {
             setNeedsLayout()
         }
@@ -55,7 +56,8 @@ public class WrapButton: UIButton {
     
     public override func sizeToFit() {
         super.sizeToFit()
-        frame.size = sizeThatFits(CGSize.pk.greatestFiniteMagnitude)
+        frame.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude,
+                                         height: .greatestFiniteMagnitude))
     }
     
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -144,6 +146,13 @@ public class WrapButton: UIButton {
         }
     }
     
+    private func isValid(size: CGSize) -> Bool {
+        let isInfinite = size.width.isInfinite || size.height.isInfinite
+        let isNaN = size.width.isNaN || size.height.isNaN
+        let isEmpty = size.width <= 0 || size.height <= 0
+        return !isEmpty && !isNaN && !isInfinite
+    }
+    
     private func getValidTitleSize() -> CGSize {
         guard isTitleValid() else { return .zero }
         return titleLabel!.intrinsicContentSize
@@ -151,7 +160,7 @@ public class WrapButton: UIButton {
     
     private func getValidImageSize() -> CGSize {
         guard isImageValid() else { return .zero }
-        return imageSpecifiedSize.pk.isValid ? imageSpecifiedSize : imageView!.bounds.size
+        return isValid(size: imageSpecifiedSize) ? imageSpecifiedSize : imageView!.bounds.size
     }
     
     private func getValidSpacing() -> CGFloat {
@@ -171,7 +180,7 @@ private extension CGRect {
 }
 
 
-// MARK: - WrapTextView
+// MARK: - IngenuityTextView
 
 /**
 *  提供以下功能：
@@ -180,7 +189,7 @@ private extension CGRect {
 *  3. 支持设置占位文本内边距 (placeholderInsets)
 *  4. 输入框变化回调 - textDidChange 增加删除监听
 */
-public class WrapTextView: UITextView {
+public class IngenuityTextView: UITextView {
     
     /// 设置占位文本
     public var placeholder: String? {
@@ -279,10 +288,10 @@ public class WrapTextView: UITextView {
 }
 
 
-// MARK: - WrapLabel
+// MARK: - IngenuityLabel
 
 /// 提供调整UILabel文本内边距功能
-public class WrapLabel: UILabel {
+public class IngenuityLabel: UILabel {
     
     /// 设置文本内边距
     public var textInsets: UIEdgeInsets = .zero
