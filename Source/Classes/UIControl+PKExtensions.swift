@@ -45,7 +45,7 @@ extension UIControl {
     open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let insets = pk_enlargeTouchInsets
         let touchRect = CGRect(x: bounds.origin.x - insets.left,
-                               y: bounds.origin.y - insets.left,
+                               y: bounds.origin.y - insets.top,
                                width: bounds.size.width + insets.left + insets.right,
                                height: bounds.size.height + insets.top + insets.bottom)
         return touchRect.contains(point)

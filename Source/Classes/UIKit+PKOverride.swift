@@ -70,14 +70,15 @@ public class WrapButton: UIButton {
         let titleSize = titleLabel!.intrinsicContentSize
         let imageSize = imageSpecifiedSize.pk.isValid ?
             imageSpecifiedSize : imageView!.bounds.size
+        let spacing: CGFloat = (isImageValid() && isTitleValid()) ? imageAndTitleSpacing : .zero
         
         switch imagePosition {
         case .top, .bottom:
-            let height = titleSize.height + imageSize.height + imageAndTitleSpacing
+            let height = titleSize.height + imageSize.height + spacing
             let width = max(titleSize.width, imageSize.width)
             return CGSize(width: width, height: height)
         case .left, .right:
-            let width = titleSize.width + imageSize.width + imageAndTitleSpacing
+            let width = titleSize.width + imageSize.width + spacing
             let height = max(titleSize.height, imageSize.height)
             return CGSize(width: width, height: height)
         }
@@ -93,7 +94,7 @@ public class WrapButton: UIButton {
         let titleSize = titleLabel!.intrinsicContentSize
         let imageSize = imageSpecifiedSize.pk.isValid ?
             imageSpecifiedSize : imageView!.bounds.size
-        let spacing = imageAndTitleSpacing
+        let spacing: CGFloat = (isImageValid() && isTitleValid()) ? imageAndTitleSpacing : .zero
         
         switch imagePosition {
         case .top:
@@ -144,6 +145,10 @@ public class WrapButton: UIButton {
             return (bounds.height - height) / 2
         }
     }
+    
+    private func isImageValid() -> Bool { currentImage != nil }
+    
+    private func isTitleValid() -> Bool { (currentTitle != nil || currentAttributedTitle != nil) }
 }
 
 private extension CGRect {
