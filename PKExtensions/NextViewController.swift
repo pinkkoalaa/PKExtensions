@@ -14,19 +14,40 @@ class NextViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
 
-//        example2()
-        example3()
+        let sd = CGFloat(23.3)
         
-        print("num is: \(test1())")
+        let res = sd.pk.flatted()
+        print("sd is: \(sd), res is: \(res)")
+        
+//        example2()
+//        example3()
+        example5()
     }
     
-    
-    func test1() -> Int {
-        var testNum: Int = 0
-        defer {
-            testNum += 1
+    func example5() {
+        let color: UIColor? = UIColor.blue
+        let image = UIImage(named: "Success-Small")
+        let button = WrapButton()
+        button.setTitleColor(color, for: .normal)
+        button.setTitle("返回", for: .normal)
+        if let _ = color {
+            let img = image?.withRenderingMode(.alwaysTemplate)
+            button.setImage(img, for: .normal)
+            button.tintColor = color
+        } else {
+            button.setImage(image, for: .normal)
         }
-        return testNum
+        button.isUserInteractionEnabled = true
+        button.backgroundColor = UIColor.lightGray
+        button.imagePosition = .left
+        button.imageSpecifiedSize = CGSize(width: 20, height: 20)
+        button.imageAndTitleSpacing = 15
+        view.addSubview(button)
+        
+        button.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
     }
     
     func example3() {

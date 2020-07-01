@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3E2A476E24A1A4120021F184 /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2A476D24A1A4120021F184 /* NextViewController.swift */; };
 		3E2A477024A1E3B70021F184 /* UIView+PKToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */; };
+		3E2C028224AC0E8900237859 /* MojitoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2C028124AC0E8900237859 /* MojitoButton.swift */; };
 		3E35ABCA249A0FE700AFCAA3 /* UIColor+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABB4249A0FE700AFCAA3 /* UIColor+PKExtensions.swift */; };
 		3E35ABCB249A0FE700AFCAA3 /* NSAttributedString+PKExtensionsl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABB5249A0FE700AFCAA3 /* NSAttributedString+PKExtensionsl.swift */; };
 		3E35ABCC249A0FE700AFCAA3 /* UIButton+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E35ABB6249A0FE700AFCAA3 /* UIButton+PKExtensions.swift */; };
@@ -47,6 +48,7 @@
 		3EFF8E0D243456E700185885 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EFF8E0B243456E700185885 /* LaunchScreen.storyboard */; };
 		3EFF8E18243456E700185885 /* PKExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E17243456E700185885 /* PKExtensionsTests.swift */; };
 		3EFF8E23243456E700185885 /* PKExtensionsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E22243456E700185885 /* PKExtensionsUITests.swift */; };
+		9DD62D09F7C7F37744156B93 /* libPods-PKExtensions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0796A6807E65ADB20C51F2 /* libPods-PKExtensions.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,8 +69,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3DEA706357ED8CFFB02F3A4C /* Pods-PKExtensions.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PKExtensions.release.xcconfig"; path = "Target Support Files/Pods-PKExtensions/Pods-PKExtensions.release.xcconfig"; sourceTree = "<group>"; };
 		3E2A476D24A1A4120021F184 /* NextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
 		3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+PKToast.swift"; sourceTree = "<group>"; };
+		3E2C028124AC0E8900237859 /* MojitoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MojitoButton.swift; sourceTree = "<group>"; };
 		3E35ABB4249A0FE700AFCAA3 /* UIColor+PKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+PKExtensions.swift"; sourceTree = "<group>"; };
 		3E35ABB5249A0FE700AFCAA3 /* NSAttributedString+PKExtensionsl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+PKExtensionsl.swift"; sourceTree = "<group>"; };
 		3E35ABB6249A0FE700AFCAA3 /* UIButton+PKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+PKExtensions.swift"; sourceTree = "<group>"; };
@@ -113,6 +117,8 @@
 		3EFF8E1E243456E700185885 /* PKExtensionsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PKExtensionsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EFF8E22243456E700185885 /* PKExtensionsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKExtensionsUITests.swift; sourceTree = "<group>"; };
 		3EFF8E24243456E700185885 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3371F4683AD7C35C8B0013A /* Pods-PKExtensions.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PKExtensions.debug.xcconfig"; path = "Target Support Files/Pods-PKExtensions/Pods-PKExtensions.debug.xcconfig"; sourceTree = "<group>"; };
+		CB0796A6807E65ADB20C51F2 /* libPods-PKExtensions.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PKExtensions.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DD62D09F7C7F37744156B93 /* libPods-PKExtensions.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +200,8 @@
 				3EFF8E16243456E700185885 /* PKExtensionsTests */,
 				3EFF8E21243456E700185885 /* PKExtensionsUITests */,
 				3EFF8DFE243456E600185885 /* Products */,
+				639323554137BDA03A00325D /* Pods */,
+				CB01F0E471981CD193FBB230 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -214,6 +223,7 @@
 				3EFF8E02243456E600185885 /* SceneDelegate.swift */,
 				3EFF8E04243456E600185885 /* ViewController.swift */,
 				3E2A476D24A1A4120021F184 /* NextViewController.swift */,
+				3E2C028124AC0E8900237859 /* MojitoButton.swift */,
 				3EFF8E06243456E600185885 /* Main.storyboard */,
 				3EFF8E09243456E700185885 /* Assets.xcassets */,
 				3EFF8E0B243456E700185885 /* LaunchScreen.storyboard */,
@@ -240,6 +250,23 @@
 			path = PKExtensionsUITests;
 			sourceTree = "<group>";
 		};
+		639323554137BDA03A00325D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C3371F4683AD7C35C8B0013A /* Pods-PKExtensions.debug.xcconfig */,
+				3DEA706357ED8CFFB02F3A4C /* Pods-PKExtensions.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		CB01F0E471981CD193FBB230 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CB0796A6807E65ADB20C51F2 /* libPods-PKExtensions.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -247,6 +274,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3EFF8E27243456E700185885 /* Build configuration list for PBXNativeTarget "PKExtensions" */;
 			buildPhases = (
+				E1E6641DBC1ECB45309FD9D1 /* [CP] Check Pods Manifest.lock */,
 				3EFF8DF9243456E600185885 /* Sources */,
 				3EFF8DFA243456E600185885 /* Frameworks */,
 				3EFF8DFB243456E600185885 /* Resources */,
@@ -366,6 +394,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		E1E6641DBC1ECB45309FD9D1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PKExtensions-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3EFF8DF9243456E600185885 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -390,6 +443,7 @@
 				3E3CD5B4249CBE8500F089A3 /* UIWindow+PKExtensions.swift in Sources */,
 				3E2A476E24A1A4120021F184 /* NextViewController.swift in Sources */,
 				3E3C52C6249F9C800056C22E /* UITableView+PKExtensions.swift in Sources */,
+				3E2C028224AC0E8900237859 /* MojitoButton.swift in Sources */,
 				3E35ABD1249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift in Sources */,
 				3E3C52C0249F3B580056C22E /* UINavigationBar+PKExtensions.swift in Sources */,
 				3E35ABD0249A0FE700AFCAA3 /* UIFont+PKExtensions.swift in Sources */,
@@ -576,6 +630,7 @@
 		};
 		3EFF8E28243456E700185885 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C3371F4683AD7C35C8B0013A /* Pods-PKExtensions.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -594,6 +649,7 @@
 		};
 		3EFF8E29243456E700185885 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3DEA706357ED8CFFB02F3A4C /* Pods-PKExtensions.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

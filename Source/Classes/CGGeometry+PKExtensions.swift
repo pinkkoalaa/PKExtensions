@@ -36,6 +36,23 @@ public extension PKCGFloatExtensions {
     
     /// 将弧度转角度
     func radiansToDegrees() -> CGFloat { (180.0 * base) / .pi }
+    
+    /// 像素取整类型
+    enum FlatType { case ceiled, floored, rounded }
+    
+    /// 基于指定的倍数，对CGFloat进行像素取整(默认向上取整)
+    func flatted(scale factor: CGFloat = UIScreen.main.scale, type: FlatType = .ceiled) -> CGFloat {
+        let value = (base == .leastNonzeroMagnitude || base == .leastNormalMagnitude) ? 0 : base
+        let scale = factor > 0 ? factor : UIScreen.main.scale
+        switch type {
+        case .ceiled:
+            return ceil(value * scale) / scale
+        case .floored:
+            return floor(value * scale) / scale
+        case .rounded:
+            return round(value * scale) / scale
+        }
+    }
 }
 
 public extension PKCGPointExtensions {
@@ -109,6 +126,11 @@ public extension PKCGPointExtensions {
 
 public extension PKCGSizeExtensions {
     
+    /// 返回最大的有限CGSize
+    static var greatestFiniteMagnitude: CGSize {
+        return CGSize(width: CGFloat.greatestFiniteMagnitude, height: .greatestFiniteMagnitude)
+    }
+    
     /// 将CGSize放大指定的倍数
     func scaled(_ scale: CGFloat) -> CGSize {
         return CGSize(width: base.width * scale, height: base.height * scale)
@@ -129,9 +151,24 @@ public extension PKCGSizeExtensions {
         return CGSize(width: round(base.width), height: round(base.height))
     }
     
-    /// 判断CGSize是否有效(不包含零值)
+    /// 判断CGSize是否存在infinite
+    var isInfinite: Bool {
+        return base.width.isInfinite || base.height.isInfinite
+    }
+    
+    /// 判断CGSize是否存在NaN
+    var isNaN: Bool {
+        return base.width.isNaN || base.height.isNaN
+    }
+    
+    /// 判断CGSize是否为空(宽或高为0)
+    var isEmpty: Bool {
+        return base.width <= 0 || base.height <= 0
+    }
+    
+    /// 判断CGSize是否有效(不包含零值、不带无穷大的值、不带非法数字）
     var isValid: Bool {
-        return (base.width > 0 && base.height > 0)
+        return !isEmpty && !isNaN && !isInfinite
     }
 }
 
@@ -159,6 +196,24 @@ public extension PKCGRectExtensions {
     func rounded() -> CGRect {
         return CGRect(x: round(base.origin.x), y: round(base.origin.y),
                       width: round(base.size.width), height: round(base.size.height))
+    }
+}
+
+public extension PKUIEdgeInsetsExtensions {
+    
+    /// 获取UIEdgeInsets在水平方向上的值
+    var horizontal: CGFloat {
+        return base.left + base.right
+    }
+    
+    /// 获取UIEdgeInsets在垂直方向上的值
+    var vertical: CGFloat {
+        return base.top + base.bottom
+    }
+    
+    /// 使用相同的值返回UIEdgeInsets
+    static func make(same value: CGFloat) -> UIEdgeInsets {
+        return UIEdgeInsets(top: value, left: value, bottom: value, right: value)
     }
 }
 
@@ -204,4 +259,15 @@ public struct PKCGFloatExtensions {
 public extension CGFloat {
     var pk: PKCGFloatExtensions { PKCGFloatExtensions(self) }
     static var pk: PKCGFloatExtensions.Type { PKCGFloatExtensions.self }
+}
+
+public struct PKUIEdgeInsetsExtensions {
+    fileprivate static var Base: UIEdgeInsets.Type { UIEdgeInsets.self }
+    fileprivate var base: UIEdgeInsets
+    fileprivate init(_ base: UIEdgeInsets) { self.base = base }
+}
+
+public extension UIEdgeInsets {
+    var pk: PKUIEdgeInsetsExtensions { PKUIEdgeInsetsExtensions(self) }
+    static var pk: PKUIEdgeInsetsExtensions.Type { PKUIEdgeInsetsExtensions.self }
 }

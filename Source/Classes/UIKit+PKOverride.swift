@@ -8,36 +8,20 @@
 
 import UIKit
 
-// MARK: - PKTextInsetLabel
+// MARK: - WrapButton
 
-/// 调整UILabel文本内边距
-public class PKTextInsetLabel: UILabel {
-    
-    /// 设置文本内边距
-    public var textInsets: UIEdgeInsets = .zero
-    
-    override public func drawText(in rect: CGRect) {
-        super.drawText(in: rect.inset(by: textInsets))
-    }
-    
-    override public func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
-        let insets = textInsets
-        var rect = super.textRect(forBounds: bounds.inset(by: insets), limitedToNumberOfLines: numberOfLines)
-        rect.origin.x -= insets.left
-        rect.origin.y -= insets.top
-        rect.size.width += (insets.left + insets.right)
-        rect.size.height += (insets.top + insets.bottom)
-        return rect
-    }
-}
-
-// MARK: - PKLegendButton
-
-/// 调整UIButton图片文字布局
-public class PKLegendButton: UIButton {
+/**
+*  主要提供子视图布局调整功能：
+*  1. 支持设置图片相对于 titleLabel 的位置 (imagePosition)
+*  2. 支持设置图片和 titleLabel 之间的间距 (imageAndTitleSpacing)
+*  3. 支持自定义图片尺寸大小 (imageSpecifiedSize)
+*  4. 支持图片和 titleLabel 居中对齐或边缘对齐
+*  5. 支持 Auto Layout 以上设置可根据内容自适应
+*/
+public class WrapButton: UIButton {
     
     /// 图片与文字布局位置
-    public enum LayoutType {
+    public enum ImagePosition {
         /// 图片在上，文字在下
         case top
         /// 图片在左，文字在右
@@ -48,78 +32,137 @@ public class PKLegendButton: UIButton {
         case right
     }
     
-    /// 设置图片尺寸
-    public var _imageSize: CGSize = .zero {
+    /// 设置按图标和文字的相对位置，默认为ImagePosition.left
+    public var imagePosition: ImagePosition = .left {
         didSet {
-            guard _imageSize.width > 0, _imageSize.height > 0 else { return }
-            _layoutNeeded = true
             setNeedsLayout()
         }
     }
-
-    /// 更新布局位置并设置子视图间距 (调用前应确认设置了title和image)
-    public func _update(layoutType type: LayoutType, itemSpacing: CGFloat = CGFloat.leastNormalMagnitude) {
-        _spacing = itemSpacing
-        _layoutNeeded = true
-        _layoutType = type
-        setNeedsLayout()
+    
+    /// 设置图标和文字之间的间隔，默认为10
+    public var imageAndTitleSpacing: CGFloat = 10 {
+        didSet {
+            setNeedsLayout()
+        }
     }
     
-    private var _layoutNeeded = false
-    private var _layoutType = LayoutType.left
-    private var _spacing: CGFloat = CGFloat.leastNormalMagnitude
+    /// 设置图标大小为指定尺寸，默认为zero使用图片自身尺寸
+    public var imageSpecifiedSize: CGSize = .zero {
+        didSet {
+            setNeedsLayout()
+        }
+    }
     
-    public override func layoutSubviews() {
+    public override func sizeToFit() {
+        super.sizeToFit()
+        frame.size = sizeThatFits(CGSize.pk.greatestFiniteMagnitude)
+    }
+    
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
+        super.sizeThatFits(size)
+        let _size = intrinsicContentSize
+        return CGSize(width: min(_size.width, size.width), height: min(_size.height, size.height))
+    }
+    
+    public override var intrinsicContentSize: CGSize {
+        guard titleLabel != nil, imageView != nil else { return .zero }
+
+        let titleSize = titleLabel!.intrinsicContentSize
+        let imageSize = imageSpecifiedSize.pk.isValid ?
+            imageSpecifiedSize : imageView!.bounds.size
+        
+        switch imagePosition {
+        case .top, .bottom:
+            let height = titleSize.height + imageSize.height + imageAndTitleSpacing
+            let width = max(titleSize.width, imageSize.width)
+            return CGSize(width: width, height: height)
+        case .left, .right:
+            let width = titleSize.width + imageSize.width + imageAndTitleSpacing
+            let height = max(titleSize.height, imageSize.height)
+            return CGSize(width: width, height: height)
+        }
+    }
+    
+    override public func layoutSubviews() {
         super.layoutSubviews()
-        guard _layoutNeeded else { return }
+
+        guard !bounds.isEmpty else { return }
         
-        let gap = _spacing
-        let imgSize = _imageSize.equalTo(.zero) ? imageView!.bounds.size : _imageSize
-        var lbeSize = titleLabel?.intrinsicContentSize ?? .zero
+        guard titleLabel != nil, imageView != nil else { return }
         
-        switch _layoutType {
+        let titleSize = titleLabel!.intrinsicContentSize
+        let imageSize = imageSpecifiedSize.pk.isValid ?
+            imageSpecifiedSize : imageView!.bounds.size
+        let spacing = imageAndTitleSpacing
+        
+        switch imagePosition {
         case .top:
-            lbeSize.width = min(lbeSize.width, bounds.size.width)
-            let contentHeight = imgSize.height + lbeSize.height + gap
-            let padding = (bounds.height - contentHeight) * 0.5
-            let imageX = (bounds.width - imgSize.width) * 0.5
-            let labelX = (bounds.width - lbeSize.width) * 0.5
-            let labelY = padding + imgSize.height + gap
-            imageView?.frame = CGRect(x: imageX, y: padding, width: imgSize.width, height: imgSize.height)
-            titleLabel?.frame = CGRect(x: labelX, y: labelY, width: lbeSize.width, height: lbeSize.height)
+            let contentHeight = imageSize.height + titleSize.height + spacing
+            let padding = verticalTop(contentHeight)
+            let imageX = (bounds.width - imageSize.width) / 2
+            let titleX = (bounds.width - titleSize.width) / 2
+            imageView!.frame = CGRect(x: imageX, y: padding, size: imageSize)
+            titleLabel!.frame = CGRect(x: titleX, y: imageView!.frame.maxY + spacing, size: titleSize)
         case .left:
-            let padding: CGFloat = 0
-            let imageY = (bounds.height - imgSize.height) / 2
-            let labelX = padding + imgSize.width + gap
-            let labelY = (bounds.height - lbeSize.height) / 2
-            imageView?.frame = CGRect(x: padding, y: imageY, width: imgSize.width, height: imgSize.height)
-            titleLabel?.frame = CGRect(x: labelX, y: labelY, width: lbeSize.width, height: lbeSize.height)
-            break
+            let contentWidth = titleSize.width + imageSize.width + spacing
+            let padding = horizontalLeft(contentWidth)
+            let imageY = (bounds.height - imageSize.height) / 2
+            let titleY = (bounds.height - titleSize.height) / 2
+            imageView!.frame = CGRect(x: padding , y: imageY, size: imageSize)
+            titleLabel!.frame = CGRect(x: imageView!.frame.maxX + spacing, y: titleY, size: titleSize)
         case .bottom:
-            let contentHeight = imgSize.height + lbeSize.height + gap
-            let padding = (bounds.height - contentHeight) / 2
-            let labelX = (bounds.width - lbeSize.width) / 2
-            let imageX = (bounds.width - imgSize.width) / 2
-            let imageY = padding + lbeSize.height + gap
-            imageView?.frame = CGRect(x: imageX, y: imageY, width: imgSize.width, height: imgSize.height)
-            titleLabel?.frame = CGRect(x: labelX, y: padding, width: lbeSize.width, height: lbeSize.height)
-            break
+            let contentHeight = imageSize.height + titleSize.height + spacing
+            let padding = verticalTop(contentHeight)
+            let imageX = (bounds.width - imageSize.width) / 2
+            let titleX = (bounds.width - titleSize.width) / 2
+            titleLabel!.frame = CGRect(x: titleX, y: padding, size: titleSize)
+            imageView!.frame = CGRect(x: imageX, y: titleLabel!.frame.maxY + spacing, size: imageSize)
         case .right:
-            let contentWidth = imgSize.width + lbeSize.width + gap
-            let padding = (bounds.width - contentWidth) / 2
-            let labelY = (bounds.height - lbeSize.height) / 2;
-            let imageX = padding + lbeSize.width + gap;
-            let imageY = (bounds.height - imgSize.height) / 2;
-            imageView?.frame = CGRect(x: imageX, y: imageY, width: imgSize.width, height: imgSize.height)
-            titleLabel?.frame = CGRect(x: padding, y: labelY, width: lbeSize.width, height: lbeSize.height)
-            break
+            let contentWidth = titleSize.width + imageSize.width + spacing
+            let padding = horizontalLeft(contentWidth)
+            let imageY = (bounds.height - imageSize.height) / 2
+            let titleY = (bounds.height - titleSize.height) / 2
+            titleLabel!.frame = CGRect(x: padding, y: titleY, size: titleSize)
+            imageView!.frame = CGRect(x: titleLabel!.frame.maxX + spacing , y: imageY, size: imageSize)
+        }
+    }
+    
+    private func horizontalLeft(_ width: CGFloat) -> CGFloat {
+        switch contentHorizontalAlignment {
+        case .left: return CGFloat(0)
+        case .right: return bounds.width - width
+        default: /// Other types regarded as .center
+            return (bounds.width - width) / 2
+        }
+    }
+    
+    private func verticalTop(_ height: CGFloat) -> CGFloat {
+        switch contentVerticalAlignment {
+        case .top: return CGFloat(0)
+        case .bottom: return bounds.height - height
+        default: /// Other types regarded as .center
+            return (bounds.height - height) / 2
         }
     }
 }
 
-// MARK: - PKTextView
+private extension CGRect {
+    init(x: CGFloat, y: CGFloat, size: CGSize) {
+        self.init(x: x, y: y, width: size.width, height: size.height)
+    }
+}
 
-public class PKTextView: UITextView {
+
+// MARK: - WrapTextView
+
+/**
+*  提供以下功能：
+*  1. 支持设置占位文本 (placeholder)
+*  2. 支持设置占位文本颜色 (placeholderColor)
+*  3. 支持设置占位文本内边距 (placeholderInsets)
+*  4. 输入框变化回调 - textDidChange 增加删除监听
+*/
+public class WrapTextView: UITextView {
     
     /// 设置占位文本
     public var placeholder: String? {
@@ -129,14 +172,14 @@ public class PKTextView: UITextView {
     }
     
     /// 设置占位文本颜色
-    public var placeholderColor: UIColor? {
+    public var placeholderColor: UIColor? = .gray {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// 调整占位文本内边距
-    var placeholderInsets: UIEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 0) {
+    public var placeholderInsets: UIEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 0) {
         didSet {
             setNeedsDisplay()
         }
@@ -214,5 +257,29 @@ public class PKTextView: UITextView {
     public override func deleteBackward() {
         super.deleteBackward()
         delegate?.textViewDidChange?(self)
+    }
+}
+
+
+// MARK: - WrapLabel
+
+/// 提供调整UILabel文本内边距功能
+public class WrapLabel: UILabel {
+    
+    /// 设置文本内边距
+    public var textInsets: UIEdgeInsets = .zero
+    
+    override public func drawText(in rect: CGRect) {
+        super.drawText(in: rect.inset(by: textInsets))
+    }
+    
+    override public func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+        let insets = textInsets
+        var rect = super.textRect(forBounds: bounds.inset(by: insets), limitedToNumberOfLines: numberOfLines)
+        rect.origin.x -= insets.left
+        rect.origin.y -= insets.top
+        rect.size.width += (insets.left + insets.right)
+        rect.size.height += (insets.top + insets.bottom)
+        return rect
     }
 }
