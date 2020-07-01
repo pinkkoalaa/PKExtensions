@@ -17,12 +17,11 @@ import UIKit
 *  3. 支持自定义图片尺寸大小 (imageSpecifiedSize)
 *  4. 支持图片和 titleLabel 居中对齐或边缘对齐
 *  5. 支持 Auto Layout 以上设置可根据内容自适应
-*  6. 支持 Object-C 语法调用
 */
-@objc public class IngenuityButton: UIButton {
+public class IngenuityButton: UIButton {
     
     /// 图片与文字布局位置
-    @objc public enum ImagePosition: Int {
+    public enum ImagePosition: Int {
         /// 图片在上，文字在下
         case top
         /// 图片在左，文字在右
@@ -34,21 +33,21 @@ import UIKit
     }
     
     /// 设置按图标和文字的相对位置，默认为ImagePosition.left
-    @objc public var imagePosition: ImagePosition = .left {
+    public var imagePosition: ImagePosition = .left {
         didSet {
             setNeedsLayout()
         }
     }
     
     /// 设置图标和文字之间的间隔，默认为10
-    @objc public var imageAndTitleSpacing: CGFloat = 10 {
+    public var imageAndTitleSpacing: CGFloat = 10 {
         didSet {
             setNeedsLayout()
         }
     }
     
     /// 设置图标大小为指定尺寸，默认为zero使用图片自身尺寸
-    @objc public var imageSpecifiedSize: CGSize = .zero {
+    public var imageSpecifiedSize: CGSize = .zero {
         didSet {
             setNeedsLayout()
         }
@@ -56,8 +55,7 @@ import UIKit
     
     public override func sizeToFit() {
         super.sizeToFit()
-        frame.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude,
-                                         height: .greatestFiniteMagnitude))
+        frame.size = sizeThatFits(CGSize.pk.greatestFiniteMagnitude)
     }
     
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -146,13 +144,6 @@ import UIKit
         }
     }
     
-    private func isValid(size: CGSize) -> Bool {
-        let isInfinite = size.width.isInfinite || size.height.isInfinite
-        let isNaN = size.width.isNaN || size.height.isNaN
-        let isEmpty = size.width <= 0 || size.height <= 0
-        return !isEmpty && !isNaN && !isInfinite
-    }
-    
     private func getValidTitleSize() -> CGSize {
         guard isTitleValid() else { return .zero }
         return titleLabel!.intrinsicContentSize
@@ -160,7 +151,7 @@ import UIKit
     
     private func getValidImageSize() -> CGSize {
         guard isImageValid() else { return .zero }
-        return isValid(size: imageSpecifiedSize) ? imageSpecifiedSize : imageView!.bounds.size
+        return imageSpecifiedSize.pk.isValid ? imageSpecifiedSize : imageView!.bounds.size
     }
     
     private func getValidSpacing() -> CGFloat {
