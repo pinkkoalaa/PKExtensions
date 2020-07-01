@@ -65,12 +65,11 @@ public class WrapButton: UIButton {
     }
     
     public override var intrinsicContentSize: CGSize {
-        guard titleLabel != nil, imageView != nil else { return .zero }
-
-        let titleSize = titleLabel!.intrinsicContentSize
-        let imageSize = imageSpecifiedSize.pk.isValid ?
-            imageSpecifiedSize : imageView!.bounds.size
-        let spacing: CGFloat = (isImageValid() && isTitleValid()) ? imageAndTitleSpacing : .zero
+        guard isImageValid() || isTitleValid() else { return .zero}
+        
+        let titleSize = getValidTitleSize()
+        let imageSize = getValidImageSize()
+        let spacing = getValidSpacing()
         
         switch imagePosition {
         case .top, .bottom:
@@ -89,12 +88,11 @@ public class WrapButton: UIButton {
 
         guard !bounds.isEmpty else { return }
         
-        guard titleLabel != nil, imageView != nil else { return }
+        guard isImageValid() || isTitleValid() else { return }
         
-        let titleSize = titleLabel!.intrinsicContentSize
-        let imageSize = imageSpecifiedSize.pk.isValid ?
-            imageSpecifiedSize : imageView!.bounds.size
-        let spacing: CGFloat = (isImageValid() && isTitleValid()) ? imageAndTitleSpacing : .zero
+        let titleSize = getValidTitleSize()
+        let imageSize = getValidImageSize()
+        let spacing = getValidSpacing()
         
         switch imagePosition {
         case .top:
@@ -144,6 +142,21 @@ public class WrapButton: UIButton {
         default: /// Other types regarded as .center
             return (bounds.height - height) / 2
         }
+    }
+    
+    private func getValidTitleSize() -> CGSize {
+        guard isTitleValid() else { return .zero }
+        return titleLabel!.intrinsicContentSize
+    }
+    
+    private func getValidImageSize() -> CGSize {
+        guard isImageValid() else { return .zero }
+        return imageSpecifiedSize.pk.isValid ? imageSpecifiedSize : imageView!.bounds.size
+    }
+    
+    private func getValidSpacing() -> CGFloat {
+        guard isImageValid(), isTitleValid() else { return .zero }
+        return imageAndTitleSpacing
     }
     
     private func isImageValid() -> Bool { currentImage != nil }
