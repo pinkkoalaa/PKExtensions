@@ -29,7 +29,7 @@ class NextViewController: UIViewController {
         button.isUserInteractionEnabled = true
         button.backgroundColor = UIColor.lightGray
         button.imagePosition = .left
-        button.imageSpecifiedSize = CGSize(width: 120, height: 120)
+        button.imageSpecifiedSize = CGSize(width: 12, height: 10)
         button.imageAndTitleSpacing = 15
         view.addSubview(button)
         
@@ -37,41 +37,16 @@ class NextViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
         }
-        
-        
-//        let orgImg = UIImage(named: "slamDunkIMG01")
-//        print("orgImg is: \(orgImg)")
-//        let image = orgImg?.pk.scaled(toHeight: 100)
-//        print("image is: \(image)")
-        
-        let color: UIColor? = nil
-                
-        let image = UIImage(named: "slamDunkIMG01")
-//        let newImage =  image?.pk.tinted(UIColor.pk.random())
-//        let newImage = image?.pk.withBackgroundColor(UIColor.pk.random())
-        
-        let newImage = image?.pk.withRoundedCorners()
-        
-        
-//        let mes = Measurement<UnitAngle>(value: 180, unit: .degrees)
-//        let newImage = image?.pk.rotated(by: mes)
-//        var newImage = image?.pk.rotated(by: .pi)
-//        newImage = newImage?.pk.filled(withColor: .red)
-        
-        
-        if let _ = color {
-            let img = newImage?.withRenderingMode(.alwaysTemplate)
-            button.setImage(img, for: .normal)
-            button.tintColor = color
-        } else {
-            button.setImage(newImage, for: .normal)
-        }
-        
-        button.setTitleColor(color, for: .normal)
+    
+        let image = UIImage(named: "fill_arrow_icon")
+        button.setImage(image, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.setTitle("产业筛选", for: .normal)
         
-        button.pk.addAction(for: .touchUpInside) { _ in
-            print("addActionaddAction")
+        button.pk.addAction(for: .touchUpInside) { (sender) in
+            UIView.animate(withDuration: 0.5, animations: {
+                sender.imageView?.transform = CGAffineTransform(rotationAngle: .pi)
+            }, completion: nil)
         }
     }
     
@@ -127,8 +102,7 @@ class NextViewController: UIViewController {
         view.addSubview(imgView)
         
         view.pk.showToast(message: "正在加载", image: UIImage(named: "jiazaizhong的副本"), isSpin: true, layout: .top, position: .center(offset: 0))
-        Timer.pk.gcdAsyncAfter(delay: 2.5) {
-            
+        DispatchQueue.pk.asyncAfter(delay: 2.5) {
             self.view.pk.hideToast()
             self.view.pk.showToast(message: "加载成功", image: UIImage(named: "chenggong-3"), layout: .top, position: .center(offset: 0))
         }

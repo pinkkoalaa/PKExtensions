@@ -296,7 +296,7 @@ public extension PKViewExtensions where Base: UIView {
         }
         
         base.pk_alertVisible = true
-        Timer.pk.gcdAsyncAfter(delay: delay) {
+        DispatchQueue.pk.asyncAfter(delay: 0.4) {
             UIView.animate(withDuration: 0.4, animations: {
                 hud.alpha = 0
             }) { (_) in

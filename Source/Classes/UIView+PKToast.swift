@@ -168,7 +168,7 @@ public extension PKViewExtensions where Base: UIView {
         base.pk_activeToasts.add(hud)
         
         if isSpin {
-            imgView.layer.pk.spin()
+            imgView.layer.pk.spinAnimation()
         }
         
         hud.alpha = 0
@@ -211,7 +211,7 @@ public extension PKViewExtensions where Base: UIView {
         base.pk_activeToasts.add(hud)
         
         if isSpin {
-            imageView.layer.pk.spin()
+            imageView.layer.pk.spinAnimation()
         }
         
         hud.alpha = 0

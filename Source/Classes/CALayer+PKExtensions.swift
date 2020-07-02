@@ -41,16 +41,18 @@ public extension PKLayerExtensions where Base: CALayer {
     }
     
     /// 为layer添加fade动画，当图层内容变化时将以淡入淡出动画使内容渐变
-    func fade(_ duration: TimeInterval = 0.25, curve: CAMediaTimingFunctionName) {
+    func fadeAnimation(duration: TimeInterval = 0.25, curve: CAMediaTimingFunctionName = .linear) {
         let animation = CATransition()
         animation.timingFunction = CAMediaTimingFunction(name: curve)
         animation.type = .fade
         animation.duration = duration
-        base.add(animation, forKey: "_pkExtensions.anim.fade")
+        base.add(animation, forKey: nil)
     }
     
     /// 为layer添加自旋转动画
-    func spin(_ duration: TimeInterval = 0.75, curve: CAMediaTimingFunctionName = .linear, clockwise: Bool = true) {
+    func spinAnimation(duration: TimeInterval = 0.75,
+                       curve: CAMediaTimingFunctionName = .linear,
+                       clockwise: Bool = true) {
         let animation = CABasicAnimation(keyPath: "transform.rotation.z")
         animation.fromValue = 0
         animation.toValue = (clockwise ? CGFloat.pi : -CGFloat.pi) * 2
@@ -59,33 +61,42 @@ public extension PKLayerExtensions where Base: CALayer {
         animation.isRemovedOnCompletion = false
         animation.fillMode = .forwards
         animation.timingFunction = CAMediaTimingFunction(name: curve)
-        base.add(animation, forKey: "_pkExtensions.anim.spin")
+        base.add(animation, forKey: nil)
     }
     
-    /// 为layer添加透明度变化动画
-    func opacity(from origin: Float,
-                 to target: Float,
-                 duration: TimeInterval = 0.5,
-                 completion: ((Bool) -> Void)? = nil) {
-        let basic = CABasicAnimation(keyPath: "opacity")
-        basic.fromValue = origin
-        basic.toValue = target
+    enum AnimationType { case opacity, rotation }
+    
+    /// 为layer添加指定类型的动画
+    func addAnimation(type: AnimationType,
+                      duration: Double = 0.25, fromValue: Any?, toValue: Any?,
+                      completion: ((Bool) -> Void)? = nil) {
+        
+        func pathName(by type: AnimationType) -> String {
+            switch type {
+            case .opacity: return "opacity"
+            case .rotation: return "transform.rotation.z"
+            }
+        }
+        
+        let basic = CABasicAnimation(keyPath: pathName(by: type))
+        basic.fromValue = fromValue
+        basic.toValue = toValue
         basic.duration = duration
         basic.fillMode = .forwards
         basic.isRemovedOnCompletion = false
         base.add(basic, forKey: nil)
         
-        Timer.pk.gcdAsyncAfter(delay: duration) { completion?(true) }
+        DispatchQueue.pk.asyncAfter(delay: duration) { completion?(true) }
     }
 }
 
 public extension PKLayerExtensions where Base: CAShapeLayer {
-
+    
     /// 自定义shapeLayer路径改变动画
-    func path(from origin: CGPath?,
-              to target: CGPath?,
-              duration: TimeInterval = 0.5,
-              completion: ((Bool) -> Void)? = nil) {
+    func addPathAnimation(from origin: CGPath?,
+                          to target: CGPath?,
+                          duration: TimeInterval = 0.5,
+                          completion: ((Bool) -> Void)? = nil) {
         guard
             let fromPath = origin,
             let toPath = target else { return }
@@ -98,7 +109,7 @@ public extension PKLayerExtensions where Base: CAShapeLayer {
         basic.isRemovedOnCompletion = false
         base.add(basic, forKey: nil)
         
-        Timer.pk.gcdAsyncAfter(delay: duration) { completion?(true) }
+        DispatchQueue.pk.asyncAfter(delay: duration) { completion?(true) }
     }
 }
 

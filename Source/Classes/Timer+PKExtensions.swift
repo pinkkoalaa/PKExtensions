@@ -10,11 +10,6 @@ import UIKit
 
 public extension PKTimerExtensions {
     
-    /// GCD方式延迟执行闭包任务
-    static func gcdAsyncAfter(delay seconds: Double, execute work: @escaping () -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: work)
-    }
-    
     /// 测试闭包内运行耗时(单位:毫秒)
     static func runThisElapsed(_ handler: @escaping () -> Void) -> Double {
         let a = CFAbsoluteTimeGetCurrent()

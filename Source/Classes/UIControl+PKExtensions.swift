@@ -16,8 +16,8 @@ public extension PKViewExtensions where Base: UIControl {
     }
     
     /// 为UIControl添加闭包点击事件
-    func addAction(for controlEvents: UIControl.Event, handler: @escaping (_ sender: UIControl) -> Void) {
-        base.pk_addAction(for: controlEvents, handler: handler)
+    func addAction(for controlEvents: UIControl.Event, handler: @escaping (_ sender: Base) -> Void) {
+        base.pk_addAction(for: controlEvents, handler: { handler($0 as! Base) })
     }
     
     /// 是否存在对应的闭包事件
