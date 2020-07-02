@@ -25,28 +25,53 @@ class NextViewController: UIViewController {
     }
     
     func example5() {
-        let color: UIColor? = UIColor.blue
-        let image = UIImage(named: "Success-Small")
         let button = IngenuityButton(type: .custom)
-        button.setTitleColor(color, for: .normal)
-        button.setTitle("返回", for: .normal)
-        if let _ = color {
-            let img = image?.withRenderingMode(.alwaysTemplate)
-            button.setImage(img, for: .normal)
-            button.tintColor = color
-        } else {
-            button.setImage(image, for: .normal)
-        }
         button.isUserInteractionEnabled = true
         button.backgroundColor = UIColor.lightGray
         button.imagePosition = .left
-        button.imageSpecifiedSize = CGSize(width: 20, height: 20)
+        button.imageSpecifiedSize = CGSize(width: 120, height: 120)
         button.imageAndTitleSpacing = 15
         view.addSubview(button)
         
         button.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
+        }
+        
+        
+//        let orgImg = UIImage(named: "slamDunkIMG01")
+//        print("orgImg is: \(orgImg)")
+//        let image = orgImg?.pk.scaled(toHeight: 100)
+//        print("image is: \(image)")
+        
+        let color: UIColor? = nil
+                
+        let image = UIImage(named: "slamDunkIMG01")
+//        let newImage =  image?.pk.tinted(UIColor.pk.random())
+//        let newImage = image?.pk.withBackgroundColor(UIColor.pk.random())
+        
+        let newImage = image?.pk.withRoundedCorners()
+        
+        
+//        let mes = Measurement<UnitAngle>(value: 180, unit: .degrees)
+//        let newImage = image?.pk.rotated(by: mes)
+//        var newImage = image?.pk.rotated(by: .pi)
+//        newImage = newImage?.pk.filled(withColor: .red)
+        
+        
+        if let _ = color {
+            let img = newImage?.withRenderingMode(.alwaysTemplate)
+            button.setImage(img, for: .normal)
+            button.tintColor = color
+        } else {
+            button.setImage(newImage, for: .normal)
+        }
+        
+        button.setTitleColor(color, for: .normal)
+        button.setTitle("产业筛选", for: .normal)
+        
+        button.pk.addAction(for: .touchUpInside) { _ in
+            print("addActionaddAction")
         }
     }
     

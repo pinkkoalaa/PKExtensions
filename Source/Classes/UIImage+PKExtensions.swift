@@ -10,6 +10,20 @@ import UIKit
 
 public extension PKImageExtensions {
     
+    /// 根据指定的宽度获取与原图等比例大小的size
+    func sizeOfScaled(width: CGFloat) -> CGSize {
+        guard width > 0, !base.size.equalTo(.zero) else { return .zero }
+        let factor = base.size.height / base.size.width
+        return CGSize(width: width, height: width * factor)
+    }
+    
+    /// 根据指定的高度获取与原图等比例大小的size
+    func sizeOfScaled(height: CGFloat) -> CGSize {
+        guard height > 0, !base.size.equalTo(.zero) else { return .zero }
+        let factor = base.size.width / base.size.height
+        return CGSize(width: height * factor, height: height)
+    }
+    
     /// 根据颜色返回一个纯色的图像
     static func image(with color: UIColor?, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage? {
         guard let cgColor = color?.cgColor, size.width > 0, size.height > 0 else { return nil }
@@ -21,6 +35,140 @@ public extension PKImageExtensions {
         let newImage = UIGraphicsGetImageFromCurrentImageContext()! as UIImage
         UIGraphicsEndImageContext()
         return newImage
+    }
+    
+    /// 压缩图像质量(默认值为0.5)
+    func compressed(quality: CGFloat = 0.5) -> UIImage? {
+        guard let data = base.jpegData(compressionQuality: quality) else { return nil }
+        return UIImage(data: data)
+    }
+    
+    /// 裁剪图像中的指定区域并返回新图像
+    func cropped(to rect: CGRect) -> UIImage {
+        guard rect.width <= base.size.width && rect.height <= base.size.height else { return base }
+        let scaledRect = rect.applying(CGAffineTransform(scaleX: base.scale, y: base.scale))
+        guard let image = base.cgImage?.cropping(to: scaledRect) else { return base }
+        return UIImage(cgImage: image, scale: base.scale, orientation: base.imageOrientation)
+    }
+    
+    /// 根据指定的高度将图像等比例缩放
+    func scaled(toHeight: CGFloat, opaque: Bool = false) -> UIImage? {
+        let scale = toHeight / base.size.height
+        let newWidth = base.size.width * scale
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: newWidth, height: toHeight), opaque, base.scale)
+        base.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: toHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    
+    /// 根据指定的宽度将图像等比例缩放
+    func scaled(toWidth: CGFloat, opaque: Bool = false) -> UIImage? {
+        let scale = toWidth / base.size.width
+        let newHeight = base.size.height * scale
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: toWidth, height: newHeight), opaque, base.scale)
+        base.draw(in: CGRect(x: 0, y: 0, width: toWidth, height: newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    
+    /// 根据给定的角度测量模型旋转图像
+    ///
+    ///     // 将图像旋转180度
+    ///     image.pk.rotated(by: Measurement<UnitAngle>(value: 180, unit: .degrees))
+    ///
+    /// - Parameter angle: 旋转图像的角度
+    /// - Returns: 返回按给定角度旋转后的图像
+    func rotated(by angle: Measurement<UnitAngle>) -> UIImage? {
+        let radians = CGFloat(angle.converted(to: .radians).value)
+        return rotated(by: radians)
+    }
+    
+    /// 根据给定的角度(以弧度为单位)旋转图像
+    ///
+    ///     // 将图像旋转180度
+    ///     image.pk.rotated(by: .pi)
+    ///
+    /// - Parameter radians: 以弧度表示的旋转角度
+    /// - Returns: 返回按给定角度旋转后的图像
+    func rotated(by radians: CGFloat) -> UIImage? {
+        let destRect = CGRect(origin: .zero, size: base.size)
+            .applying(CGAffineTransform(rotationAngle: radians))
+        let roundedDestRect = CGRect(x: destRect.origin.x.rounded(),
+                                     y: destRect.origin.y.rounded(),
+                                     width: destRect.width.rounded(),
+                                     height: destRect.height.rounded())
+
+        UIGraphicsBeginImageContextWithOptions(roundedDestRect.size, false, base.scale)
+        guard let contextRef = UIGraphicsGetCurrentContext() else { return nil }
+
+        contextRef.translateBy(x: roundedDestRect.width / 2, y: roundedDestRect.height / 2)
+        contextRef.rotate(by: radians)
+
+        let origin = CGPoint(x: -base.size.width / 2, y: -base.size.height / 2)
+        base.draw(in: CGRect(origin: origin, size: base.size))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    
+    /// 根据指定的颜色填充图像并返回新图像
+    func filled(withColor color: UIColor) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(base.size, false, base.scale)
+        color.setFill()
+        guard let context = UIGraphicsGetCurrentContext() else { return base }
+
+        context.translateBy(x: 0, y: base.size.height)
+        context.scaleBy(x: 1.0, y: -1.0)
+        context.setBlendMode(.normal)
+
+        let rect = CGRect(x: 0, y: 0, width: base.size.width, height: base.size.height)
+        guard let mask = base.cgImage else { return base }
+        context.clip(to: rect, mask: mask)
+        context.fill(rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    
+    /// 根据指定的颜色对图像线条轮廓上色
+    ///
+    /// - Parameters:
+    ///   - color: 给图像着色用的颜色
+    ///   - blendMode: 混合模式
+    /// - Returns: 返回着色后的图像
+    func tinted(_ color: UIColor, blendMode: CGBlendMode = .normal, alpha: CGFloat = 1.0) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(base.size, false, base.scale)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+        let drawRect = CGRect(origin: .zero, size: base.size)
+        let context = UIGraphicsGetCurrentContext()
+        color.setFill()
+        context?.fill(drawRect)
+        base.draw(in: drawRect, blendMode: blendMode, alpha: alpha)
+        return UIGraphicsGetImageFromCurrentImageContext()!
+    }
+    
+    /// 根据给定的半径返回圆角图像 (默认nil为图像自身半径)
+    func withRoundedCorners(radius: CGFloat? = nil) -> UIImage? {
+        let maxRadius = min(base.size.width, base.size.height) / 2
+        let cornerRadius: CGFloat
+        if let radius = radius, radius > 0 && radius <= maxRadius {
+            cornerRadius = radius
+        } else {
+            cornerRadius = maxRadius
+        }
+
+        UIGraphicsBeginImageContextWithOptions(base.size, false, base.scale)
+        let rect = CGRect(origin: .zero, size: base.size)
+        UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
+        base.draw(in: rect)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
     
     /// 根据图片名称生成不同尺寸的占位图
@@ -78,11 +226,12 @@ public extension PKImageExtensions {
         width = floor(width)
         height = floor(height)
         
-        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
-        backgroundColor.set()
-        UIRectFill(CGRect(origin: .zero, size: size))
         let center = CGPoint(x: size.width * 0.5, y: size.height * 0.5)
         let origin = CGPoint(x: center.x - width * 0.5, y: center.y - height * 0.5)
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
+        backgroundColor.setFill()
+        UIRectFill(CGRect(origin: .zero, size: size))
         image.draw(in: CGRect(origin: origin, size: CGSize(width: width, height: height)))
         let placeholderImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -208,20 +357,6 @@ public extension PKImageExtensions {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
-    }
-    
-    /// 根据指定的宽度获取与原图等比例大小的size
-    func sizeOfScaled(width: CGFloat) -> CGSize {
-        guard width > 0, !base.size.equalTo(.zero) else { return .zero }
-        let factor = base.size.height / base.size.width
-        return CGSize(width: width, height: width * factor)
-    }
-    
-    /// 根据指定的高度获取与原图等比例大小的size
-    func sizeOfScaled(height: CGFloat) -> CGSize {
-        guard height > 0, !base.size.equalTo(.zero) else { return .zero }
-        let factor = base.size.width / base.size.height
-        return CGSize(width: height * factor, height: height)
     }
     
     /// 合成两张图片并添加文字
