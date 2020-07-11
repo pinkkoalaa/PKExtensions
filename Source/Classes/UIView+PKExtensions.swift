@@ -79,7 +79,7 @@ public extension PKViewExtensions where Base: UIView {
     ///   - width: 边框线宽度
     ///   - color: 边框线颜色
     ///   - edges: 添加边框线的位置，默认四周
-    func addBorderLayer(width: CGFloat, color: UIColor = .gray, byRectEdge edges: UIRectEdge = .left) {
+    func addBorderLayer(width: CGFloat, color: UIColor? = .gray, byRectEdge edges: UIRectEdge = .left) {
         guard base.bounds.size.pk.isValid else { return }
         
         let path = UIBezierPath()
@@ -107,13 +107,13 @@ public extension PKViewExtensions where Base: UIView {
         if let lineLayer = base.pk_borderLayer {
             lineLayer.path = path.cgPath
             lineLayer.lineWidth = width
-            lineLayer.strokeColor = color.cgColor
+            lineLayer.strokeColor = color?.cgColor
         } else {
             let layer = CAShapeLayer()
             layer.zPosition = 2200
             layer.path = path.cgPath
             layer.fillColor = UIColor.clear.cgColor
-            layer.strokeColor = color.cgColor
+            layer.strokeColor = color?.cgColor
             layer.lineWidth = width
             base.layer.addSublayer(layer)
             base.pk_borderLayer = layer
@@ -141,11 +141,11 @@ public extension PKViewExtensions where Base: UIView {
     ///            - offset中的height为正数时，阴影向下偏移，为负数时，向上偏移
     ///
     ///   - color: 阴影颜色，默认灰色
-    func addShadow(radius: CGFloat, opacity: Float, offset: CGSize = .zero, color: UIColor = .gray) {
+    func addShadow(radius: CGFloat, opacity: Float, offset: CGSize = .zero, color: UIColor? = .gray) {
         base.layer.shadowRadius = radius
         base.layer.shadowOpacity = opacity
         base.layer.shadowOffset = offset
-        base.layer.shadowColor = color.cgColor
+        base.layer.shadowColor = color?.cgColor
     }
     
     /// 通过设置阴影路径为视图添加四周阴影效果，显示效果更加均匀
@@ -158,10 +158,10 @@ public extension PKViewExtensions where Base: UIView {
     ///   - radius: 阴影半径，默认为5
     ///   - opacity: 阴影透明度，取值范围0至1
     ///   - color: 阴影颜色，默认灰色
-    func setShadowPath(radius: CGFloat = 5, opacity: Float, color: UIColor = .gray) {
+    func setShadowPath(radius: CGFloat = 5, opacity: Float, color: UIColor? = .gray) {
         base.layer.shadowRadius = radius
         base.layer.shadowOpacity = opacity
-        base.layer.shadowColor = color.cgColor
+        base.layer.shadowColor = color?.cgColor
         base.layer.shadowOffset = .zero
         
         guard base.bounds.size.pk.isValid else { return }
@@ -198,12 +198,12 @@ public extension PKViewExtensions where Base: UIView {
     /// - Parameters:
     ///   - colors: 渐变颜色数组
     ///   - direction: 渐变方向
-    func addGradientLayer(colors: [UIColor], direction: GradientDirection = .leftToRight) {
+    func addGradientLayer(colors: [UIColor?], direction: GradientDirection = .leftToRight) {
         return addGradientLayer(colors: colors, direction: direction, size: base.bounds.size)
     }
     
     /// 为视图添加线性渐变图层 (自定义渐变图层大小)
-    func addGradientLayer(colors: [UIColor], direction: GradientDirection = .leftToRight, size: CGSize) {
+    func addGradientLayer(colors: [UIColor?], direction: GradientDirection = .leftToRight, size: CGSize) {
         guard size.pk.isValid else { return }
         
         var gradientLayer: CAGradientLayer!
@@ -213,7 +213,7 @@ public extension PKViewExtensions where Base: UIView {
         } else {
             gradientLayer = CAGradientLayer()
             gradientLayer.frame = CGRect(origin: .zero, size: size)
-            gradientLayer.colors = colors.map{( $0.cgColor )}
+            gradientLayer.colors = colors.map({ $0?.cgColor ?? UIColor.black.cgColor })
             base.layer.insertSublayer(gradientLayer, at: 0)
             base.pk_gradientLayer = gradientLayer
         }

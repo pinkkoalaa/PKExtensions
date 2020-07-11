@@ -36,6 +36,15 @@ public extension PKDispatchQueueExtensions {
     static func asyncAfter(delay seconds: Double, execute work: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: work)
     }
+    
+    /// 在主线程中执行闭包任务
+    static func executeInMainThread(_ work: @escaping () -> Void) {
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.sync(execute: work)
+        }
+    }
 }
 
 public struct PKDispatchQueueExtensions {

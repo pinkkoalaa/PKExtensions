@@ -18,7 +18,7 @@ import UIKit
 *  4. 支持图片和 titleLabel 居中对齐或边缘对齐
 *  5. 支持 Auto Layout 以上设置可根据内容自适应
 */
-public class IngenuityButton: UIButton {
+open class IngenuityButton: UIButton {
     
     /// 图片与文字布局位置
     public enum ImagePosition: Int {
@@ -180,7 +180,7 @@ private extension CGRect {
 *  3. 支持设置占位文本内边距 (placeholderInsets)
 *  4. 输入框变化回调 - textDidChange 增加删除监听
 */
-public class IngenuityTextView: UITextView {
+open class IngenuityTextView: UITextView {
     
     /// 设置占位文本
     public var placeholder: String? {
@@ -208,7 +208,7 @@ public class IngenuityTextView: UITextView {
         bindNotifications()
     }
     
-    required init?(coder: NSCoder) { super.init(coder: coder) }
+    public required init?(coder: NSCoder) { super.init(coder: coder) }
     
     public override func draw(_ rect: CGRect) {
         guard !hasText else { return }
@@ -282,7 +282,7 @@ public class IngenuityTextView: UITextView {
 // MARK: - IngenuityLabel
 
 /// 提供调整UILabel文本内边距功能
-public class IngenuityLabel: UILabel {
+open class IngenuityLabel: UILabel {
     
     /// 设置文本内边距
     public var textInsets: UIEdgeInsets = .zero
