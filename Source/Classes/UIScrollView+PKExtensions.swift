@@ -25,3 +25,32 @@ public extension PKViewExtensions where Base: UIScrollView {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 }
+
+public extension PKViewExtensions where Base: UIScrollView {
+    
+    /// 视图的四周边界
+    var boundaries: UIEdgeInsets {
+        let top = 0 - base.contentInset.top
+        let left = 0 - base.contentInset.left
+        let bottom = base.contentSize.height - base.bounds.size.height + base.contentInset.bottom
+        let right = base.contentSize.width - base.bounds.size.width + base.contentInset.right
+        return UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+    }
+    
+    /// 边界类型(上左下右)
+    enum BoundariesType {
+        case top, left, bottom, right
+    }
+    
+    /// 使视图滚动到指定边界
+    func scroll(to type: BoundariesType, animated: Bool = true) {
+        var offset = base.contentOffset
+        switch type {
+        case .top: offset.y = boundaries.top
+        case .left: offset.x = boundaries.left
+        case .bottom: offset.y = boundaries.bottom
+        case .right: offset.x = boundaries.right
+        }
+        base.setContentOffset(offset, animated: animated)
+    }
+}
