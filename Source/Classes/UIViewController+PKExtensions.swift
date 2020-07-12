@@ -59,7 +59,7 @@ public extension PKViewControllerExtensions where Base: UIViewController {
 }
 
 public struct PKViewControllerExtensions<Base> {
-    fileprivate var base: Base
+    var base: Base
     fileprivate init(_ base: Base) { self.base = base }
 }
 

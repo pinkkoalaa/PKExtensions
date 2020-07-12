@@ -44,9 +44,7 @@ class NextViewController: UIViewController {
         button.setTitle("产业筛选", for: .normal)
         
         button.pk.addAction(for: .touchUpInside) { (sender) in
-            UIView.animate(withDuration: 0.5, animations: {
-                sender.imageView?.transform = CGAffineTransform(rotationAngle: .pi)
-            }, completion: nil)
+            UIAlertController.pk.show(message: "clicked！")
         }
     }
     
