@@ -149,6 +149,32 @@ public extension PKStringExtensions {
         let regex = "^(?:[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[\\p{L}0-9](?:[a-z0-9-]*[\\p{L}0-9])?\\.)+[\\p{L}0-9](?:[\\p{L}0-9-]*[\\p{L}0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[\\p{L}0-9-]*[\\p{L}0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
         return base.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
     }
+    
+    /// 检查字符串是否是手机号 (仅中国手机号所有号段)
+    var isValidMobileNumber: Bool {
+        let string = base.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard string.count == 11 else { return false }
+        let regex = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$"
+        return string.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+    }
+    
+    /// 检查字符串是否是身份证号
+    var isValidIDCardNumber: Bool {
+        let regex = "^(\\d{14}|\\d{17})(\\d|[xX])$"
+        return base.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+    }
+    
+    /// 验证字符串是否为纯数字
+    var validateAllDigits: Bool {
+        let regex = "(^[0-9]*$)"
+        return base.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+    }
+    
+    /// 验证字符串是否为纯汉字
+    var validateChineseCharacters: Bool {
+        let regex = "(^[\\u4e00-\\u9fa5]+$)"
+        return base.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+    }
 }
 
 public struct PKStringExtensions {

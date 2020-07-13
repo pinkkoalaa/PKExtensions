@@ -171,6 +171,89 @@ private extension CGRect {
 }
 
 
+// MARK: - IngenuityTextField
+
+/**
+*  提供以下功能：
+*  1. 支持调整左视图边缘留白 (leftViewPadding)
+*  2. 支持调整右视图边缘留白 (rightViewPadding)
+*  3. 支持调整清除按钮边缘留白 (clearButtonPadding)
+*  4. 支持输入框文本边缘留白 (textEdgeInsets)
+*  5. 增加键盘删除按钮的响应事件 - IngenuityTextField.deleteBackward
+*/
+open class IngenuityTextField: UITextField {
+    
+    
+    /// 左视图边缘留白
+    public var leftViewPadding: CGFloat = 0
+    
+    /// 右视图边缘留白
+    public var rightViewPadding: CGFloat = 0
+    
+    /// 清除按钮边缘留白
+    public var clearButtonPadding: CGFloat = 0
+    
+    /// 文本边缘留白
+    public var textEdgeInsets: UIEdgeInsets = .zero
+    
+    public override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+        var leftRect = super.leftViewRect(forBounds: bounds)
+        leftRect.origin.x += leftViewPadding
+        return leftRect
+    }
+    
+    public override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        var rightRect = super.rightViewRect(forBounds: bounds)
+        rightRect.origin.x -= rightViewPadding
+        return rightRect
+    }
+    
+    public override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
+        var clearRect = super.clearButtonRect(forBounds: bounds)
+        clearRect.origin.x = bounds.size.width - clearRect.size.width - clearButtonPadding
+        return clearRect
+    }
+    
+    public override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return _inputRect(forBounds: bounds, modes: [.always])
+    }
+    
+    public override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return _inputRect(forBounds: bounds, modes: [.always, .whileEditing])
+    }
+    
+    private func _inputRect(forBounds bounds: CGRect, modes: [ViewMode]) -> CGRect {
+        var insets = textEdgeInsets
+        
+        if let _ = leftView, modes.contains(leftViewMode) {
+            insets.left += leftViewRect(forBounds: bounds).maxX
+        }
+        
+        if let _ = rightView, modes.contains(rightViewMode) {
+            insets.right += (bounds.width - rightViewRect(forBounds: bounds).minX)
+        }
+        
+        if modes.contains(clearButtonMode) {
+            insets.right += (bounds.width - clearButtonRect(forBounds: bounds).minX)
+        }
+        
+        return bounds.inset(by: insets)
+    }
+
+    public override func deleteBackward() {
+        super.deleteBackward()
+        sendActions(for: IngenuityTextField.deleteBackward)
+    }
+    
+    /// 键盘删除按钮的响应事件
+    ///
+    ///     Usage: textField.addTarget(self, action: #selector(textFieldDeleteBackward(_:)), for: IngenuityTextField.deleteBackward)
+    public static var deleteBackward: UIControl.Event {
+        return UIControl.Event(rawValue: 2020)
+    }
+}
+
+
 // MARK: - IngenuityTextView
 
 /**
@@ -264,7 +347,7 @@ open class IngenuityTextView: UITextView {
         NotificationCenter.default.removeObserver(self, name: UITextView.textDidChangeNotification, object: nil)
     }
     
-    @objc func textDidChange(_ notif: Notification) {
+    @objc private func textDidChange(_ notif: Notification) {
         setNeedsDisplay()
     }
     

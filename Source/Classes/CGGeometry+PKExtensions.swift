@@ -216,9 +216,24 @@ public extension PKUIEdgeInsetsExtensions {
         return UIEdgeInsets(top: value, left: value, bottom: value, right: value)
     }
     
-    /// 使用默认为0的值返回UIEdgeInsets
-    static func make(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> UIEdgeInsets {
-        return UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+    /// 设置top值返回UIEdgeInsets
+    static func make(top: CGFloat) -> UIEdgeInsets {
+        return UIEdgeInsets(top: top, left: 0, bottom: 0, right: 0)
+    }
+    
+    /// 设置left值返回UIEdgeInsets
+    static func make(left: CGFloat) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: left, bottom: 0, right: 0)
+    }
+    
+    /// 设置bottom值返回UIEdgeInsets
+    static func make(bottom: CGFloat) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
+    }
+    
+    /// 设置right值返回UIEdgeInsets
+    static func make(right: CGFloat) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: right)
     }
 }
 

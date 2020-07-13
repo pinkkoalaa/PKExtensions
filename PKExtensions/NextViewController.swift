@@ -8,20 +8,68 @@
 
 import UIKit
 
-class NextViewController: UIViewController {
+class NextViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
 
-        let sd = CGFloat(23.3)
+        let textField = IngenuityTextField.init()
+        textField.delegate = self
+        textField.backgroundColor = .lightGray
+        textField.pk.setPlaceHolder("请输入文字")
+        textField.tintColor = .red
+        view.addSubview(textField)
         
-        let res = sd.pk.flatted()
-        print("sd is: \(sd), res is: \(res)")
         
-//        example2()
-//        example3()
-        example5()
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "sheet_Collection")
+        imgView.size = CGSize(width: 20, height: 20)
+        
+        let backView = UIView()
+        backView.size = CGSize(width: 20, height: 20)
+        backView.addSubview(imgView)
+//        
+        textField.leftView = backView
+        textField.leftViewMode = .whileEditing
+        textField.leftViewPadding = 20
+        textField.textEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        
+        
+        
+        let riImgView = UIImageView()
+        riImgView.image = UIImage(named: "sheet_Collection")
+        riImgView.size = CGSize(width: 20, height: 20)
+
+        let rightBackView = UIView()
+        rightBackView.size = CGSize(width: 20, height: 20)
+        rightBackView.addSubview(riImgView)
+        
+        
+        textField.clearButtonPadding = 10
+        textField.clearButtonMode = .whileEditing;
+        
+        textField.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.width.equalTo(300)
+            make.height.equalTo(70)
+            make.top.equalTo(200)
+        }
+        
+        textField.addTarget(self, action: #selector(textFieldDeleteBackward(_:)), for: IngenuityTextField.deleteBackward)
+        
+        
+//        textField.pk.addAction(for: IngenuityTextField.deleteBackward) { _ in
+//            print("editingChangededitingChanged")
+//        }
+        
+        view.pk.addTapGesture { _ in
+            textField.resignFirstResponder()
+        }
+    }
+    
+    @objc func textFieldDeleteBackward(_ textField: UITextField) {
+        print("textFieldDeleteBackward-textFieldDeleteBackward")
     }
     
     func example5() {
