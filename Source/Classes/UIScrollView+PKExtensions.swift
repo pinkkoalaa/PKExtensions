@@ -28,6 +28,15 @@ public extension PKViewExtensions where Base: UIScrollView {
 
 public extension PKViewExtensions where Base: UIScrollView {
     
+    /// 吃掉滚动视图自动调整的Insets
+    func eatAdjustedInsets() {
+        if #available(iOS 11.0, *) {
+            base.contentInsetAdjustmentBehavior = .never
+        } else {
+            base.pk.dependViewController()?.automaticallyAdjustsScrollViewInsets = false
+        }
+    }
+    
     /// 视图的四周边界
     var boundaries: UIEdgeInsets {
         let top = 0 - base.contentInset.top
