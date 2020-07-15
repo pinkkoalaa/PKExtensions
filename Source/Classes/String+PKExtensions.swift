@@ -32,27 +32,27 @@ public extension PKStringExtensions {
     }
     
     /// 计算文本所对应的视图大小
-    func size(constraint size: CGSize, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGSize {
+    func getSize(constraint size: CGSize, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGSize {
         var attrib: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)]
         if lineBreakMode != nil {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineBreakMode = lineBreakMode!
             attrib.updateValue(paragraphStyle, forKey: NSAttributedString.Key.paragraphStyle)
         }
-        let rect = (base as NSString).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attrib, context: nil)
+        let rect = NSString(string: base).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attrib, context: nil)
         return CGSize(width: ceil(rect.width), height: ceil(rect.height))
     }
     
     /// 计算文本宽度 (约束高度)
-    func width(constraint height: CGFloat, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
-        let size = CGSize(width: CGFloat(Double.greatestFiniteMagnitude), height: height)
-        return self.size(constraint: size, font: font, lineBreakMode: lineBreakMode).width
+    func getWidth(constraint height: CGFloat, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
+        let size = CGSize(width: .greatestFiniteMagnitude, height: height)
+        return self.getSize(constraint: size, font: font, lineBreakMode: lineBreakMode).width
     }
     
     /// 计算文本高度 (约束宽度)
-    func height(constraint width: CGFloat, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
-        let size = CGSize(width: width, height: CGFloat(Double.greatestFiniteMagnitude))
-        return self.size(constraint: size, font: font, lineBreakMode: lineBreakMode).height
+    func getHeight(constraint width: CGFloat, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
+        let size = CGSize(width: width, height: .greatestFiniteMagnitude)
+        return self.getSize(constraint: size, font: font, lineBreakMode: lineBreakMode).height
     }
 }
 
