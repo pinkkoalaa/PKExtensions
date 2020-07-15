@@ -10,17 +10,78 @@ import UIKit
 
 class NextViewController: UIViewController, UITextFieldDelegate {
 
+//    let _Titles = "The 1896 Cedar Keys hurricane was a powerful tropical cyclone that devastated much of the East Coast of the United States, starting with Florida's Cedar Keys, near the end of September. The storm's rapid movement allowed it to maintain much of its intensity after landfall, becoming one of the costliest United States hurricanes at the time. "
+   
+    let _Titles = "新华社华盛顿7月14日电（记者徐剑梅　邓仙来）美国波士顿联邦地区法院法官伯勒斯14日在开庭审理哈佛大学和麻省理工学院提起的相关诉讼时宣布，美国政府同意撤销此前发布的留学生签证新规。"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+    
+        example7()
+        example8()
+    }
+    
+    func makeLabel() -> UILabel {
+        let label = UILabel()
+        label.numberOfLines = 0
+//        label.font = UIFont.pk.fontName(.dINCondensed, style: .bold, size: 34)
+//        label.lineBreakMode = .byTruncatingTail
+        label.textColor = .white
+        label.backgroundColor = .orange
+        
+        let attrig = NSMutableAttributedString(string: _Titles)
+        attrig.pk.font(UIFont.pk.fontName(.pingFangSC, style: .medium, size: 24))
+        attrig.pk.foregroundColor(.white)
+        attrig.pk.setUnderlineStyle(.single, range: NSRange(location: 5, length: 20))
+        attrig.pk.setUnderlineColor(.red, range: NSRange(location: 5, length: 20))
+        attrig.pk.kern(5)
+        attrig.pk.setFont(UIFont.pk.fontName(.dINCondensed, style: .bold, size: 34), range: NSRange(location: 25, length: 20))
+        
+        let style = NSMutableParagraphStyle()
+        style.pk.lineSpacing(10)
+        style.pk.firstLineHeadIndent(20)
+        attrig.pk.paragraphStyle(style)
+        
+        label.attributedText = attrig
+        
+        return label
+    }
+    
+    func example7() {
+        let label = makeLabel()
+        label.backgroundColor = UIColor.pk.random(.gentle)
+        view.addSubview(label)
 
-        let textField = IngenuityTextField.init()
+        let maxSize = CGSize(width: view.bounds.width - 20, height: .greatestFiniteMagnitude)
+        let _size = label.attributedText!.pk.boundingSize(with: maxSize)
+        label.size = _size
+        label.left = 10
+        label.top = 100
+    }
+    
+    func example8() {
+        let label = makeLabel()
+        label.backgroundColor = UIColor.pk.random(.gentle)
+        view.addSubview(label)
+        
+        let maxSize = CGSize(width: view.bounds.width - 20, height: .greatestFiniteMagnitude)
+        let _size = label.sizeThatFits(maxSize)
+//        label.sizeToFit()
+        label.size = _size
+        label.left = 10
+        label.bottom = view.height - 20
+    }
+    
+    
+
+    func example6() {
+        let textField = IngenuityTextField()
         textField.delegate = self
         textField.backgroundColor = .lightGray
         textField.pk.setPlaceHolder("请输入文字")
         textField.tintColor = .red
         view.addSubview(textField)
-        
         
         let imgView = UIImageView()
         imgView.image = UIImage(named: "sheet_Collection")
@@ -29,13 +90,11 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         let backView = UIView()
         backView.size = CGSize(width: 20, height: 20)
         backView.addSubview(imgView)
-//        
+
         textField.leftView = backView
         textField.leftViewMode = .whileEditing
         textField.leftViewPadding = 20
         textField.textEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        
-        
         
         let riImgView = UIImageView()
         riImgView.image = UIImage(named: "sheet_Collection")
@@ -44,7 +103,6 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         let rightBackView = UIView()
         rightBackView.size = CGSize(width: 20, height: 20)
         rightBackView.addSubview(riImgView)
-        
         
         textField.clearButtonPadding = 10
         textField.clearButtonMode = .whileEditing;
@@ -56,16 +114,11 @@ class NextViewController: UIViewController, UITextFieldDelegate {
             make.top.equalTo(200)
         }
         
-        textField.addTarget(self, action: #selector(textFieldDeleteBackward(_:)), for: IngenuityTextField.deleteBackward)
-        
-        
-//        textField.pk.addAction(for: IngenuityTextField.deleteBackward) { _ in
-//            print("editingChangededitingChanged")
-//        }
-        
         view.pk.addTapGesture { _ in
             textField.resignFirstResponder()
         }
+        
+        textField.addTarget(self, action: #selector(textFieldDeleteBackward(_:)), for: IngenuityTextField.deleteBackward)
     }
     
     @objc func textFieldDeleteBackward(_ textField: UITextField) {

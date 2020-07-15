@@ -31,28 +31,37 @@ public extension PKStringExtensions {
         return NSRange(swiftRange!, in: base)
     }
     
-    /// 计算文本所对应的视图大小
-    func getSize(constraint size: CGSize, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGSize {
-        var attrib: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)]
+    /// 获取字符串尺寸
+    func boundingSize(with size: CGSize,
+                      font: UIFont!,
+                      lineBreakMode: NSLineBreakMode? = nil) -> CGSize {
+        var attributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize) ]
         if lineBreakMode != nil {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineBreakMode = lineBreakMode!
-            attrib.updateValue(paragraphStyle, forKey: NSAttributedString.Key.paragraphStyle)
+            attributes.updateValue(paragraphStyle, forKey: NSAttributedString.Key.paragraphStyle)
         }
-        let rect = NSString(string: base).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attrib, context: nil)
-        return CGSize(width: ceil(rect.width), height: ceil(rect.height))
+        let _size = NSString(string: base).boundingRect(with: size,
+                                                        options: .usesLineFragmentOrigin,
+                                                        attributes: attributes,
+                                                        context: nil)
+        return CGSize(width: ceil(_size.width), height: ceil(_size.height))
     }
     
-    /// 计算文本宽度 (约束高度)
-    func getWidth(constraint height: CGFloat, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
+    /// 获取字符串宽度 (约束高度)
+    func boundingWidth(with height: CGFloat,
+                       font: UIFont!,
+                       lineBreakMode: NSLineBreakMode? = nil) -> CGFloat {
         let size = CGSize(width: .greatestFiniteMagnitude, height: height)
-        return self.getSize(constraint: size, font: font, lineBreakMode: lineBreakMode).width
+        return boundingSize(with: size, font: font, lineBreakMode: lineBreakMode).width
     }
     
-    /// 计算文本高度 (约束宽度)
-    func getHeight(constraint width: CGFloat, font: UIFont? = nil, lineBreakMode: NSLineBreakMode? = .byCharWrapping) -> CGFloat {
+    /// 获取字符串高度 (约束宽度)
+    func boundingHeight(with width: CGFloat,
+                        font: UIFont!,
+                        lineBreakMode: NSLineBreakMode? = nil) -> CGFloat {
         let size = CGSize(width: width, height: .greatestFiniteMagnitude)
-        return self.getSize(constraint: size, font: font, lineBreakMode: lineBreakMode).height
+        return boundingSize(with: size, font: font, lineBreakMode: lineBreakMode).height
     }
 }
 
@@ -78,7 +87,7 @@ public extension PKStringExtensions {
 
 public extension PKStringExtensions {
     
-    /// 将数字金额字符串转成人民币朗读形式
+    /// 将数字金额字符串转成大写(人民币朗读形式)
     func rmbCapitalized() -> String {
         guard let number = Double(base) else { return "" }
         return number.pk.stringRmbCapitalized()
