@@ -10,18 +10,10 @@ import UIKit
 
 public extension PKAttributedStringExtensions where Base: NSAttributedString {
     
-    /// 获取属性字符串尺寸 - (若存在不同子串属性则计算不准确, 则应该使用boundingSize()计算)
-    func getSize(with size: CGSize) -> CGSize {
-        let _size = NSString(string: base.string).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: getAttributes(), context: nil)
-        return CGSize(width: ceil(_size.width), height: ceil(_size.height))
-    }
-    
-    /// 获取属性字符串尺寸 - (通过创建一个label来计算尺寸，计算准确，但在循环中使用存在内存消耗)
+    /// 获取属性字符串尺寸
     func boundingSize(with size: CGSize) -> CGSize {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.attributedText = base
-        return label.sizeThatFits(size)
+        let _size = base.boundingRect(with: size, options: .usesLineFragmentOrigin, context: nil)
+        return CGSize(width: ceil(_size.width), height: ceil(_size.height))
     }
     
     /// 获取属性字符串宽度 (约束高度)
