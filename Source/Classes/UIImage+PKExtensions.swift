@@ -10,6 +10,16 @@ import UIKit
 
 public extension PKImageExtensions {
     
+    /// 图像宽度与高度的比值
+    var ratioOfWidthToHeight: CGFloat {
+        return base.size.width / base.size.height
+    }
+    
+    /// 图像高度与宽度的比值
+    var ratioOfHeightToWidth: CGFloat {
+        return base.size.height / base.size.width
+    }
+    
     /// 根据指定的宽度获取与原图等比例大小的size
     func sizeOfScaled(width: CGFloat) -> CGSize {
         guard width > 0, !base.size.equalTo(.zero) else { return .zero }
@@ -281,7 +291,7 @@ public extension PKImageExtensions {
     }
     
     /// 根据颜色和方向返回渐变色图像
-    static func gradientImage(with colors: [UIColor], size: CGSize, direction: GradientDirection = .leftToRight) -> UIImage? {
+    static func gradientImage(with colors: [UIColor?], size: CGSize, direction: GradientDirection = .leftToRight) -> UIImage? {
         guard !colors.isEmpty, size.pk.isValid else { return nil }
         
         var startPoint = CGPoint.zero
@@ -313,7 +323,7 @@ public extension PKImageExtensions {
             endPoint = CGPoint(x: 0, y: 0)
         }
         
-        let cgColors: [CGColor] = colors.map({ $0.cgColor })
+        let cgColors: [CGColor] = colors.map({ $0?.cgColor ?? UIColor.black.cgColor })
         let path = CGPath(rect: CGRect(origin: .zero, size: size), transform: nil)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let context = UIGraphicsGetCurrentContext()
