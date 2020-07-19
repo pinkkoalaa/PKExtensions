@@ -18,8 +18,44 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
     
-        example7()
-        example8()
+        example10()
+    }
+    
+    func example10() {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .white
+        label.backgroundColor = .orange
+        label.text = "美国政府同意撤销此前发布的留学生签证新规。国政府同意撤销此前发布的留学生签证国政府同意撤销此前发布的留学生签证"
+        view.addSubview(label)
+        
+        label.pk.makeConstraints { (make) in
+            make.left.equalToSuperview().offset(100)
+            make.right.equalTo(-5)
+            make.top.equalToSuperview().offset(200)
+        }
+        
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIColor.pk.random()
+        view.addSubview(imgView)
+        
+        imgView.pk.makeConstraints { (make) in
+            make.left.equalTo(label)
+            make.right.equalToSuperview().offset(-20)
+            make.top.equalTo(label.pk.bottom).offset(50)
+            make.height.equalTo(200)
+        }
+        
+        DispatchQueue.pk.asyncAfter(delay: 2) {
+            
+            imgView.pk.updateConstraints { (make) in
+                make.top.equalTo(label.pk.bottom).offset(150)
+            }
+            
+            UIView.animate(withDuration: 0.25) {
+                imgView.superview?.layoutIfNeeded()
+            }
+        }
     }
     
     func makeLabel() -> UILabel {
@@ -137,6 +173,7 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         button.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
+            make.width.equalTo(10)
         }
     
         let image = UIImage(named: "fill_arrow_icon")

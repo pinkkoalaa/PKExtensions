@@ -42,6 +42,7 @@
 		3E3CD5B4249CBE8500F089A3 /* UIWindow+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3CD5B3249CBE8500F089A3 /* UIWindow+PKExtensions.swift */; };
 		3E3CD5B6249CC71000F089A3 /* Dictionary+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3CD5B5249CC71000F089A3 /* Dictionary+PKExtensions.swift */; };
 		3E3E69E224BB10F3001C7EC0 /* UIAlertController+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3E69E124BB10F3001C7EC0 /* UIAlertController+PKExtensions.swift */; };
+		3E8BE0A024C2910400F2A093 /* UIView+PKConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8BE09F24C2910400F2A093 /* UIView+PKConstraints.swift */; };
 		3EFF8E01243456E600185885 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E00243456E600185885 /* AppDelegate.swift */; };
 		3EFF8E03243456E600185885 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E02243456E600185885 /* SceneDelegate.swift */; };
 		3EFF8E05243456E600185885 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E04243456E600185885 /* ViewController.swift */; };
@@ -108,6 +109,7 @@
 		3E3CD5B3249CBE8500F089A3 /* UIWindow+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+PKExtensions.swift"; sourceTree = "<group>"; };
 		3E3CD5B5249CC71000F089A3 /* Dictionary+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+PKExtensions.swift"; sourceTree = "<group>"; };
 		3E3E69E124BB10F3001C7EC0 /* UIAlertController+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+PKExtensions.swift"; sourceTree = "<group>"; };
+		3E8BE09F24C2910400F2A093 /* UIView+PKConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+PKConstraints.swift"; sourceTree = "<group>"; };
 		3EFF8DFD243456E600185885 /* PKExtensions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PKExtensions.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EFF8E00243456E600185885 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3EFF8E02243456E600185885 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				3E3C52C1249F4DC80056C22E /* UITabBar+PKExtensions.swift */,
 				3E3C52C5249F9C800056C22E /* UITableView+PKExtensions.swift */,
 				618A0E4624BC2CF90043D0C2 /* UITextField+PKExtensions.swift */,
+				3E8BE09F24C2910400F2A093 /* UIView+PKConstraints.swift */,
 				3E35ABB9249A0FE700AFCAA3 /* UIView+PKExtensions.swift */,
 				3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */,
 				3E35ABBB249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift */,
@@ -453,6 +456,7 @@
 				3E2A476E24A1A4120021F184 /* NextViewController.swift in Sources */,
 				3E3C52C6249F9C800056C22E /* UITableView+PKExtensions.swift in Sources */,
 				3E2C028224AC0E8900237859 /* MojitoButton.swift in Sources */,
+				3E8BE0A024C2910400F2A093 /* UIView+PKConstraints.swift in Sources */,
 				3E35ABD1249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift in Sources */,
 				3E3C52C0249F3B580056C22E /* UINavigationBar+PKExtensions.swift in Sources */,
 				3E35ABD0249A0FE700AFCAA3 /* UIFont+PKExtensions.swift in Sources */,
