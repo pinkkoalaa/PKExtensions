@@ -196,7 +196,7 @@ public extension PKViewExtensions where Base: UIView {
             }
         }
         
-        imgView.snp.makeConstraints { (make) in
+        imgView.pk.makeConstraints { (make) in
             make.size.equalTo(style.imageSize)
             make.center.equalToSuperview()
         }
