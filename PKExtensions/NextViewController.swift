@@ -9,16 +9,43 @@
 import UIKit
 
 class NextViewController: UIViewController, UITextFieldDelegate {
-
-//    let _Titles = "The 1896 Cedar Keys hurricane was a powerful tropical cyclone that devastated much of the East Coast of the United States, starting with Florida's Cedar Keys, near the end of September. The storm's rapid movement allowed it to maintain much of its intensity after landfall, becoming one of the costliest United States hurricanes at the time. "
-   
-    let _Titles = "新华社华盛顿7月14日电（记者徐剑梅　邓仙来）美国波士顿联邦地区法院法官伯勒斯14日在开庭审理哈佛大学和麻省理工学院提起的相关诉讼时宣布，美国政府同意撤销此前发布的留学生签证新规。"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        test1()
+    }
     
-        example10()
+    func test1() {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = UIColor.pk.random(.granite)
+        scrollView.bounces = true
+        scrollView.contentSize = CGSize(width: view.width, height: 1000)
+        scrollView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        view.addSubview(scrollView)
+        
+        let mybutton = UIButton(type: .custom)
+        mybutton.setTitle("sd", for: .normal)
+        mybutton.backgroundColor = UIColor.pk.random()
+        mybutton.pk.addAction(for: .touchUpInside) { _ in
+            print("点击了mybuttonmybutton")
+        }
+        scrollView.addSubview(mybutton)
+        mybutton.pk.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
+        
+        scrollView.snp.makeConstraints { (make) in
+            make.left.equalTo(10)
+            make.right.equalTo(-20)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(300)
+        }
+        
+        scrollView.pk.showToast(message: "哈哈")
+        DispatchQueue.pk.asyncAfter(delay: 2) {
+            scrollView.pk.hideToast()
+        }
     }
     
     func example10() {
@@ -58,11 +85,11 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    let _Titles = "新华社华盛顿7月14日电（记者徐剑梅　邓仙来）美国波士顿联邦地区法院法官伯勒斯14日在开庭审理哈佛大学和麻省理工学院提起的相关诉讼时宣布，美国政府同意撤销此前发布的留学生签证新规。"
+    
     func makeLabel() -> UILabel {
         let label = UILabel()
         label.numberOfLines = 0
-//        label.font = UIFont.pk.fontName(.dINCondensed, style: .bold, size: 34)
-//        label.lineBreakMode = .byTruncatingTail
         label.textColor = .white
         label.backgroundColor = .orange
         
@@ -237,7 +264,7 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         imgView.frame = CGRect.init(x: 100, y: 200, width: 40, height: 40)
         view.addSubview(imgView)
         
-        view.pk.showToast(message: "正在加载", image: UIImage(named: "jiazaizhong的副本"), isSpin: true, layout: .top, position: .center(offset: 0))
+        view.pk.showToast(message: "正在加载", image: UIImage(named: "jiazaizhong的副本"), rotateAnimated: true, layout: .top, position: .center(offset: 0))
         DispatchQueue.pk.asyncAfter(delay: 2.5) {
             self.view.pk.hideToast()
             self.view.pk.showToast(message: "加载成功", image: UIImage(named: "chenggong-3"), layout: .top, position: .center(offset: 0))

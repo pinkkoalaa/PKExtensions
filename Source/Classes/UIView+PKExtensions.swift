@@ -269,7 +269,11 @@ public extension PKViewExtensions where Base: UIView {
         guard !isAlerting else { return }
         guard let message = text else { return }
         
-        let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+        let hud = UIView()
+        hud.backgroundColor = .darkGray
+        hud.clipsToBounds = true
+        hud.layer.cornerRadius = 2
+        base.addSubview(hud)
         
         let label = UILabel()
         label.text = message
@@ -277,27 +281,30 @@ public extension PKViewExtensions where Base: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 15)
-        let size = label.sizeThatFits(CGSize(width: 200, height: 200))
-        label.frame = CGRect(origin: .zero, size: size.pk.ceiled())
-
-        let hud = UIView()
-        hud.backgroundColor = .darkGray
-        hud.clipsToBounds = true
-        hud.layer.cornerRadius = 2
-        hud.frame = CGRect(origin: .zero, size: CGSize(width: size.width + insets.left + insets.right, height: size.height + insets.top + insets.bottom))
-        label.center = CGPoint(x: hud.bounds.width * 0.5, y: hud.bounds.height * 0.5)
-        hud.center = CGPoint(x: base.bounds.width * 0.5, y: base.bounds.height * 0.5 + offset)
         hud.addSubview(label)
-        base.addSubview(hud)
+        
+        label.pk.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
+        
+        hud.pk.makeConstraints { (make) in
+            let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+            make.left.equalTo(label).offset(-insets.left)
+            make.right.equalTo(label).offset(insets.right)
+            make.top.equalTo(label).offset(-insets.top)
+            make.bottom.equalTo(label).offset(insets.bottom)
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(offset)
+        }
         
         hud.alpha = 0
-        UIView.animate(withDuration: 0.4) {
+        UIView.animate(withDuration: 0.25) {
             hud.alpha = 1
         }
         
         base.pk_alertVisible = true
-        DispatchQueue.pk.asyncAfter(delay: 0.4) {
-            UIView.animate(withDuration: 0.4, animations: {
+        DispatchQueue.pk.asyncAfter(delay: delay) {
+            UIView.animate(withDuration: 0.25, animations: {
                 hud.alpha = 0
             }) { (_) in
                 hud.removeFromSuperview()
@@ -333,18 +340,41 @@ public extension PKViewExtensions where Base: UIView {
         
         if let message = text {
             let textLabel = UILabel()
-            textLabel.font = UIFont.systemFont(ofSize: 11)
+            textLabel.numberOfLines = 0
+            textLabel.textAlignment = .center
+            textLabel.font = UIFont.systemFont(ofSize: 12)
             textLabel.textColor = tintColor
             textLabel.text = message
             base.addSubview(textLabel)
             base.pk_loadingViewSet?.insert(textLabel)
             
-            let size = textLabel.sizeThatFits(base.bounds.size)
-            textLabel.frame = CGRect(origin: .zero, size: size.pk.ceiled())
-            textLabel.center = CGPoint(x: base.bounds.width / 2, y: base.bounds.height / 2 + offset)
-            indicatorView.center = CGPoint(x: base.bounds.width / 2, y: textLabel.frame.minY - indicatorView.bounds.height / 2 - 8)
+            let gapView = UIView()
+            base.addSubview(gapView)
+            base.pk_loadingViewSet?.insert(gapView)
+            
+            gapView.pk.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview().offset(offset)
+                make.left.equalToSuperview()
+                make.right.equalToSuperview()
+                make.height.equalTo(8)
+            }
+            
+            indicatorView.pk.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.bottom.equalTo(gapView.pk.top)
+            }
+            
+            textLabel.pk.makeConstraints { (make) in
+                make.left.equalTo(10)
+                make.right.equalTo(-10)
+                make.top.equalTo(gapView.pk.bottom)
+            }
         } else {
-            indicatorView.center = CGPoint(x: base.bounds.width / 2, y: base.bounds.height / 2 + offset)
+            indicatorView.pk.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview().offset(offset)
+            }
         }
     }
     

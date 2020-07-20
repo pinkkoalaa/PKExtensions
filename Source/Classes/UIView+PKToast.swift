@@ -19,7 +19,7 @@ public class PKToastStyle {
     /// 文本颜色
     public var messageColor: UIColor = .white
     
-    /// 图片颜色 (若为nil则使用原图片)
+    /// 图片颜色 (设置nil不做任何修改)
     public var imageColor: UIColor? = .white
     
     /// 文本字体
@@ -32,10 +32,7 @@ public class PKToastStyle {
     public var messageNumberOfLines: Int = 0
     
     /// 文本最大宽度限制
-    public var messageLayoutMaxWidth: CGFloat = 180
-    
-    /// 文本最大高度限制
-    public var messageLayoutMaxHeight: CGFloat = 400
+    public var messageLayoutMaxWidth: CGFloat = 200
     
     /// 图片尺寸
     public var imageSize = CGSize(width: 20, height: 20)
@@ -47,7 +44,7 @@ public class PKToastStyle {
     public var cornerRadius: CGFloat = 2
     
     /// 子视图间距
-    public var lineSpacing: CGFloat = 10
+    public var interitemSpacing: CGFloat = 10
     
     /// 内容边缘留白
     public var paddingInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
@@ -56,7 +53,7 @@ public class PKToastStyle {
 public extension PKViewExtensions where Base: UIView {
     
     /// Toast子视图布局
-    enum ToastLayout {
+    enum ToastLayout: Int {
         case top, left, bottom, right
     }
     
@@ -70,12 +67,12 @@ public extension PKViewExtensions where Base: UIView {
     /// 图片文本样式Toast
     func showToast(message: String?,
                    image: UIImage?,
-                   isSpin: Bool = false,
+                   rotateAnimated: Bool = false,
                    layout: ToastLayout = .left,
                    position: ToastPosition = .center(offset: 0),
                    style: PKToastStyle = .shared) {
         if let msg = message, let img = image {
-            return _perfectToast(message: msg, image: img, isSpin: isSpin, layout: layout, position: position, style: style)
+            return _perfectToast(message: msg, image: img, rotateAnimated: rotateAnimated, layout: layout, position: position, style: style)
         }
         
         if let msg = message {
@@ -83,14 +80,14 @@ public extension PKViewExtensions where Base: UIView {
         }
         
         if let img = image {
-            return _imageToast(image: img, isSpin: isSpin, position: position, style: style)
+            return _imageToast(image: img, rotateAnimated: rotateAnimated, position: position, style: style)
         }
     }
     
     /// 仅图片样式Toast
-    func showToast(image: UIImage?, isSpin: Bool = false, position: ToastPosition = .center(offset: 0), style: PKToastStyle = .shared) {
+    func showToast(image: UIImage?, rotateAnimated: Bool = false, position: ToastPosition = .center(offset: 0), style: PKToastStyle = .shared) {
         guard let img = image else { return }
-        _imageToast(image: img, isSpin: isSpin, position: position, style: style)
+        _imageToast(image: img, rotateAnimated: rotateAnimated, position: position, style: style)
     }
     
     /// 仅文本样式Toast
@@ -113,38 +110,70 @@ public extension PKViewExtensions where Base: UIView {
     // MARK: - private -
     
     private func _messageToast(message: String, position: ToastPosition, style: PKToastStyle) {
+        let contentView = UIView()
+        contentView.isUserInteractionEnabled = false
+        base.addSubview(contentView)
+        base.pk_activeToasts.add(contentView)
+        
+        let hud = UIView()
+        hud.backgroundColor = style.backgroundColor
+        hud.layer.cornerRadius = style.cornerRadius
+        hud.clipsToBounds = true
+        contentView.addSubview(hud)
+        
         let label = UILabel()
         label.text = message
         label.textColor = style.messageColor
         label.font = style.messageFont
         label.numberOfLines = style.messageNumberOfLines
         label.textAlignment = style.messageAlignment
-        var size = label.sizeThatFits(CGSize(width: style.messageLayoutMaxWidth,
-                                                 height: .greatestFiniteMagnitude))
-        size.height = min(size.height, style.messageLayoutMaxHeight)
-        label.frame = CGRect(origin: .zero, size: size.pk.ceiled())
-        
-        let hud = UIView()
-        hud.backgroundColor = style.backgroundColor
-        hud.clipsToBounds = true
-        hud.layer.cornerRadius = style.cornerRadius
-        let insets = style.paddingInsets
-        hud.frame = CGRect(origin: .zero, size: CGSize(width: size.width + insets.left + insets.right,
-                                                       height: size.height + insets.top + insets.bottom))
-        label.center = CGPoint(x: hud.bounds.width.pk.scaled(0.5), y: hud.bounds.height.pk.scaled(0.5))
         hud.addSubview(label)
-        base.addSubview(hud)
-        base.pk_activeToasts.add(hud)
+        
+        contentView.pk.makeConstraints { (make) in
+            if let scrollView = self.base as? UIScrollView {
+                let insets = scrollView.contentInset
+                make.left.equalToSuperview().offset(-insets.left)
+                make.right.equalToSuperview().offset(insets.right)
+                make.top.equalToSuperview().offset(-insets.top)
+                make.bottom.equalToSuperview().offset(insets.bottom)
+                make.size.equalToSuperview()
+            } else {
+                make.edges.equalToSuperview()
+            }
+        }
+        
+        label.pk.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
+        
+        hud.pk.makeConstraints { (make) in
+            let insets = style.paddingInsets
+            make.left.equalTo(label).offset(-insets.left)
+            make.right.equalTo(label).offset(insets.right)
+            make.top.equalTo(label).offset(-insets.top)
+            make.bottom.equalTo(label).offset(insets.bottom)
+        }
+        
+        _adjustToast(hud, position)
         
         hud.alpha = 0
         UIView.animate(withDuration: style.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
             hud.alpha = 1.0
         })
-        
-        _adjustToast(hud, position)
     }
     
-    private func _imageToast(image: UIImage, isSpin: Bool, position: ToastPosition, style: PKToastStyle) {
+    private func _imageToast(image: UIImage, rotateAnimated: Bool, position: ToastPosition, style: PKToastStyle) {
+        let contentView = UIView()
+        contentView.isUserInteractionEnabled = false
+        base.addSubview(contentView)
+        base.pk_activeToasts.add(contentView)
+        
+        let hud = UIView()
+        hud.backgroundColor = style.backgroundColor
+        hud.layer.cornerRadius = style.cornerRadius
+        hud.clipsToBounds = true
+        contentView.addSubview(hud)
+        
         let imgView = UIImageView()
         if let tintColor = style.imageColor {
             imgView.image = image.withRenderingMode(.alwaysTemplate)
@@ -152,135 +181,136 @@ public extension PKViewExtensions where Base: UIView {
         } else {
             imgView.image = image
         }
-        let size = style.imageSize
-        imgView.frame = CGRect(origin: .zero, size: size)
-        
-        let hud = UIView()
-        hud.backgroundColor = style.backgroundColor
-        hud.clipsToBounds = true
-        hud.layer.cornerRadius = style.cornerRadius
-        let insets = style.paddingInsets
-        hud.frame = CGRect(origin: .zero, size: CGSize(width: size.width + insets.left + insets.right,
-                                                       height: size.height + insets.top + insets.bottom))
-        imgView.center = CGPoint(x: hud.bounds.width.pk.scaled(0.5), y: hud.bounds.height.pk.scaled(0.5))
         hud.addSubview(imgView)
-        base.addSubview(hud)
-        base.pk_activeToasts.add(hud)
+            
+        contentView.pk.makeConstraints { (make) in
+            if let scrollView = self.base as? UIScrollView {
+                let insets = scrollView.contentInset
+                make.left.equalToSuperview().offset(-insets.left)
+                make.right.equalToSuperview().offset(insets.right)
+                make.top.equalToSuperview().offset(-insets.top)
+                make.bottom.equalToSuperview().offset(insets.bottom)
+                make.size.equalToSuperview()
+            } else {
+                make.edges.equalToSuperview()
+            }
+        }
         
-        if isSpin {
-            imgView.layer.pk.spinAnimation()
+        imgView.snp.makeConstraints { (make) in
+            make.size.equalTo(style.imageSize)
+            make.center.equalToSuperview()
+        }
+        
+        hud.pk.makeConstraints { (make) in
+            let insets = style.paddingInsets
+            make.left.equalTo(imgView).offset(-insets.left)
+            make.right.equalTo(imgView).offset(insets.right)
+            make.top.equalTo(imgView).offset(-insets.top)
+            make.bottom.equalTo(imgView).offset(insets.bottom)
+        }
+        
+        _adjustToast(hud, position)
+        
+        if rotateAnimated {
+            imgView.layer.pk.rotateAnimation()
         }
         
         hud.alpha = 0
         UIView.animate(withDuration: style.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
             hud.alpha = 1.0
         })
-        
-        _adjustToast(hud, position)
     }
     
-    private func _perfectToast(message: String,
-                               image: UIImage,
-                               isSpin: Bool,
-                               layout: ToastLayout,
-                               position: ToastPosition,
-                               style: PKToastStyle) {
-        let mssgLabel = UILabel()
-        mssgLabel.text = message
-        mssgLabel.textColor = style.messageColor
-        mssgLabel.font = style.messageFont
-        mssgLabel.numberOfLines = style.messageNumberOfLines
-        mssgLabel.textAlignment = style.messageAlignment
-        var size = mssgLabel.sizeThatFits(CGSize(width: style.messageLayoutMaxWidth,
-                                                 height: .greatestFiniteMagnitude))
-        size.height = min(size.height, style.messageLayoutMaxHeight)
-        mssgLabel.frame = CGRect(origin: .zero, size: size.pk.ceiled())
+    private func _perfectToast(message: String, image: UIImage, rotateAnimated: Bool, layout: ToastLayout, position: ToastPosition, style: PKToastStyle) {
+        let contentView = UIView()
+        contentView.isUserInteractionEnabled = false
+        base.addSubview(contentView)
+        base.pk_activeToasts.add(contentView)
         
-        let imageView = UIImageView()
-        imageView.image = image.withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = style.imageColor
-        imageView.frame = CGRect(origin: .zero, size: style.imageSize)
-
         let hud = UIView()
         hud.backgroundColor = style.backgroundColor
-        hud.clipsToBounds = true
         hud.layer.cornerRadius = style.cornerRadius
-        hud.addSubview(mssgLabel)
-        hud.addSubview(imageView)
-        base.addSubview(hud)
-        base.pk_activeToasts.add(hud)
+        hud.clipsToBounds = true
+        contentView.addSubview(hud)
         
-        if isSpin {
-            imageView.layer.pk.spinAnimation()
+        let button = IngenuityButton(type: .custom)
+        button.clipsToBounds = true
+        button.isUserInteractionEnabled = false
+        button.layer.cornerRadius = style.cornerRadius
+        button.imageSpecifiedSize = style.imageSize
+        button.imageAndTitleSpacing = style.interitemSpacing
+        button.imagePosition = IngenuityButton.ImagePosition(rawValue: layout.rawValue)!
+        button.setTitle(message, for: .normal)
+        button.setTitleColor(style.messageColor, for: .normal)
+        button.titleLabel?.font = style.messageFont
+        button.titleLabel?.numberOfLines = style.messageNumberOfLines
+        button.titleLabel?.textAlignment = style.messageAlignment
+        button.titleLabel?.preferredMaxLayoutWidth = style.messageLayoutMaxWidth
+        button.setImage(image.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = style.imageColor
+        hud.addSubview(button)
+    
+        contentView.pk.makeConstraints { (make) in
+            if let scrollView = self.base as? UIScrollView {
+                let insets = scrollView.contentInset
+                make.left.equalToSuperview().offset(-insets.left)
+                make.right.equalToSuperview().offset(insets.right)
+                make.top.equalToSuperview().offset(-insets.top)
+                make.bottom.equalToSuperview().offset(insets.bottom)
+                make.size.equalToSuperview()
+            } else {
+                make.edges.equalToSuperview()
+            }
+        }
+        
+        button.pk.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
+        
+        hud.pk.makeConstraints { (make) in
+            let insets = style.paddingInsets
+            make.left.equalTo(button).offset(-insets.left)
+            make.right.equalTo(button).offset(insets.right)
+            make.top.equalTo(button).offset(-insets.top)
+            make.bottom.equalTo(button).offset(insets.bottom)
+        }
+        
+        _adjustToast(hud, position)
+        
+        if rotateAnimated {
+            button.imageView?.layer.pk.rotateAnimation()
         }
         
         hud.alpha = 0
         UIView.animate(withDuration: style.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
             hud.alpha = 1.0
         })
-    
-        let insets = style.paddingInsets
-        let lineSpacing = style.lineSpacing
-        let imgSize = imageView.bounds.size
-        let labSize = mssgLabel.bounds.size
-        
-        switch layout {
-        case .top:
-            let hudWidth = max(imgSize.width, labSize.width) + insets.left + insets.right
-            let hudHeight = imgSize.height + labSize.height + lineSpacing + insets.top + insets.bottom
-            hud.frame = CGRect(origin: .zero, size: CGSize(width: hudWidth, height: hudHeight))
-            imageView.center = CGPoint(x: hudWidth.pk.scaled(0.5),
-                                       y: insets.top + imgSize.height.pk.scaled(0.5))
-            mssgLabel.center = CGPoint(x: hudWidth.pk.scaled(0.5),
-                                       y: hudHeight - insets.bottom - labSize.height.pk.scaled(0.5))
-        case .left:
-            let hudWidth = imgSize.width + labSize.width + lineSpacing + insets.left + insets.right
-            let hudHeight = max(imgSize.height, labSize.height) + insets.top + insets.bottom
-            hud.frame = CGRect(origin: .zero, size: CGSize(width: hudWidth, height: hudHeight))
-            imageView.center = CGPoint(x: insets.left + imgSize.width.pk.scaled(0.5),
-                                       y: hudHeight.pk.scaled(0.5))
-            mssgLabel.center = CGPoint(x: hudWidth - insets.right - labSize.width.pk.scaled(0.5),
-                                       y: hudHeight.pk.scaled(0.5))
-        case .bottom:
-            let hudWidth = max(imgSize.width, labSize.width) + insets.left + insets.right
-            let hudHeight = imgSize.height + labSize.height + lineSpacing + insets.top + insets.bottom
-            hud.frame = CGRect(origin: .zero, size: CGSize(width: hudWidth, height: hudHeight))
-            mssgLabel.center = CGPoint(x: hudWidth.pk.scaled(0.5),
-                                       y: insets.top + labSize.height.pk.scaled(0.5))
-            imageView.center = CGPoint(x: hudWidth.pk.scaled(0.5),
-                                       y: hudHeight - insets.bottom - imgSize.height.pk.scaled(0.5))
-        case .right:
-            let hudWidth = imgSize.width + labSize.width + lineSpacing + insets.left + insets.right
-            let hudHeight = max(imgSize.height, labSize.height) + insets.top + insets.bottom
-            hud.frame = CGRect(origin: .zero, size: CGSize(width: hudWidth, height: hudHeight))
-            mssgLabel.center = CGPoint(x: insets.left + labSize.width.pk.scaled(0.5),
-                                       y: hudHeight.pk.scaled(0.5))
-            imageView.center = CGPoint(x: hudWidth - insets.right - imgSize.width.pk.scaled(0.5),
-                                       y: hudHeight.pk.scaled(0.5))
-        }
-        
-        _adjustToast(hud, position)
     }
     
     private func _adjustToast(_ toast: UIView, _ position: ToastPosition) {
-        let safe = UIScreen.pk.safeInsets
         switch position {
         case .top(offset: let value):
-            toast.center = CGPoint(x: base.bounds.width.pk.scaled(0.5),
-                                   y: toast.bounds.height.pk.scaled(0.5) + safe.top + value)
+            toast.pk.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.top.equalToSuperview().offset(value)
+            }
         case .center(offset: let value):
-            toast.center = CGPoint(x: base.bounds.width.pk.scaled(0.5),
-                                   y: base.bounds.height.pk.scaled(0.5) + value)
+            toast.pk.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview().offset(value)
+            }
         case .bottom(offset: let value):
-            toast.center = CGPoint(x: base.bounds.width.pk.scaled(0.5),
-                                   y: base.bounds.height - safe.bottom - toast.bounds.height.pk.scaled(0.5) + value)
+            toast.pk.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.bottom.equalToSuperview().offset(value)
+            }
         }
     }
     
     private func _hideToast(_ toast: UIView) {
         guard base.pk_activeToasts.contains(toast) else { return }
         UIView.animate(withDuration: PKToastStyle.shared.fadeDuration, delay: 0, options: [.curveEaseIn, .beginFromCurrentState], animations: {
-            toast.alpha = 0.0
+            toast.alpha = 0
         }) { _ in
             toast.removeFromSuperview()
             self.base.pk_activeToasts.remove(toast)

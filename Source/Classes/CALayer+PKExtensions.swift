@@ -49,10 +49,10 @@ public extension PKLayerExtensions where Base: CALayer {
         base.add(animation, forKey: nil)
     }
     
-    /// 为layer添加自旋转动画
-    func spinAnimation(duration: TimeInterval = 0.75,
-                       curve: CAMediaTimingFunctionName = .linear,
-                       clockwise: Bool = true) {
+    /// 为layer添加旋转动画
+    func rotateAnimation(duration: TimeInterval = 0.75,
+                         curve: CAMediaTimingFunctionName = .linear,
+                         clockwise: Bool = true) {
         let animation = CABasicAnimation(keyPath: "transform.rotation.z")
         animation.fromValue = 0
         animation.toValue = (clockwise ? CGFloat.pi : -CGFloat.pi) * 2

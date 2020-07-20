@@ -29,7 +29,7 @@ public extension PKViewExtensions where Base: UIScrollView {
 public extension PKViewExtensions where Base: UIScrollView {
     
     /// 吃掉滚动视图自动调整的Insets
-    func eatAdjustedInsets() {
+    func eatAutomaticallyAdjustsInsets() {
         if #available(iOS 11.0, *) {
             base.contentInsetAdjustmentBehavior = .never
         } else {
