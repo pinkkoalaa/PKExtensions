@@ -53,18 +53,18 @@ open class IngenuityButton: UIButton {
         }
     }
     
-    public override func sizeToFit() {
+    open override func sizeToFit() {
         super.sizeToFit()
         frame.size = sizeThatFits(CGSize.pk.greatestFiniteMagnitude)
     }
     
-    public override func sizeThatFits(_ size: CGSize) -> CGSize {
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
         super.sizeThatFits(size)
         let _size = intrinsicContentSize
         return CGSize(width: min(_size.width, size.width), height: min(_size.height, size.height))
     }
     
-    public override var intrinsicContentSize: CGSize {
+    open override var intrinsicContentSize: CGSize {
         guard isImageValid() || isTitleValid() else { return .zero}
         
         let titleSize = getValidTitleSize()
@@ -83,7 +83,7 @@ open class IngenuityButton: UIButton {
         }
     }
     
-    override public func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
 
         guard !bounds.isEmpty else { return }
@@ -124,6 +124,11 @@ open class IngenuityButton: UIButton {
             titleLabel!.frame = CGRect(x: padding, y: titleY, size: titleSize)
             imageView!.frame = CGRect(x: titleLabel!.frame.maxX + spacing , y: imageY, size: imageSize)
         }
+    }
+    
+    open override func updateConstraints() {
+        super.updateConstraints()
+        layoutIfNeeded()
     }
     
     private func horizontalLeft(_ width: CGFloat) -> CGFloat {
@@ -196,29 +201,29 @@ open class IngenuityTextField: UITextField {
     /// 文本边缘留白
     public var textEdgeInsets: UIEdgeInsets = .zero
     
-    public override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+    open override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
         var leftRect = super.leftViewRect(forBounds: bounds)
         leftRect.origin.x += leftViewPadding
         return leftRect
     }
     
-    public override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+    open override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
         var rightRect = super.rightViewRect(forBounds: bounds)
         rightRect.origin.x -= rightViewPadding
         return rightRect
     }
     
-    public override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
+    open override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
         var clearRect = super.clearButtonRect(forBounds: bounds)
         clearRect.origin.x = bounds.size.width - clearRect.size.width - clearButtonPadding
         return clearRect
     }
     
-    public override func textRect(forBounds bounds: CGRect) -> CGRect {
+    open override func textRect(forBounds bounds: CGRect) -> CGRect {
         return _inputRect(forBounds: bounds, modes: [.always])
     }
     
-    public override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    open override func editingRect(forBounds bounds: CGRect) -> CGRect {
         return _inputRect(forBounds: bounds, modes: [.always, .whileEditing])
     }
     
@@ -240,7 +245,7 @@ open class IngenuityTextField: UITextField {
         return bounds.inset(by: insets)
     }
 
-    public override func deleteBackward() {
+    open override func deleteBackward() {
         super.deleteBackward()
         sendActions(for: IngenuityTextField.deleteBackward)
     }
@@ -370,11 +375,11 @@ open class IngenuityLabel: UILabel {
     /// 设置文本内边距
     public var textInsets: UIEdgeInsets = .zero
     
-    override public func drawText(in rect: CGRect) {
+    open override func drawText(in rect: CGRect) {
         super.drawText(in: rect.inset(by: textInsets))
     }
     
-    override public func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+    open override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
         let insets = textInsets
         var rect = super.textRect(forBounds: bounds.inset(by: insets), limitedToNumberOfLines: numberOfLines)
         rect.origin.x -= insets.left
