@@ -124,9 +124,9 @@ public extension PKImageExtensions {
     }
     
     /// 根据指定的颜色填充图像并返回新图像
-    func filled(withColor color: UIColor) -> UIImage {
+    func filled(withColor color: UIColor?) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(base.size, false, base.scale)
-        color.setFill()
+        color?.setFill()
         guard let context = UIGraphicsGetCurrentContext() else { return base }
 
         context.translateBy(x: 0, y: base.size.height)
@@ -148,14 +148,14 @@ public extension PKImageExtensions {
     ///   - color: 给图像着色用的颜色
     ///   - blendMode: 混合模式
     /// - Returns: 返回着色后的图像
-    func tinted(_ color: UIColor, blendMode: CGBlendMode = .normal, alpha: CGFloat = 1.0) -> UIImage {
+    func tinted(_ color: UIColor?, blendMode: CGBlendMode = .normal, alpha: CGFloat = 1.0) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(base.size, false, base.scale)
         defer {
             UIGraphicsEndImageContext()
         }
         let drawRect = CGRect(origin: .zero, size: base.size)
         let context = UIGraphicsGetCurrentContext()
-        color.setFill()
+        color?.setFill()
         context?.fill(drawRect)
         base.draw(in: drawRect, blendMode: blendMode, alpha: alpha)
         return UIGraphicsGetImageFromCurrentImageContext()!
@@ -182,7 +182,7 @@ public extension PKImageExtensions {
     }
     
     /// 根据图片名称生成不同尺寸的占位图
-    static func placeholderImage(with name: String, size: CGSize, backgroundColor: UIColor = UIColor.pk.rgb(same: 245)) -> UIImage? {
+    static func placeholderImage(with name: String, size: CGSize, backgroundColor: UIColor? = UIColor.pk.rgb(same: 245)) -> UIImage? {
         guard let logo = UIImage(named: name) else { return nil }
         return placeholderImage(with: logo, size: size, backgroundColor: backgroundColor)
     }
@@ -195,7 +195,7 @@ public extension PKImageExtensions {
     ///   - backgroundColor: 背景色
     ///
     /// - Returns: 占位图
-    static func placeholderImage(with image: UIImage, size: CGSize, backgroundColor: UIColor = UIColor.pk.rgb(same: 245)) -> UIImage? {
+    static func placeholderImage(with image: UIImage, size: CGSize, backgroundColor: UIColor? = UIColor.pk.rgb(same: 245)) -> UIImage? {
         guard !image.size.equalTo(.zero), size.pk.isValid else { return nil }
        
         /**
@@ -240,7 +240,7 @@ public extension PKImageExtensions {
         let origin = CGPoint(x: center.x - width * 0.5, y: center.y - height * 0.5)
         
         UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
-        backgroundColor.setFill()
+        backgroundColor?.setFill()
         UIRectFill(CGRect(origin: .zero, size: size))
         image.draw(in: CGRect(origin: origin, size: CGSize(width: width, height: height)))
         let placeholderImage = UIGraphicsGetImageFromCurrentImageContext()
