@@ -25,10 +25,12 @@ public extension PKStringExtensions {
     }
     
     /// 字符串查找子串返回NSRange
-    func range(of subString: String?) -> NSRange {
+    func nsRange(of subString: String?) -> NSRange {
         guard let subValue = subString else { return NSRange(location: 0, length: 0) }
-        let swiftRange = base.range(of: subValue)
-        return NSRange(swiftRange!, in: base)
+        guard let range = base.range(of: subValue) else {
+            return NSRange(location: 0, length: 0)
+        }
+        return NSRange(range, in: base)
     }
     
     /// 获取字符串尺寸
