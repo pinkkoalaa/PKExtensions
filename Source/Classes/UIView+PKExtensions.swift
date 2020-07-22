@@ -51,9 +51,9 @@ public extension PKViewExtensions where Base: UIView {
     ///     // 注：使用此方法设置圆角，超出父图层部分的子图层将被裁减掉，且在视图得到位置大小后调用生效
     ///     // 若视图必须等Auto Layout算出元件的大小后，再计算cornerRadius，推荐两种写法：
     ///     // 1. 在controller的 viewDidLayoutSubviews() 里计算 cornerRadius
-    ///     // 该方法执行时controller内的视图都已依 auto layout 的约束得到位置大小
+    ///     // 该方法执行时controller内的视图都已按 auto layout 的约束得到位置大小
     ///     // 2. 在自定义view的 layoutSubviews() 里计算 cornerRadius
-    ///     // 该方法执行时视图自身和它的子视图都已依 auto layout 的约束得到位置大小
+    ///     // 该方法执行时视图自身和它的子视图都已按 auto layout 的约束得到位置大小
     ///
     /// - Parameters:
     ///   - radius: 圆角半径
@@ -73,7 +73,7 @@ public extension PKViewExtensions where Base: UIView {
     ///
     ///     let aView = UIView()
     ///     aView.pk.addBorderLayer(width: 1 / UIScreen.main.scale, color: .red, byRectEdge: [.left, .bottom])
-    ///     // 注：在视图得到位置大小后调用生效
+    ///     // 注：在视图得到位置大小后调用生效，同addCorner(:)方法说明
     ///
     /// - Parameters:
     ///   - width: 边框线宽度
@@ -152,7 +152,7 @@ public extension PKViewExtensions where Base: UIView {
     ///
     ///     let aView = UIView()
     ///     aView.pk.setShadowPath(radius: 5, opacity: 0.2, color:.gray)
-    ///     // 注：在视图得到位置大小后调用生效
+    ///     // 注：在视图得到位置大小后调用生效，同addCorner(:)方法说明
     ///
     /// - Parameters:
     ///   - radius: 阴影半径，默认为5
@@ -193,7 +193,7 @@ public extension PKViewExtensions where Base: UIView {
     ///
     ///     let aView = UIView()
     ///     aView.pk.addGradientLayer(colors: [.red, .orange], direction: .leftToRight)
-    ///     // 注：在视图得到位置大小后调用生效
+    ///     // 注：在视图得到位置大小后调用生效，同addCorner(:)方法说明
     ///
     /// - Parameters:
     ///   - colors: 渐变颜色数组

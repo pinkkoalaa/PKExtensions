@@ -285,7 +285,7 @@ open class IngenuityTextView: UITextView {
     }
     
     /// 调整占位文本内边距
-    public var placeholderInsets: UIEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 0) {
+    public var placeholderInset: UIEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 0) {
         didSet {
             setNeedsDisplay()
         }
@@ -307,10 +307,10 @@ open class IngenuityTextView: UITextView {
         let range = NSRange(location: 0, length: attributedText.length)
         attributedText.addAttribute(.font, value: fontValue, range: range)
         attributedText.addAttribute(.foregroundColor, value: colorValue, range: range)
-        let rect = CGRect(x: placeholderInsets.left,
-                          y: placeholderInsets.top,
-                          width: bounds.width - placeholderInsets.left - placeholderInsets.right,
-                          height: bounds.height - placeholderInsets.top - placeholderInsets.bottom)
+        let rect = CGRect(x: placeholderInset.left,
+                          y: placeholderInset.top,
+                          width: bounds.width - placeholderInset.left - placeholderInset.right,
+                          height: bounds.height - placeholderInset.top - placeholderInset.bottom)
         attributedText.draw(in: rect)
     }
     

@@ -52,6 +52,7 @@
 		3EFF8E18243456E700185885 /* PKExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E17243456E700185885 /* PKExtensionsTests.swift */; };
 		3EFF8E23243456E700185885 /* PKExtensionsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E22243456E700185885 /* PKExtensionsUITests.swift */; };
 		618A0E4724BC2CF90043D0C2 /* UITextField+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618A0E4624BC2CF90043D0C2 /* UITextField+PKExtensions.swift */; };
+		61AF761C24C8224700ADB18F /* UITextView+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AF761B24C8224700ADB18F /* UITextView+PKExtensions.swift */; };
 		9DD62D09F7C7F37744156B93 /* libPods-PKExtensions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0796A6807E65ADB20C51F2 /* libPods-PKExtensions.a */; };
 /* End PBXBuildFile section */
 
@@ -125,6 +126,7 @@
 		3EFF8E22243456E700185885 /* PKExtensionsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKExtensionsUITests.swift; sourceTree = "<group>"; };
 		3EFF8E24243456E700185885 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		618A0E4624BC2CF90043D0C2 /* UITextField+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+PKExtensions.swift"; sourceTree = "<group>"; };
+		61AF761B24C8224700ADB18F /* UITextView+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+PKExtensions.swift"; sourceTree = "<group>"; };
 		C3371F4683AD7C35C8B0013A /* Pods-PKExtensions.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PKExtensions.debug.xcconfig"; path = "Target Support Files/Pods-PKExtensions/Pods-PKExtensions.debug.xcconfig"; sourceTree = "<group>"; };
 		CB0796A6807E65ADB20C51F2 /* libPods-PKExtensions.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PKExtensions.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -196,6 +198,7 @@
 				3E3C52C1249F4DC80056C22E /* UITabBar+PKExtensions.swift */,
 				3E3C52C5249F9C800056C22E /* UITableView+PKExtensions.swift */,
 				618A0E4624BC2CF90043D0C2 /* UITextField+PKExtensions.swift */,
+				61AF761B24C8224700ADB18F /* UITextView+PKExtensions.swift */,
 				3E8BE09F24C2910400F2A093 /* UIView+PKConstraints.swift */,
 				3E35ABB9249A0FE700AFCAA3 /* UIView+PKExtensions.swift */,
 				3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */,
@@ -463,6 +466,7 @@
 				3E35ABCF249A0FE700AFCAA3 /* UIView+PKExtensions.swift in Sources */,
 				3E35ABCA249A0FE700AFCAA3 /* UIColor+PKExtensions.swift in Sources */,
 				3E35ABE1249A109300AFCAA3 /* UIBezierPath+PKExtensions.swift in Sources */,
+				61AF761C24C8224700ADB18F /* UITextView+PKExtensions.swift in Sources */,
 				3E35ABCD249A0FE700AFCAA3 /* Date+PKExtensions.swift in Sources */,
 				3E35ABDB249A0FE700AFCAA3 /* UIGestureRecognizer+PKExtensions.swift in Sources */,
 				3E35ABCC249A0FE700AFCAA3 /* UIButton+PKExtensions.swift in Sources */,
