@@ -13,7 +13,28 @@ class NextViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        test1()
+        buttonTest()
+    }
+    
+    func buttonTest() {
+        let button = IngenuityButton(type: .custom)
+        button.titleLabel?.font = UIFont.pk.fontName(.pingFangSC)
+        button.setTitleColor(.white, for: .normal)
+        button.setTitle("请选择", for: .normal)
+        button.setImage(UIImage(named: "shibai"), for: .normal)
+        button.backgroundColor = UIColor.lightGray
+        button.imagePosition = .left
+        button.contentHorizontalAlignment = IngenuityButton.leftAndRight
+        button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 20)
+        button.imageView?.backgroundColor = .orange
+        button.titleLabel?.backgroundColor = .brown
+        view.addSubview(button)
+        
+        button.snp.makeConstraints { (make) in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(20)
+            make.right.equalTo(-20)
+        }
     }
     
     func test1() {

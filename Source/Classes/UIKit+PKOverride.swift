@@ -18,6 +18,19 @@ import UIKit
 *  4. 支持图片和 titleLabel 居中对齐或边缘对齐
 *  5. 支持 Auto Layout 以上设置可根据内容自适应
 */
+public extension IngenuityButton {
+    
+    /// 图片标题分别对齐到左右两端
+    static var leftAndRight: UIControl.ContentHorizontalAlignment {
+        return UIControl.ContentHorizontalAlignment(rawValue:7)!
+    }
+
+    /// 图片标题分别对齐到顶部和底部
+    static var topAndBottom: UIControl.ContentVerticalAlignment {
+        return UIControl.ContentVerticalAlignment(rawValue: 6)!
+    }
+}
+
 open class IngenuityButton: UIButton {
     
     /// 图片与文字布局位置
@@ -39,7 +52,7 @@ open class IngenuityButton: UIButton {
         }
     }
     
-    /// 设置图标和文字之间的间隔，默认为10
+    /// 设置图标和文字之间的间隔，默认为10 (与两端对齐样式冲突时优先级低)
     public var imageAndTitleSpacing: CGFloat = 10 {
         didSet {
             setNeedsLayout()
@@ -71,16 +84,20 @@ open class IngenuityButton: UIButton {
         let imageSize = getValidImageSize()
         let spacing = getValidSpacing()
         
+        var contentSize: CGSize
         switch imagePosition {
         case .top, .bottom:
             let height = titleSize.height + imageSize.height + spacing
             let width = max(titleSize.width, imageSize.width)
-            return CGSize(width: width, height: height)
+            contentSize = CGSize(width: width, height: height)
         case .left, .right:
             let width = titleSize.width + imageSize.width + spacing
             let height = max(titleSize.height, imageSize.height)
-            return CGSize(width: width, height: height)
+            contentSize = CGSize(width: width, height: height)
         }
+        contentSize.height += contentEdgeInsets.pk.vertical
+        contentSize.width += contentEdgeInsets.pk.horizontal
+        return contentSize
     }
     
     open override func layoutSubviews() {
@@ -93,59 +110,85 @@ open class IngenuityButton: UIButton {
         let titleSize = getValidTitleSize()
         let imageSize = getValidImageSize()
         let spacing = getValidSpacing()
+        let inset = contentEdgeInsets
         
         switch imagePosition {
         case .top:
             let contentHeight = imageSize.height + titleSize.height + spacing
             let padding = verticalTop(contentHeight)
-            let imageX = (bounds.width - imageSize.width) / 2
-            let titleX = (bounds.width - titleSize.width) / 2
+            let imageX = (bounds.width - inset.pk.horizontal - imageSize.width) / 2 + inset.left
+            let titleX = (bounds.width - inset.pk.horizontal - titleSize.width) / 2 + inset.left
             imageView!.frame = CGRect(x: imageX, y: padding, size: imageSize)
-            titleLabel!.frame = CGRect(x: titleX, y: imageView!.frame.maxY + spacing, size: titleSize)
+            let titleY = anotherTop(titleSize.height, originY: imageView!.frame.maxY + spacing)
+            titleLabel!.frame = CGRect(x: titleX, y: titleY, size: titleSize)
         case .left:
             let contentWidth = titleSize.width + imageSize.width + spacing
             let padding = horizontalLeft(contentWidth)
-            let imageY = (bounds.height - imageSize.height) / 2
-            let titleY = (bounds.height - titleSize.height) / 2
+            let imageY = (bounds.height - inset.pk.vertical - imageSize.height) / 2 + inset.top
+            let titleY = (bounds.height - inset.pk.vertical - titleSize.height) / 2 + inset.top
             imageView!.frame = CGRect(x: padding , y: imageY, size: imageSize)
-            titleLabel!.frame = CGRect(x: imageView!.frame.maxX + spacing, y: titleY, size: titleSize)
+            let titleX = anotherLeft(titleSize.width, originX: imageView!.frame.maxX + spacing)
+            titleLabel!.frame = CGRect(x: titleX, y: titleY, size: titleSize)
         case .bottom:
             let contentHeight = imageSize.height + titleSize.height + spacing
             let padding = verticalTop(contentHeight)
-            let imageX = (bounds.width - imageSize.width) / 2
-            let titleX = (bounds.width - titleSize.width) / 2
+            let imageX = (bounds.width - inset.pk.horizontal - imageSize.width) / 2 + inset.left
+            let titleX = (bounds.width - inset.pk.horizontal - titleSize.width) / 2 + inset.left
             titleLabel!.frame = CGRect(x: titleX, y: padding, size: titleSize)
-            imageView!.frame = CGRect(x: imageX, y: titleLabel!.frame.maxY + spacing, size: imageSize)
+            let imageY = anotherTop(imageSize.height, originY: titleLabel!.frame.maxY + spacing)
+            imageView!.frame = CGRect(x: imageX, y: imageY, size: imageSize)
         case .right:
             let contentWidth = titleSize.width + imageSize.width + spacing
             let padding = horizontalLeft(contentWidth)
-            let imageY = (bounds.height - imageSize.height) / 2
-            let titleY = (bounds.height - titleSize.height) / 2
+            let imageY = (bounds.height - inset.pk.vertical - imageSize.height) / 2 + inset.top
+            let titleY = (bounds.height - inset.pk.vertical - titleSize.height) / 2 + inset.top
             titleLabel!.frame = CGRect(x: padding, y: titleY, size: titleSize)
-            imageView!.frame = CGRect(x: titleLabel!.frame.maxX + spacing , y: imageY, size: imageSize)
+            let imageX = anotherLeft(imageSize.width, originX: titleLabel!.frame.maxX + spacing)
+            imageView!.frame = CGRect(x: imageX, y: imageY, size: imageSize)
         }
-    }
-    
-    open override func updateConstraints() {
-        super.updateConstraints()
-        layoutIfNeeded()
     }
     
     private func horizontalLeft(_ width: CGFloat) -> CGFloat {
         switch contentHorizontalAlignment {
-        case .left: return CGFloat(0)
-        case .right: return bounds.width - width
+        case .left:
+            return contentEdgeInsets.left
+        case .right:
+            return bounds.width - contentEdgeInsets.right - width
+        case IngenuityButton.leftAndRight:
+            return contentEdgeInsets.left
         default: /// Other types regarded as .center
-            return (bounds.width - width) / 2
+            return (bounds.width - contentEdgeInsets.pk.horizontal - width) / 2 + contentEdgeInsets.left
+        }
+    }
+    
+    private func anotherLeft(_ width: CGFloat, originX: CGFloat) -> CGFloat {
+        switch contentHorizontalAlignment {
+            case IngenuityButton.leftAndRight:
+                return bounds.width - width - contentEdgeInsets.right
+        default:
+            return originX
         }
     }
     
     private func verticalTop(_ height: CGFloat) -> CGFloat {
         switch contentVerticalAlignment {
-        case .top: return CGFloat(0)
-        case .bottom: return bounds.height - height
+        case .top:
+            return contentEdgeInsets.top
+        case .bottom:
+            return bounds.height - contentEdgeInsets.bottom - height
+        case IngenuityButton.topAndBottom:
+            return contentEdgeInsets.top
         default: /// Other types regarded as .center
-            return (bounds.height - height) / 2
+            return (bounds.height - contentEdgeInsets.pk.vertical - height) / 2 + contentEdgeInsets.top
+        }
+    }
+    
+    private func anotherTop(_ height: CGFloat, originY: CGFloat) -> CGFloat {
+        switch contentVerticalAlignment {
+            case IngenuityButton.topAndBottom:
+                return bounds.height - height - contentEdgeInsets.bottom
+        default:
+            return originY
         }
     }
     
@@ -156,7 +199,7 @@ open class IngenuityButton: UIButton {
     
     private func getValidImageSize() -> CGSize {
         guard isImageValid() else { return .zero }
-        return imageSpecifiedSize.pk.isValid ? imageSpecifiedSize : imageView!.bounds.size
+        return imageSpecifiedSize.pk.isValid ? imageSpecifiedSize : currentImage!.size
     }
     
     private func getValidSpacing() -> CGFloat {
