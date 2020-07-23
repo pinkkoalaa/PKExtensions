@@ -16,16 +16,20 @@ import UIKit
 *  2. 支持设置图片和 titleLabel 之间的间距 (imageAndTitleSpacing)
 *  3. 支持自定义图片尺寸大小 (imageSpecifiedSize)
 *  4. 支持图片和 titleLabel 居中对齐或边缘对齐
-*  5. 支持 Auto Layout 以上设置可根据内容自适应
+*  5. 支持图片和 titleLabel 各自对齐到两端 (.leftAndRight/.topAndBottom)
+*  6. 支持调整内容边距 (contentEdgeInsets) 不支持titleEdgeInsets/imageEdgeInsets
+*  7. 支持 Auto Layout 以上设置可根据内容自适应
 */
 public extension IngenuityButton {
     
     /// 图片标题分别对齐到左右两端
+    /// Usage: button.contentHorizontalAlignment = IngenuityButton.leftAndRight
     static var leftAndRight: UIControl.ContentHorizontalAlignment {
         return UIControl.ContentHorizontalAlignment(rawValue:7)!
     }
 
     /// 图片标题分别对齐到顶部和底部
+    /// Usage: button.contentVerticalAlignment = IngenuityButton.topAndBottom
     static var topAndBottom: UIControl.ContentVerticalAlignment {
         return UIControl.ContentVerticalAlignment(rawValue: 6)!
     }
