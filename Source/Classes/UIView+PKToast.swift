@@ -233,13 +233,13 @@ public extension PKViewExtensions where Base: UIView {
         hud.clipsToBounds = true
         contentView.addSubview(hud)
         
-        let button = IngenuityButton(type: .custom)
+        let button = PKUIButton(type: .custom)
         button.clipsToBounds = true
         button.isUserInteractionEnabled = false
         button.layer.cornerRadius = style.cornerRadius
         button.imageSpecifiedSize = style.imageSize
         button.imageAndTitleSpacing = style.interitemSpacing
-        button.imagePosition = IngenuityButton.ImagePosition(rawValue: layout.rawValue)!
+        button.imagePosition = PKUIButton.ImagePosition(rawValue: layout.rawValue)!
         button.setTitle(message, for: .normal)
         button.setTitleColor(style.messageColor, for: .normal)
         button.titleLabel?.font = style.messageFont
