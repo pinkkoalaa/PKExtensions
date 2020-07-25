@@ -274,6 +274,13 @@ open class IngenuityTextField: UITextField {
         return _inputRect(forBounds: bounds, modes: [.always, .whileEditing])
     }
     
+    open override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        guard isEditing else {
+            return textRect(forBounds: bounds)
+        }
+        return editingRect(forBounds: bounds)
+    }
+    
     private func _inputRect(forBounds bounds: CGRect, modes: [ViewMode]) -> CGRect {
         var insets = textEdgeInsets
         

@@ -13,7 +13,8 @@ class NextViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        buttonTest()
+//        buttonTest()
+        example6()
     }
     
     func buttonTest() {
