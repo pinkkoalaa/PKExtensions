@@ -307,10 +307,10 @@ open class PKUITextField: UITextField {
         
         if let _ = rightView, modes.contains(rightViewMode) {
             insets.right += (bounds.width - rightViewRect(forBounds: bounds).minX)
-        }
-        
-        if modes.contains(clearButtonMode) {
-            insets.right += (bounds.width - clearButtonRect(forBounds: bounds).minX)
+        } else {
+            if modes.contains(clearButtonMode) {
+                insets.right += (bounds.width - clearButtonRect(forBounds: bounds).minX)
+            }
         }
         
         return bounds.inset(by: insets)
