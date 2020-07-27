@@ -10,6 +10,21 @@ import UIKit
 
 public extension PKApplicationExtensions {
     
+    /// 获取应用程序顶层窗口
+    static var frontWindow: UIWindow? {
+        let frontToBackWindows = UIApplication.shared.windows.reversed()
+        for window in frontToBackWindows {
+            guard
+                !window.isHidden,
+                window.alpha > 0,
+                window.screen == UIScreen.main else {
+                continue
+            }
+            return window
+        }
+        return nil
+    }
+    
     /// 获取应用程序的主窗口
     static var keyWindow: UIWindow? {
         if let window = UIApplication.shared.delegate?.window as? UIWindow {
