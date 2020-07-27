@@ -13,22 +13,23 @@ class NextViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-//        buttonTest()
-        example6()
+        buttonTest()
+//        example6()
     }
     
     func buttonTest() {
-        let button = IngenuityButton(type: .custom)
+        let button = PKUIButton(type: .custom)
         button.titleLabel?.font = UIFont.pk.fontName(.pingFangSC)
         button.setTitleColor(.white, for: .normal)
         button.setTitle("请选择", for: .normal)
         button.setImage(UIImage(named: "shibai"), for: .normal)
         button.backgroundColor = UIColor.lightGray
         button.imagePosition = .left
-        button.contentHorizontalAlignment = IngenuityButton.leftAndRight
+        button.contentHorizontalAlignment = PKUIButton.leftAndRight
         button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 20)
         button.imageView?.backgroundColor = .orange
         button.titleLabel?.backgroundColor = .brown
+        button.adjustsRoundedCornersAutomatically = true
         view.addSubview(button)
         
         button.snp.makeConstraints { (make) in
@@ -161,7 +162,7 @@ class NextViewController: UIViewController, UITextFieldDelegate {
     
 
     func example6() {
-        let textField = IngenuityTextField()
+        let textField = PKUITextField()
         textField.delegate = self
         textField.backgroundColor = .lightGray
         textField.pk.setPlaceHolder("请输入文字")
@@ -203,7 +204,7 @@ class NextViewController: UIViewController, UITextFieldDelegate {
             textField.resignFirstResponder()
         }
         
-        textField.addTarget(self, action: #selector(textFieldDeleteBackward(_:)), for: IngenuityTextField.deleteBackward)
+        textField.addTarget(self, action: #selector(textFieldDeleteBackward(_:)), for: PKUITextField.deleteBackward)
     }
     
     @objc func textFieldDeleteBackward(_ textField: UITextField) {
@@ -211,7 +212,7 @@ class NextViewController: UIViewController, UITextFieldDelegate {
     }
     
     func example5() {
-        let button = IngenuityButton(type: .custom)
+        let button = PKUIButton(type: .custom)
         button.isUserInteractionEnabled = true
         button.backgroundColor = UIColor.lightGray
         button.imagePosition = .left
