@@ -37,18 +37,34 @@ public extension PKViewExtensions where Base: UICollectionView {
         }
         return cell
     }
+    
+    enum ElementKind  { case sectionHeader, sectionFooter }
 
     /// 使用类名出列可重用的UICollectionReusableView
-    func dequeueReusableSupplementaryView<T: UICollectionReusableView>(ofKind kind: String, withClass name: T.Type, for indexPath: IndexPath) -> T {
-        guard let cell = base.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: String(describing: name), for: indexPath) as? T else {
+    func dequeueReusableSupplementaryView<T: UICollectionReusableView>(ofKind kind: ElementKind, withClass name: T.Type, for indexPath: IndexPath) -> T {
+        let elementKind: String
+        switch kind {
+        case .sectionFooter:
+            elementKind = UICollectionView.elementKindSectionHeader
+        default:
+            elementKind = UICollectionView.elementKindSectionFooter
+        }
+        guard let cell = base.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: String(describing: name), for: indexPath) as? T else {
             fatalError("Couldn't find UICollectionReusableView for \(String(describing: name)), make sure the view is registered with collection view")
         }
         return cell
     }
     
     /// 使用类名注册UICollectionReusableView
-    func register<T: UICollectionReusableView>(supplementaryViewOfKind kind: String, withClass name: T.Type) {
-        base.register(T.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: String(describing: name))
+    func register<T: UICollectionReusableView>(supplementaryViewOfKind kind: ElementKind, withClass name: T.Type) {
+        let elementKind: String
+        switch kind {
+        case .sectionFooter:
+            elementKind = UICollectionView.elementKindSectionHeader
+        default:
+            elementKind = UICollectionView.elementKindSectionFooter
+        }
+        base.register(T.self, forSupplementaryViewOfKind: elementKind, withReuseIdentifier: String(describing: name))
     }
     
     /// 使用类名注册UICollectionViewCell
