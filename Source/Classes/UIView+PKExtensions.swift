@@ -267,7 +267,7 @@ public extension PKViewExtensions where Base: UIView {
         guard let message = text else { return }
         
         let hud = UIView()
-        hud.backgroundColor = .darkGray
+        hud.backgroundColor = UIColor.black.withAlphaComponent(0.85)
         hud.clipsToBounds = true
         hud.layer.cornerRadius = 2
         base.addSubview(hud)
