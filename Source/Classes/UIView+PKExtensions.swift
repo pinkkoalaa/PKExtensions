@@ -21,20 +21,17 @@ public extension PKViewExtensions where Base: UIView {
     
     /// 删除视图的所有子视图
     func removeAllSubviews() {
-        while !base.subviews.isEmpty {
-            base.subviews.last?.removeFromSuperview()
-        }
+        base.subviews.forEach({ $0.removeFromSuperview() })
     }
     
     /// 返回视图所在的控制器
     func dependViewController() -> UIViewController? {
-        var view: UIView? = base
-        while view != nil {
-            let next = view?.next
-            if let nextResponder = next as? UIViewController {
-                return nextResponder
+        weak var dependResponder: UIResponder? = base
+        while dependResponder != nil {
+            dependResponder = dependResponder!.next
+            if let viewController = dependResponder as? UIViewController {
+                return viewController
             }
-            view = view?.superview
         }
         return nil
     }
