@@ -64,7 +64,7 @@ public extension PKViewExtensions where Base: UITextField {
     }
     
     /// 设置占位符文本及颜色
-    func setPlaceHolder(_ string: String?, color: UIColor? = nil) {
+    func setPlaceholder(_ string: String?, color: UIColor? = nil) {
         guard let holder = string, !holder.isEmpty else { return }
         let foregroundColor = color ?? UIColor.gray.withAlphaComponent(0.7)
         base.attributedPlaceholder = NSAttributedString(string: string!, attributes: [.foregroundColor: foregroundColor])

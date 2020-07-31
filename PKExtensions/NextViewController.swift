@@ -165,7 +165,7 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         let textField = PKUITextField()
         textField.delegate = self
         textField.backgroundColor = .lightGray
-        textField.pk.setPlaceHolder("请输入文字")
+        textField.pk.setPlaceholder("请输入文字")
         textField.tintColor = .red
         view.addSubview(textField)
         
