@@ -127,6 +127,7 @@ public extension PKViewExtensions where Base: UIView {
         label.font = style.messageFont
         label.numberOfLines = style.messageNumberOfLines
         label.textAlignment = style.messageAlignment
+        label.preferredMaxLayoutWidth = 220
         hud.addSubview(label)
         
         contentView.pk.makeConstraints { (make) in
