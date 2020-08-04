@@ -67,7 +67,7 @@ public extension PKViewExtensions where Base: UIView {
     /// 图片文本样式Toast
     func showToast(message: String?,
                    image: UIImage?,
-                   delay: TimeInterval = 2,
+                   delay: TimeInterval = 1.5,
                    rotateAnimated: Bool = false,
                    layout: ToastLayout = .left,
                    position: ToastPosition = .center(offset: 0),
@@ -87,7 +87,7 @@ public extension PKViewExtensions where Base: UIView {
     
     /// 仅图片样式Toast
     func showToast(image: UIImage?,
-                   delay: TimeInterval = 2,
+                   delay: TimeInterval = 1.5,
                    rotateAnimated: Bool = false,
                    position: ToastPosition = .center(offset: 0),
                    style: PKToastStyle = .shared) {
@@ -97,7 +97,7 @@ public extension PKViewExtensions where Base: UIView {
     
     /// 仅文本样式Toast
     func showToast(message: String?,
-                   delay: TimeInterval = 2,
+                   delay: TimeInterval = 1.5,
                    position: ToastPosition = .center(offset: 0),
                    style: PKToastStyle = .shared) {
         guard let msg = message else { return }
