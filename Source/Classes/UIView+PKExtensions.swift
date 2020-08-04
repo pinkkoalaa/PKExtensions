@@ -278,6 +278,7 @@ public extension PKViewExtensions where Base: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 15)
+        label.preferredMaxLayoutWidth = 220
         hud.addSubview(label)
         
         label.pk.makeConstraints { (make) in
