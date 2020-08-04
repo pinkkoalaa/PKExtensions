@@ -38,7 +38,7 @@ public class PKToastStyle {
     public var imageSize = CGSize(width: 20, height: 20)
     
     /// Toast淡入淡出动画时间
-    public var fadeDuration: TimeInterval = 0
+    public var fadeDuration: TimeInterval = 0.15
     
     /// 圆角半径
     public var cornerRadius: CGFloat = 2
@@ -67,33 +67,41 @@ public extension PKViewExtensions where Base: UIView {
     /// 图片文本样式Toast
     func showToast(message: String?,
                    image: UIImage?,
+                   delay: TimeInterval = 2,
                    rotateAnimated: Bool = false,
                    layout: ToastLayout = .left,
                    position: ToastPosition = .center(offset: 0),
                    style: PKToastStyle = .shared) {
         if let msg = message, let img = image {
-            return _perfectToast(message: msg, image: img, rotateAnimated: rotateAnimated, layout: layout, position: position, style: style)
+            return _perfectToast(message: msg, image: img, delay: delay, rotateAnimated: rotateAnimated, layout: layout, position: position, style: style)
         }
         
         if let msg = message {
-            return _messageToast(message: msg, position: position, style: style)
+            return _messageToast(message: msg, delay: delay, position: position, style: style)
         }
         
         if let img = image {
-            return _imageToast(image: img, rotateAnimated: rotateAnimated, position: position, style: style)
+            return _imageToast(image: img, delay: delay, rotateAnimated: rotateAnimated, position: position, style: style)
         }
     }
     
     /// 仅图片样式Toast
-    func showToast(image: UIImage?, rotateAnimated: Bool = false, position: ToastPosition = .center(offset: 0), style: PKToastStyle = .shared) {
+    func showToast(image: UIImage?,
+                   delay: TimeInterval = 2,
+                   rotateAnimated: Bool = false,
+                   position: ToastPosition = .center(offset: 0),
+                   style: PKToastStyle = .shared) {
         guard let img = image else { return }
-        _imageToast(image: img, rotateAnimated: rotateAnimated, position: position, style: style)
+        _imageToast(image: img, delay: delay, rotateAnimated: rotateAnimated, position: position, style: style)
     }
     
     /// 仅文本样式Toast
-    func showToast(message: String?, position: ToastPosition = .center(offset: 0), style: PKToastStyle = .shared) {
+    func showToast(message: String?,
+                   delay: TimeInterval = 2,
+                   position: ToastPosition = .center(offset: 0),
+                   style: PKToastStyle = .shared) {
         guard let msg = message else { return }
-        _messageToast(message: msg, position: position, style: style)
+        _messageToast(message: msg, delay: delay, position: position, style: style)
     }
     
     /// 隐藏Toast
@@ -109,7 +117,7 @@ public extension PKViewExtensions where Base: UIView {
     
     // MARK: - private -
     
-    private func _messageToast(message: String, position: ToastPosition, style: PKToastStyle) {
+    private func _messageToast(message: String, delay: TimeInterval, position: ToastPosition, style: PKToastStyle) {
         let contentView = UIView()
         contentView.isUserInteractionEnabled = false
         base.addSubview(contentView)
@@ -127,6 +135,7 @@ public extension PKViewExtensions where Base: UIView {
         label.font = style.messageFont
         label.numberOfLines = style.messageNumberOfLines
         label.textAlignment = style.messageAlignment
+        label.preferredMaxLayoutWidth = 220
         hud.addSubview(label)
         
         contentView.pk.makeConstraints { (make) in
@@ -160,9 +169,13 @@ public extension PKViewExtensions where Base: UIView {
         UIView.animate(withDuration: style.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
             hud.alpha = 1.0
         })
+        
+        DispatchQueue.pk.asyncAfter(delay: delay) {
+            self._hideToast(contentView)
+        }
     }
     
-    private func _imageToast(image: UIImage, rotateAnimated: Bool, position: ToastPosition, style: PKToastStyle) {
+    private func _imageToast(image: UIImage, delay: TimeInterval, rotateAnimated: Bool, position: ToastPosition, style: PKToastStyle) {
         let contentView = UIView()
         contentView.isUserInteractionEnabled = false
         base.addSubview(contentView)
@@ -219,9 +232,13 @@ public extension PKViewExtensions where Base: UIView {
         UIView.animate(withDuration: style.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
             hud.alpha = 1.0
         })
+        
+        DispatchQueue.pk.asyncAfter(delay: delay) {
+            self._hideToast(contentView)
+        }
     }
     
-    private func _perfectToast(message: String, image: UIImage, rotateAnimated: Bool, layout: ToastLayout, position: ToastPosition, style: PKToastStyle) {
+    private func _perfectToast(message: String, image: UIImage, delay: TimeInterval, rotateAnimated: Bool, layout: ToastLayout, position: ToastPosition, style: PKToastStyle) {
         let contentView = UIView()
         contentView.isUserInteractionEnabled = false
         base.addSubview(contentView)
@@ -285,6 +302,10 @@ public extension PKViewExtensions where Base: UIView {
         UIView.animate(withDuration: style.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
             hud.alpha = 1.0
         })
+        
+        DispatchQueue.pk.asyncAfter(delay: delay) {
+            self._hideToast(contentView)
+        }
     }
     
     private func _adjustToast(_ toast: UIView, _ position: ToastPosition) {
@@ -333,3 +354,4 @@ private extension UIView {
         }
     }
 }
+
