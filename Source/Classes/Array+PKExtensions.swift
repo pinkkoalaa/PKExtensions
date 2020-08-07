@@ -55,8 +55,9 @@ public extension PKArrayExtensions {
 public extension Collection {
     
     /// 返回指定索引对应的元素，若索引越界则返回nil
-    subscript (safe index: Index) -> Iterator.Element? {
-        return indices.contains(index) ? self[index] : nil
+    subscript (safe index: Index?) -> Iterator.Element? {
+        guard let idx = index else { return nil }
+        return indices.contains(idx) ? self[idx] : nil
     }
 }
 
