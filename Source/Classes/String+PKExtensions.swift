@@ -128,6 +128,14 @@ public extension PKStringExtensions {
 
 public extension PKStringExtensions {
     
+    /// 检查是否包含指定字符串 (默认会区分大小写)
+    func contains(_ string: String, caseSensitive: Bool = true) -> Bool {
+        if !caseSensitive {
+            return base.range(of: string, options: .caseInsensitive) != nil
+        }
+        return base.range(of: string) != nil
+    }
+    
     /// 将数字金额字符串转成大写(人民币朗读形式)
     func rmbCapitalized() -> String {
         guard let number = Double(base) else { return "" }
