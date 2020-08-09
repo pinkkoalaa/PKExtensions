@@ -10,27 +10,21 @@ import UIKit
 
 public extension PKStringExtensions {
     
-    /// 检查字符串是否为空或只包含空白和换行字符
-    var isBlank: Bool {
-        let trimmed = base.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty
+    /// 将String转为Int
+    func toInt() -> Int? { Int(base) }
+    
+    /// 将String转为Double
+    func toDouble() -> Double? { Double(base) }
+    
+    /// 将String转CGFloat
+    func toCGFloat() -> CGFloat? {
+        guard let doubleValue = Double(base) else { return nil }
+        return CGFloat(doubleValue)
     }
     
-    /// 返回字符串中出现指定字符的第一个索引
-    func index(of char: Character) -> Int? {
-        for (index, c) in base.enumerated() where c == char {
-            return index
-        }
-        return nil
-    }
-    
-    /// 字符串查找子串返回NSRange
-    func nsRange(of subString: String?) -> NSRange {
-        guard let subValue = subString else { return NSRange(location: 0, length: 0) }
-        guard let range = base.range(of: subValue) else {
-            return NSRange(location: 0, length: 0)
-        }
-        return NSRange(range, in: base)
+    /// 将String转NSString
+    func toNSString() -> NSString {
+        return NSString(string: base)
     }
     
     /// 获取字符串尺寸
@@ -69,21 +63,66 @@ public extension PKStringExtensions {
 
 public extension PKStringExtensions {
     
-    /// 将String转为Int
-    func toInt() -> Int? { Int(base) }
-    
-    /// 将String转为Double
-    func toDouble() -> Double? { Double(base) }
-    
-    /// 将String转CGFloat
-    func toCGFloat() -> CGFloat? {
-        guard let doubleValue = Double(base) else { return nil }
-        return CGFloat(doubleValue)
+    /// 检查字符串是否为空或只包含空白和换行字符
+    var isBlank: Bool {
+        let trimmed = base.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty
     }
     
-    /// 将String转NSString
-    func toNSString() -> NSString {
-        return NSString(string: base)
+    /// 返回base64编码的字符串
+    var base64Encoded: String? {
+        // https://github.com/Reza-Rg/Base64-Swift-Extension/blob/master/Base64.swift
+        let plainData = base.data(using: .utf8)
+        return plainData?.base64EncodedString()
+    }
+    
+    /// 返回字符串中出现指定字符的第一个索引
+    func index(of char: Character) -> Int? {
+        for (index, c) in base.enumerated() where c == char {
+            return index
+        }
+        return nil
+    }
+    
+    /// 字符串查找子串返回NSRange
+    func nsRange(of subString: String?) -> NSRange {
+        guard let subValue = subString else { return NSRange(location: 0, length: 0) }
+        guard let range = base.range(of: subValue) else {
+            return NSRange(location: 0, length: 0)
+        }
+        return NSRange(range, in: base)
+    }
+    
+    /// 字符串提取子串 (从某个位置起到某个位置结束)
+    ///
+    ///     "Hello World".pk.slicing(from: 6, length: 5) -> "World"
+    func substring(from index: Int, length: Int) -> String? {
+        guard length >= 0, index >= 0, index < base.count  else { return nil }
+        guard index.advanced(by: length) <= base.count else {
+            return base[safe: index..<base.count]
+        }
+        guard length > 0 else { return "" }
+        return base[safe: index..<index.advanced(by: length)]
+    }
+    
+    /// 字符串提取子串 (从起始处到某个位置结束)
+    func substring(to index: Int) -> String? {
+        return substring(from: 0, length: index)
+    }
+    
+    /// 字符串提取子串 (从某个位置起直到末尾结束)
+    func substring(from index: Int) -> String? {
+        return substring(from: index, length: base.count)
+    }
+    
+    /// 删除首字符并返回新字符串
+    func deleteFirstCharacter() -> String? {
+        return substring(from: 1)
+    }
+    
+    /// 删除末尾字符并返回新字符串
+    func deleteLastCharacter() -> String? {
+        return substring(to: base.count - 1)
     }
 }
 
@@ -185,6 +224,20 @@ public extension PKStringExtensions {
     var validateChineseCharacters: Bool {
         let regex = "(^[\\u4e00-\\u9fa5]+$)"
         return base.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+    }
+}
+
+public extension String {
+    
+    /// 获取指定范围内字符串
+    subscript<R>(safe range: R) -> String? where R: RangeExpression, R.Bound == Int {
+        let range = range.relative(to: Int.min..<Int.max)
+        guard range.lowerBound >= 0,
+            let lowerIndex = index(startIndex, offsetBy: range.lowerBound, limitedBy: endIndex),
+            let upperIndex = index(startIndex, offsetBy: range.upperBound, limitedBy: endIndex) else {
+                return nil
+        }
+        return String(self[lowerIndex..<upperIndex])
     }
 }
 
