@@ -10,7 +10,12 @@ import UIKit
 
 public class PKToastStyle {
     
-    /// PKToastStyle单例实例
+    /// 获取一个PKToastStyle对象实例
+    public static func make() -> PKToastStyle {
+        return PKToastStyle()
+    }
+    
+    /// 获取PKToastStyle单例实例
     public static let shared = PKToastStyle()
     
     /// 背景色
@@ -31,8 +36,11 @@ public class PKToastStyle {
     /// 文本最大行数 (默认无限制)
     public var messageNumberOfLines: Int = 0
     
-    /// 文本最大宽度限制
+    /// 文本最大宽度限制(自适应限制的最大宽度)
     public var messageLayoutMaxWidth: CGFloat = 200
+    
+    /// 文本固定宽度(默认为0优先使用自适应)
+    public var messageLayoutFixedWidth: CGFloat = 0
     
     /// 图片尺寸
     public var imageSize = CGSize(width: 20, height: 20)
@@ -64,7 +72,7 @@ public extension PKViewExtensions where Base: UIView {
         case bottom(offset: CGFloat)
     }
     
-    /// 图片文本样式Toast
+    /// 图片文本样式Toast (delay设置为0则不自动隐藏)
     func showToast(message: String?,
                    image: UIImage?,
                    delay: TimeInterval = 1.5,
@@ -85,7 +93,7 @@ public extension PKViewExtensions where Base: UIView {
         }
     }
     
-    /// 仅图片样式Toast
+    /// 仅图片样式Toast (delay设置为0则不自动隐藏)
     func showToast(image: UIImage?,
                    delay: TimeInterval = 1.5,
                    rotateAnimated: Bool = false,
@@ -95,7 +103,7 @@ public extension PKViewExtensions where Base: UIView {
         _imageToast(image: img, delay: delay, rotateAnimated: rotateAnimated, position: position, style: style)
     }
     
-    /// 仅文本样式Toast
+    /// 仅文本样式Toast (delay设置为0则不自动隐藏)
     func showToast(message: String?,
                    delay: TimeInterval = 1.5,
                    position: ToastPosition = .center(offset: 0),
@@ -135,7 +143,7 @@ public extension PKViewExtensions where Base: UIView {
         label.font = style.messageFont
         label.numberOfLines = style.messageNumberOfLines
         label.textAlignment = style.messageAlignment
-        label.preferredMaxLayoutWidth = 220
+        label.preferredMaxLayoutWidth = style.messageLayoutMaxWidth
         hud.addSubview(label)
         
         contentView.pk.makeConstraints { (make) in
@@ -153,6 +161,9 @@ public extension PKViewExtensions where Base: UIView {
         
         label.pk.makeConstraints { (make) in
             make.center.equalToSuperview()
+            if style.messageLayoutFixedWidth > 0 {
+                make.width.equalTo(style.messageLayoutFixedWidth)
+            }
         }
         
         hud.pk.makeConstraints { (make) in
@@ -169,6 +180,8 @@ public extension PKViewExtensions where Base: UIView {
         UIView.animate(withDuration: style.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
             hud.alpha = 1.0
         })
+        
+        guard delay > 0 else { return }
         
         DispatchQueue.pk.asyncAfter(delay: delay) {
             self._hideToast(contentView)
@@ -233,6 +246,8 @@ public extension PKViewExtensions where Base: UIView {
             hud.alpha = 1.0
         })
         
+        guard delay > 0 else { return }
+        
         DispatchQueue.pk.asyncAfter(delay: delay) {
             self._hideToast(contentView)
         }
@@ -282,6 +297,9 @@ public extension PKViewExtensions where Base: UIView {
         
         button.pk.makeConstraints { (make) in
             make.center.equalToSuperview()
+            if style.messageLayoutFixedWidth > 0 {
+                make.width.equalTo(style.messageLayoutFixedWidth)
+            }
         }
         
         hud.pk.makeConstraints { (make) in
@@ -302,6 +320,8 @@ public extension PKViewExtensions where Base: UIView {
         UIView.animate(withDuration: style.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
             hud.alpha = 1.0
         })
+        
+        guard delay > 0 else { return }
         
         DispatchQueue.pk.asyncAfter(delay: delay) {
             self._hideToast(contentView)
@@ -354,4 +374,3 @@ private extension UIView {
         }
     }
 }
-
