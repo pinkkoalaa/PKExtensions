@@ -70,6 +70,15 @@ public extension PKApplicationExtensions {
             self.base.endBackgroundTask(taskID)
         }
     }
+    
+    /// 调起拨打电话
+    static func call(phone number: String?) {
+        guard let value = number else { return }
+        let phone = "telprompt://" + value
+        if UIApplication.shared.canOpenURL(URL(string: phone)!) {
+            UIApplication.shared.open(URL(string: phone)!, options: [:], completionHandler: nil)
+        }
+    }
 }
 
 public extension PKApplicationExtensions {
