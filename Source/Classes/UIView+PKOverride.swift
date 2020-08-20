@@ -128,14 +128,18 @@ open class PKUIButton: UIButton {
         
         guard isImageValid() || isTitleValid() else { return }
         
-        let titleSize = getValidTitleSize()
+        var titleSize = getValidTitleSize()
         let imageSize = getValidImageSize()
         let spacing = getValidSpacing()
         let inset = contentEdgeInsets
         
         switch imagePosition {
         case .top:
-            let contentHeight = imageSize.height + titleSize.height + spacing
+            var contentHeight = imageSize.height + titleSize.height + spacing
+            if contentHeight > bounds.height {
+                titleSize.height = bounds.height - imageSize.height - spacing
+                contentHeight = bounds.height
+            }
             let padding = verticalTop(contentHeight)
             let imageX = (bounds.width - inset.pk.horizontal - imageSize.width) / 2 + inset.left
             let titleX = (bounds.width - inset.pk.horizontal - titleSize.width) / 2 + inset.left
@@ -143,7 +147,11 @@ open class PKUIButton: UIButton {
             let titleY = anotherTop(titleSize.height, originY: imageView!.frame.maxY + spacing)
             titleLabel!.frame = CGRect(x: titleX, y: titleY, size: titleSize)
         case .left:
-            let contentWidth = titleSize.width + imageSize.width + spacing
+            var contentWidth = titleSize.width + imageSize.width + spacing
+            if contentWidth > bounds.width {
+                titleSize.width = bounds.width - imageSize.width - spacing
+                contentWidth = bounds.width
+            }
             let padding = horizontalLeft(contentWidth)
             let imageY = (bounds.height - inset.pk.vertical - imageSize.height) / 2 + inset.top
             let titleY = (bounds.height - inset.pk.vertical - titleSize.height) / 2 + inset.top
@@ -151,7 +159,11 @@ open class PKUIButton: UIButton {
             let titleX = anotherLeft(titleSize.width, originX: imageView!.frame.maxX + spacing)
             titleLabel!.frame = CGRect(x: titleX, y: titleY, size: titleSize)
         case .bottom:
-            let contentHeight = imageSize.height + titleSize.height + spacing
+            var contentHeight = imageSize.height + titleSize.height + spacing
+            if contentHeight > bounds.height {
+                titleSize.height = bounds.height - imageSize.height - spacing
+                contentHeight = bounds.height
+            }
             let padding = verticalTop(contentHeight)
             let imageX = (bounds.width - inset.pk.horizontal - imageSize.width) / 2 + inset.left
             let titleX = (bounds.width - inset.pk.horizontal - titleSize.width) / 2 + inset.left
@@ -159,7 +171,11 @@ open class PKUIButton: UIButton {
             let imageY = anotherTop(imageSize.height, originY: titleLabel!.frame.maxY + spacing)
             imageView!.frame = CGRect(x: imageX, y: imageY, size: imageSize)
         case .right:
-            let contentWidth = titleSize.width + imageSize.width + spacing
+            var contentWidth = titleSize.width + imageSize.width + spacing
+            if contentWidth > bounds.width {
+                titleSize.width = bounds.width - imageSize.width - spacing
+                contentWidth = bounds.width
+            }
             let padding = horizontalLeft(contentWidth)
             let imageY = (bounds.height - inset.pk.vertical - imageSize.height) / 2 + inset.top
             let titleY = (bounds.height - inset.pk.vertical - titleSize.height) / 2 + inset.top
