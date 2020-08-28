@@ -37,7 +37,6 @@ public extension PKImageExtensions {
     /// 根据颜色返回一个纯色的图像
     static func image(with color: UIColor?, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage? {
         guard let cgColor = color?.cgColor, size.width > 0, size.height > 0 else { return nil }
-        let size = CGSize(width: 1, height: 1)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let context = UIGraphicsGetCurrentContext()
         context?.setFillColor(cgColor)
