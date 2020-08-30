@@ -59,9 +59,9 @@ public extension PKViewExtensions where Base: UICollectionView {
     func register<T: UICollectionReusableView>(supplementaryViewOfKind kind: ElementKind, withClass name: T.Type) {
         let elementKind: String
         switch kind {
-        case .sectionFooter:
+        case .sectionHeader:
             elementKind = UICollectionView.elementKindSectionHeader
-        default:
+        case .sectionFooter:
             elementKind = UICollectionView.elementKindSectionFooter
         }
         base.register(T.self, forSupplementaryViewOfKind: elementKind, withReuseIdentifier: String(describing: name))
