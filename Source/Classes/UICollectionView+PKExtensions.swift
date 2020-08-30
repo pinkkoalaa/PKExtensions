@@ -44,9 +44,9 @@ public extension PKViewExtensions where Base: UICollectionView {
     func dequeueReusableSupplementaryView<T: UICollectionReusableView>(ofKind kind: ElementKind, withClass name: T.Type, for indexPath: IndexPath) -> T {
         let elementKind: String
         switch kind {
-        case .sectionFooter:
+        case .sectionHeader:
             elementKind = UICollectionView.elementKindSectionHeader
-        default:
+        case .sectionFooter:
             elementKind = UICollectionView.elementKindSectionFooter
         }
         guard let cell = base.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: String(describing: name), for: indexPath) as? T else {
