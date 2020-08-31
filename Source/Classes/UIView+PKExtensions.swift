@@ -11,10 +11,9 @@ import UIKit
 public extension PKViewExtensions where Base: UIView {
     
     /// 设置视图禁用交互时长
-    func disableInteraction(duration: TimeInterval = 0) {
+    func disableInteraction(duration: TimeInterval) {
         guard base.isUserInteractionEnabled else { return }
         base.isUserInteractionEnabled = false
-        guard duration > 0 else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             self.base.isUserInteractionEnabled = true
         }
