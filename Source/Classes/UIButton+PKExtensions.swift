@@ -34,7 +34,7 @@ public extension PKViewExtensions where Base: UIButton {
     ///   - style: 指示器样式
     ///   - color: 颜色
     ///   - cleared: 是否清除背景色，默认false
-    func showIndicator(style: UIActivityIndicatorView.Style, color: UIColor = .white, cleared: Bool = false) {
+    func showIndicator(style: UIActivityIndicatorView.Style, color: UIColor? = .white, cleared: Bool = false) {
         guard !isShowingIndicator else { return }
         if !base.translatesAutoresizingMaskIntoConstraints {
             base.superview?.layoutIfNeeded()
@@ -72,7 +72,7 @@ public extension PKViewExtensions where Base: UIButton {
     }
     
     /// 显示活动指示器并自定义文本
-    func showIndicatorText(_ text: String? = nil, style: UIActivityIndicatorView.Style, color: UIColor = .white) {
+    func showIndicatorText(_ text: String? = nil, style: UIActivityIndicatorView.Style, color: UIColor? = .white) {
         guard !isShowingIndicator else { return }
         if !base.translatesAutoresizingMaskIntoConstraints {
             base.superview?.layoutIfNeeded()
