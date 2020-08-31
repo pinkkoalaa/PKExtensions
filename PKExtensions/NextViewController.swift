@@ -25,7 +25,7 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         button.setImage(UIImage(named: "shibai"), for: .normal)
         button.backgroundColor = UIColor.lightGray
         button.imagePosition = .left
-        button.contentHorizontalAlignment = PKUIButton.leftAndRight
+        button.contentHorizontalAlignment = .eachEnd
         button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 20)
         button.imageView?.backgroundColor = .orange
         button.titleLabel?.backgroundColor = .brown

@@ -315,12 +315,12 @@ public extension PKViewExtensions where Base: UIView {
 public extension PKViewExtensions where Base: UIView {
     
     /// 指示器是否加载中
-    var isIndicatorLoading: Bool {
+    var isLoading: Bool {
         return (base.pk_loadingViewSet != nil)
     }
     
     /// 开启指示器加载效果
-    func beginIndicatorLoading(text: String? = nil, tintColor: UIColor = .gray, offset: CGFloat = 0) {
+    func beginLoading(text: String? = nil, tintColor: UIColor = .gray, offset: CGFloat = 0) {
         guard base.pk_loadingViewSet == nil else { return }
         base.pk_loadingViewSet = Set()
         
@@ -377,7 +377,7 @@ public extension PKViewExtensions where Base: UIView {
     }
     
     /// 结束指示器加载效果
-    func endIndicatorLoading() {
+    func endLoading() {
         guard base.pk_loadingViewSet != nil else { return }
         base.pk_loadingViewSet?.forEach({ $0.removeFromSuperview() })
         base.pk_loadingViewSet?.removeAll()

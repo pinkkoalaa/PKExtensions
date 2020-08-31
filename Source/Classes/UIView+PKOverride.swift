@@ -15,24 +15,27 @@ import UIKit
 *  1. 支持设置图片相对于 titleLabel 的位置 (imagePosition)
 *  2. 支持设置图片和 titleLabel 之间的间距 (imageAndTitleSpacing)
 *  3. 支持自定义图片尺寸大小 (imageSpecifiedSize)
-*  4. 支持图片和 titleLabel 居中对齐或边缘对齐
-*  5. 支持图片和 titleLabel 各自对齐到两端 (.leftAndRight/.topAndBottom)
-*  6. 支持调整内容边距 (contentEdgeInsets) 不支持titleEdgeInsets/imageEdgeInsets
+*  4. 支持图片和 titleLabel 同时居中对齐或边缘对齐
+*  5. 支持图片和 titleLabel 各自对齐到两端 (.eachEnd)
+*  6. 支持调整内容边距 (contentEdgeInsets) 注：不支持titleEdgeInsets/imageEdgeInsets
 *  7. 支持调整 cornerRadius 始终保持为高度的 1/2 (adjustsRoundedCornersAutomatically)
 *  8. 支持 Auto Layout 以上设置可根据内容自适应
 */
-public extension PKUIButton {
+public extension UIControl.ContentHorizontalAlignment {
     
     /// 图片标题分别对齐到左右两端
-    /// Usage: button.contentHorizontalAlignment = PKUIButton.leftAndRight
-    static var leftAndRight: UIControl.ContentHorizontalAlignment {
-        return UIControl.ContentHorizontalAlignment(rawValue:7)!
+    /// Usage: button.contentHorizontalAlignment = .eachEnd
+    static var eachEnd: UIControl.ContentHorizontalAlignment {
+        return .fill
     }
+}
 
+public extension UIControl.ContentVerticalAlignment {
+    
     /// 图片标题分别对齐到顶部和底部
-    /// Usage: button.contentVerticalAlignment = PKUIButton.topAndBottom
-    static var topAndBottom: UIControl.ContentVerticalAlignment {
-        return UIControl.ContentVerticalAlignment(rawValue: 6)!
+    /// Usage: button.contentVerticalAlignment = .eachEnd
+    static var eachEnd: UIControl.ContentVerticalAlignment {
+        return .fill
     }
 }
 
@@ -191,7 +194,7 @@ open class PKUIButton: UIButton {
             return contentEdgeInsets.left
         case .right:
             return bounds.width - contentEdgeInsets.right - width
-        case PKUIButton.leftAndRight:
+        case .eachEnd:
             return contentEdgeInsets.left
         default: /// Other types regarded as .center
             return (bounds.width - contentEdgeInsets.pk.horizontal - width) / 2 + contentEdgeInsets.left
@@ -200,8 +203,8 @@ open class PKUIButton: UIButton {
     
     private func anotherLeft(_ width: CGFloat, originX: CGFloat) -> CGFloat {
         switch contentHorizontalAlignment {
-            case PKUIButton.leftAndRight:
-                return bounds.width - width - contentEdgeInsets.right
+        case .eachEnd:
+            return bounds.width - width - contentEdgeInsets.right
         default:
             return originX
         }
@@ -213,7 +216,7 @@ open class PKUIButton: UIButton {
             return contentEdgeInsets.top
         case .bottom:
             return bounds.height - contentEdgeInsets.bottom - height
-        case PKUIButton.topAndBottom:
+        case .eachEnd:
             return contentEdgeInsets.top
         default: /// Other types regarded as .center
             return (bounds.height - contentEdgeInsets.pk.vertical - height) / 2 + contentEdgeInsets.top
@@ -222,8 +225,8 @@ open class PKUIButton: UIButton {
     
     private func anotherTop(_ height: CGFloat, originY: CGFloat) -> CGFloat {
         switch contentVerticalAlignment {
-            case PKUIButton.topAndBottom:
-                return bounds.height - height - contentEdgeInsets.bottom
+        case .eachEnd:
+            return bounds.height - height - contentEdgeInsets.bottom
         default:
             return originY
         }
