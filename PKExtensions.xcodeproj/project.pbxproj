@@ -180,6 +180,7 @@
 				3E28239C24ADBE2E0056502E /* DispatchQueue+PKExtensions.swift */,
 				3E35ABC7249A0FE700AFCAA3 /* Double+PKExtensions.swift */,
 				3E35ABB5249A0FE700AFCAA3 /* NSAttributedString+PKExtensionsl.swift */,
+				61157428250A0338007A7632 /* NSObject+PKExtensions.swift */,
 				3E35ABBF249A0FE700AFCAA3 /* String+PKExtensions.swift */,
 				3E35ABBD249A0FE700AFCAA3 /* Timer+PKExtensions.swift */,
 				3E3E69E124BB10F3001C7EC0 /* UIAlertController+PKExtensions.swift */,
@@ -209,7 +210,6 @@
 				3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */,
 				3E35ABBB249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift */,
 				3E3CD5B3249CBE8500F089A3 /* UIWindow+PKExtensions.swift */,
-				61157428250A0338007A7632 /* NSObject+PKExtensions.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

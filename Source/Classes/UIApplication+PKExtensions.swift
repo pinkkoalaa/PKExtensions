@@ -10,21 +10,6 @@ import UIKit
 
 public extension PKApplicationExtensions {
     
-    /// 获取应用程序顶层窗口
-    static var frontWindow: UIWindow? {
-        let frontToBackWindows = UIApplication.shared.windows.reversed()
-        for window in frontToBackWindows {
-            guard
-                !window.isHidden,
-                window.alpha > 0,
-                window.screen == UIScreen.main else {
-                continue
-            }
-            return window
-        }
-        return nil
-    }
-    
     /// 获取应用程序的主窗口
     static var keyWindow: UIWindow? {
         if let window = UIApplication.shared.delegate?.window as? UIWindow {
@@ -36,6 +21,23 @@ public extension PKApplicationExtensions {
         } else {
             return UIApplication.shared.keyWindow
         }
+    }
+    
+    /// 获取应用程序顶层窗口
+    static func topWindow(_ isFirstResponder: Bool = true) -> UIWindow? {
+        let frontToBackWindows = UIApplication.shared.windows.reversed()
+        for window in frontToBackWindows {
+            guard !window.isHidden, window.alpha > 0, window.screen == UIScreen.main else {
+                continue
+            }
+            
+            if isFirstResponder {
+                return window
+            } else if window.isKeyWindow {
+                return window
+            }
+        }
+        return UIApplication.shared.delegate?.window as? UIWindow
     }
 
     /// 获取当前程序的顶层控制器
