@@ -18,13 +18,12 @@ public extension PKViewExtensions where Base: UIWindow {
     ///   - duration: 动画持续时间
     ///   - options: 动画选项
     ///   - completion: 切换完成后回调
-    func switchRootViewController(
-        to viewController: UIViewController,
-        animated: Bool = true,
-        duration: TimeInterval = 0.5,
-        options: UIView.AnimationOptions = .transitionFlipFromRight,
-        _ completion: (() -> Void)? = nil) {
-
+    func switchRootViewController(to viewController: UIViewController,
+                                  animated: Bool = true,
+                                  duration: TimeInterval = 0.5,
+                                  options: UIView.AnimationOptions = .transitionFlipFromRight,
+                                  _ completion: (() -> Void)? = nil) {
+    
         guard animated else {
             base.rootViewController = viewController
             completion?()

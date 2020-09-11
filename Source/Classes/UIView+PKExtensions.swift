@@ -41,88 +41,6 @@ public extension PKViewExtensions where Base: UIView {
         return base.layer.pk.screenshots()
     }
     
-    /// 为视图指定位置添加圆角
-    ///
-    ///     let aView = UIView()
-    ///     aView.pk.addCorner(radius: 5, byRoundingCorners: [.topLeft, .bottomLeft])
-    ///     // 注：使用此方法设置圆角，超出父图层部分的子图层将被裁减掉，且在视图得到位置大小后调用生效
-    ///     // 若视图必须等Auto Layout算出元件的大小后，再计算cornerRadius，推荐两种写法：
-    ///     // 1. 在controller的 viewDidLayoutSubviews() 里计算 cornerRadius
-    ///     // 该方法执行时controller内的视图都已按 auto layout 的约束得到位置大小
-    ///     // 2. 在自定义view的 layoutSubviews() 里计算 cornerRadius
-    ///     // 该方法执行时视图自身和它的子视图都已按 auto layout 的约束得到位置大小
-    ///
-    /// - Parameters:
-    ///   - radius: 圆角半径
-    ///   - corners: 添加圆角的位置，默认四周
-    func addCorner(radius: CGFloat, byRoundingCorners corners: UIRectCorner = .allCorners) {
-        guard base.bounds.size.pk.isValid else { return }
-        let path = UIBezierPath(roundedRect: base.bounds,
-                                byRoundingCorners: corners,
-                                cornerRadii: CGSize(width: radius, height: radius))
-        let maskLayer = CAShapeLayer()
-        maskLayer.frame = base.bounds
-        maskLayer.path = path.cgPath
-        base.layer.mask = maskLayer
-    }
-    
-    /// 为视图指定位置添加边框线
-    ///
-    ///     let aView = UIView()
-    ///     aView.pk.addBorderLayer(width: 1 / UIScreen.main.scale, color: .red, byRectEdge: [.left, .bottom])
-    ///     // 注：在视图得到位置大小后调用生效，同addCorner(:)方法说明
-    ///
-    /// - Parameters:
-    ///   - width: 边框线宽度
-    ///   - color: 边框线颜色
-    ///   - edges: 添加边框线的位置，默认四周
-    func addBorderLayer(width: CGFloat, color: UIColor? = .gray, byRectEdge edges: UIRectEdge = .left) {
-        guard base.bounds.size.pk.isValid else { return }
-        
-        let path = UIBezierPath()
-        let centerWidth = width / 2
-        if edges.rawValue & UIRectEdge.top.rawValue > 0 {
-            path.move(to: CGPoint(x: 0, y: centerWidth))
-            path.addLine(to: CGPoint(x: base.bounds.width, y: centerWidth))
-        }
-        
-        if edges.rawValue & UIRectEdge.left.rawValue > 0 {
-            path.move(to: CGPoint(x: centerWidth, y: 0))
-            path.addLine(to: CGPoint(x: centerWidth, y: base.bounds.height))
-        }
-        
-        if edges.rawValue & UIRectEdge.bottom.rawValue > 0 {
-            path.move(to: CGPoint(x: 0, y: base.bounds.height - centerWidth))
-            path.addLine(to: CGPoint(x: base.bounds.width, y: base.bounds.height - centerWidth))
-        }
-         
-        if edges.rawValue & UIRectEdge.right.rawValue > 0 {
-            path.move(to: CGPoint(x: base.bounds.width - centerWidth, y: 0))
-            path.addLine(to: CGPoint(x: base.bounds.width - centerWidth, y: base.bounds.height))
-        }
-        
-        if let lineLayer = base.pk_borderLayer {
-            lineLayer.path = path.cgPath
-            lineLayer.lineWidth = width
-            lineLayer.strokeColor = color?.cgColor
-        } else {
-            let layer = CAShapeLayer()
-            layer.zPosition = 2200
-            layer.path = path.cgPath
-            layer.fillColor = UIColor.clear.cgColor
-            layer.strokeColor = color?.cgColor
-            layer.lineWidth = width
-            base.layer.addSublayer(layer)
-            base.pk_borderLayer = layer
-        }
-    }
-    
-    /// 删除视图边框线 (对应-addBorder:方法)dddd
-    func removeBorderLayer() {
-        base.pk_borderLayer?.removeFromSuperlayer()
-        base.pk_borderLayer = nil
-    }
-    
     /// 为视图添加阴影效果
     ///
     ///     let aView = UIView()
@@ -145,25 +63,37 @@ public extension PKViewExtensions where Base: UIView {
         base.layer.shadowColor = color?.cgColor
     }
     
-    /// 通过设置阴影路径为视图添加四周阴影效果，显示效果更加均匀
-    ///
-    ///     let aView = UIView()
-    ///     aView.pk.setShadowPath(radius: 5, opacity: 0.2, color:.gray)
-    ///     // 注：在视图得到位置大小后调用生效，同addCorner(:)方法说明
-    ///
+    /// 为视图指定位置添加圆角 (通过视图mask属性设置)
     /// - Parameters:
-    ///   - radius: 阴影半径，默认为5
-    ///   - opacity: 阴影透明度，取值范围0至1
-    ///   - color: 阴影颜色，默认灰色
-    func setShadowPath(radius: CGFloat = 5, opacity: Float, color: UIColor? = .gray) {
-        base.layer.shadowRadius = radius
-        base.layer.shadowOpacity = opacity
-        base.layer.shadowColor = color?.cgColor
-        base.layer.shadowOffset = .zero
-        
-        guard base.bounds.size.pk.isValid else { return }
-        let path = UIBezierPath(roundedRect: base.bounds, cornerRadius: base.layer.cornerRadius)
-        base.layer.shadowPath = path.cgPath
+    ///   - radius: 圆角半径
+    ///   - corners: 添加圆角的位置，默认四周
+    func makeCorner(radius: CGFloat, byRoundingCorners corners: UIRectCorner = .allCorners) {
+        let makeClosure: (_ : UIView) -> Void = { sender in
+            sender.pk._setCorner(radius: radius, byRoundingCorners: corners)
+        }
+        makeClosure(base)
+        base.pk_addViewObserver("frame", makeClosure, identify: "corner")
+        base.pk_addViewObserver("bounds", makeClosure, identify: "corner")
+    }
+    
+    /// 为视图指定位置添加边框线
+    /// - Parameters:
+    ///   - width: 边框线宽度
+    ///   - color: 边框线颜色
+    ///   - edges: 添加边框线的位置，默认四周
+    func addBorderLayer(width: CGFloat, color: UIColor? = .gray, byRectEdge edges: UIRectEdge = .left) {
+        let makeClosure: (_ : UIView) -> Void = { sender in
+            sender.pk._setBorder(width: width, color: color, byRectEdge: edges)
+        }
+        makeClosure(base)
+        base.pk_addViewObserver("frame", makeClosure, identify: "border")
+        base.pk_addViewObserver("bounds", makeClosure, identify: "border")
+    }
+    
+    /// 删除视图边框线 (对应-addBorderLayer:方法)
+    func removeBorderLayer() {
+        base.pk_borderLayer?.removeFromSuperlayer()
+        base.pk_borderLayer = nil
     }
     
     /// 线性渐变方向
@@ -187,60 +117,24 @@ public extension PKViewExtensions where Base: UIView {
     }
     
     /// 为视图添加线性渐变图层
-    ///
-    ///     let aView = UIView()
-    ///     aView.pk.addGradientLayer(colors: [.red, .orange], direction: .leftToRight)
-    ///     // 注：在视图得到位置大小后调用生效，同addCorner(:)方法说明
-    ///
     /// - Parameters:
     ///   - colors: 渐变颜色数组
     ///   - direction: 渐变方向
     func addGradientLayer(colors: [UIColor?], direction: GradientDirection = .leftToRight) {
-        return addGradientLayer(colors: colors, direction: direction, size: base.bounds.size)
+        let makeClosure: (_ : UIView) -> Void = { sender in
+            self.addGradientLayer(colors: colors, direction: direction, size: sender.bounds.size)
+        }
+        makeClosure(base)
+        base.pk_addViewObserver("frame", makeClosure, identify: "gradient")
+        base.pk_addViewObserver("bounds", makeClosure, identify: "gradient")
     }
     
     /// 为视图添加线性渐变图层 (自定义渐变图层大小)
     func addGradientLayer(colors: [UIColor?], direction: GradientDirection = .leftToRight, size: CGSize) {
-        guard size.pk.isValid else { return }
-        
-        var gradientLayer: CAGradientLayer!
-        if let layer = base.pk_gradientLayer {
-            gradientLayer = layer
-            gradientLayer.frame = CGRect(origin: .zero, size: size)
-        } else {
-            gradientLayer = CAGradientLayer()
-            gradientLayer.frame = CGRect(origin: .zero, size: size)
-            gradientLayer.colors = colors.map({ $0?.cgColor ?? UIColor.black.cgColor })
-            base.layer.insertSublayer(gradientLayer, at: 0)
-            base.pk_gradientLayer = gradientLayer
-        }
-        
-        switch direction {
-        case .leftToRight:
-            gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-            gradientLayer.endPoint = CGPoint(x: 1, y: 0)
-        case .rightToLeft:
-            gradientLayer.startPoint = CGPoint(x: 1, y: 0)
-            gradientLayer.endPoint = CGPoint(x: 0, y: 0)
-        case .topToBottom:
-            gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-            gradientLayer.endPoint = CGPoint(x: 0, y: 1)
-        case .bottomToTop:
-            gradientLayer.startPoint = CGPoint(x: 0, y: 1)
-            gradientLayer.endPoint = CGPoint(x: 0, y: 0)
-        case .leftTopToRightBottom:
-            gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-            gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        case .leftBottomToRightTop:
-            gradientLayer.startPoint = CGPoint(x: 0, y: 1)
-            gradientLayer.endPoint = CGPoint(x: 1, y: 0)
-        case .rightTopToLeftBottom:
-            gradientLayer.startPoint = CGPoint(x: 1, y: 0)
-            gradientLayer.endPoint = CGPoint(x: 0, y: 1)
-        case .rightBottomToLeftTop:
-            gradientLayer.startPoint = CGPoint(x: 1, y: 1)
-            gradientLayer.endPoint = CGPoint(x: 0, y: 0)
-        }
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        _setGradient(colors: colors, direction: direction, size: size)
+        CATransaction.commit()
     }
     
     /// 删除渐变图层 (对应-addGradientLayer:方法)
@@ -494,6 +388,155 @@ private extension UIView {
             return objc_getAssociatedObject(self, &UIViewAssociatedPKLoadingViewsKey) as? Set
         } set {
             objc_setAssociatedObject(self, &UIViewAssociatedPKLoadingViewsKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+private extension UIView {
+    
+    func pk_removeViewObserver(identify: String) {
+        guard let superView = self.superview else { return }
+        superView.pk_KVOWrappers.removeObject(forKey: identify)
+    }
+    
+    func pk_addViewObserver(_ keyPath: String, _ handler: @escaping (_ sender: UIView) -> Void, identify: String) {
+        pk_addViewObserver(keyPath: keyPath, handler: { (object, _) in
+            handler(object as! UIView)
+        }, identify: identify)
+    }
+    
+    private func pk_addViewObserver(keyPath: String,
+                                    handler: @escaping (_ sender: NSObject, _ change: [NSKeyValueChangeKey : Any]?) -> Void,
+                                    identify: String) {
+        if let superView = self.superview {
+            let anyObj = superView.pk_KVOWrappers.value(forKey: identify)
+            if let wrapper = anyObj as? _PKObserverWrapper {
+                let newWrapper = _PKObserverWrapper(wrapper: wrapper, ketPath: keyPath, handler: handler)
+                superView.pk_KVOWrappers.setValue(newWrapper, forKey: identify)
+            } else {
+                let wrapper = _PKObserverWrapper(target: self, keyPath: keyPath, handler: handler)
+                superView.pk_KVOWrappers.setValue(wrapper, forKey: identify)
+            }
+        } else {
+            let wrapper = _PKObserverWrapper(target: self, keyPath: keyPath, handler: handler)
+            DispatchQueue.main.async {
+                guard let superview = self.superview else {
+                    fatalError("未找到父视图! \(self)")
+                }
+                superview.pk_KVOWrappers.setValue(wrapper, forKey: identify)
+            }
+        }
+    }
+    
+    private var pk_KVOWrappers: NSMutableDictionary { // [identifyKey: _PKObserverWrapper]
+        let wrappers: NSMutableDictionary
+        if let existing = objc_getAssociatedObject(self, &UIViewAssociatedKVODictionaryKey) as? NSMutableDictionary {
+            wrappers = existing
+        } else {
+            wrappers = NSMutableDictionary()
+            objc_setAssociatedObject(self, &UIViewAssociatedKVODictionaryKey, wrappers, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        return wrappers
+    }
+}
+
+private var UIViewAssociatedKVOSetKey: Void?
+private var UIViewAssociatedKVODictionaryKey: Void?
+
+private extension PKViewExtensions where Base: UIView {
+ 
+    private func _setCorner(radius: CGFloat, byRoundingCorners corners: UIRectCorner = .allCorners) {
+        guard base.bounds.size.pk.isValid else { return }
+        let path = UIBezierPath(roundedRect: base.bounds,
+                                byRoundingCorners: corners,
+                                cornerRadii: CGSize(width: radius, height: radius))
+        let maskLayer = CAShapeLayer()
+        maskLayer.frame = base.bounds
+        maskLayer.path = path.cgPath
+        base.layer.mask = maskLayer
+    }
+    
+    private func _setBorder(width: CGFloat, color: UIColor? = .gray, byRectEdge edges: UIRectEdge = .left) {
+        guard base.bounds.size.pk.isValid else { return }
+        
+        let path = UIBezierPath()
+        let centerWidth = width / 2
+        if edges.rawValue & UIRectEdge.top.rawValue > 0 {
+            path.move(to: CGPoint(x: 0, y: centerWidth))
+            path.addLine(to: CGPoint(x: base.bounds.width, y: centerWidth))
+        }
+        
+        if edges.rawValue & UIRectEdge.left.rawValue > 0 {
+            path.move(to: CGPoint(x: centerWidth, y: 0))
+            path.addLine(to: CGPoint(x: centerWidth, y: base.bounds.height))
+        }
+        
+        if edges.rawValue & UIRectEdge.bottom.rawValue > 0 {
+            path.move(to: CGPoint(x: 0, y: base.bounds.height - centerWidth))
+            path.addLine(to: CGPoint(x: base.bounds.width, y: base.bounds.height - centerWidth))
+        }
+         
+        if edges.rawValue & UIRectEdge.right.rawValue > 0 {
+            path.move(to: CGPoint(x: base.bounds.width - centerWidth, y: 0))
+            path.addLine(to: CGPoint(x: base.bounds.width - centerWidth, y: base.bounds.height))
+        }
+        
+        if let lineLayer = base.pk_borderLayer {
+            lineLayer.path = path.cgPath
+            lineLayer.lineWidth = width
+            lineLayer.strokeColor = color?.cgColor
+        } else {
+            let layer = CAShapeLayer()
+            layer.zPosition = 2200
+            layer.path = path.cgPath
+            layer.fillColor = UIColor.clear.cgColor
+            layer.strokeColor = color?.cgColor
+            layer.lineWidth = width
+            base.layer.addSublayer(layer)
+            base.pk_borderLayer = layer
+        }
+    }
+    
+    private func _setGradient(colors: [UIColor?], direction: GradientDirection = .leftToRight, size: CGSize) {
+        guard size.pk.isValid else { return }
+        
+        var gradientLayer: CAGradientLayer!
+        if let layer = base.pk_gradientLayer {
+            gradientLayer = layer
+            gradientLayer.frame = CGRect(origin: .zero, size: size)
+        } else {
+            gradientLayer = CAGradientLayer()
+            gradientLayer.frame = CGRect(origin: .zero, size: size)
+            gradientLayer.colors = colors.map({ $0?.cgColor ?? UIColor.black.cgColor })
+            base.layer.insertSublayer(gradientLayer, at: 0)
+            base.pk_gradientLayer = gradientLayer
+        }
+        
+        switch direction {
+        case .leftToRight:
+            gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+            gradientLayer.endPoint = CGPoint(x: 1, y: 0)
+        case .rightToLeft:
+            gradientLayer.startPoint = CGPoint(x: 1, y: 0)
+            gradientLayer.endPoint = CGPoint(x: 0, y: 0)
+        case .topToBottom:
+            gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+            gradientLayer.endPoint = CGPoint(x: 0, y: 1)
+        case .bottomToTop:
+            gradientLayer.startPoint = CGPoint(x: 0, y: 1)
+            gradientLayer.endPoint = CGPoint(x: 0, y: 0)
+        case .leftTopToRightBottom:
+            gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+            gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+        case .leftBottomToRightTop:
+            gradientLayer.startPoint = CGPoint(x: 0, y: 1)
+            gradientLayer.endPoint = CGPoint(x: 1, y: 0)
+        case .rightTopToLeftBottom:
+            gradientLayer.startPoint = CGPoint(x: 1, y: 0)
+            gradientLayer.endPoint = CGPoint(x: 0, y: 1)
+        case .rightBottomToLeftTop:
+            gradientLayer.startPoint = CGPoint(x: 1, y: 1)
+            gradientLayer.endPoint = CGPoint(x: 0, y: 0)
         }
     }
 }

@@ -64,6 +64,47 @@ public extension PKLayerExtensions where Base: CALayer {
         base.add(animation, forKey: nil)
     }
     
+    enum ShakeDirection { case horizontal(offset: CGFloat), vertical(offset: CGFloat) }
+    
+    /// 为layer添加晃动动画
+    func shakeAnimation(duration: TimeInterval = 0.25,
+                        repeatCount: Float = .greatestFiniteMagnitude,
+                        curve: CAMediaTimingFunctionName = .linear,
+                        direction: ShakeDirection = .horizontal(offset: 10)) {
+        var offsetX: CGFloat = 0
+        var offsetY: CGFloat = 0
+        switch direction {
+        case .horizontal(let value): offsetX = value
+        case .vertical(let value): offsetY = value
+        }
+        
+        let p = base.position
+        let values = [p, CGPoint(x: p.x - offsetX, y: p.y - offsetY), p, CGPoint(x: p.x + offsetX, y: p.y + offsetY), p]
+        
+        let animation = CAKeyframeAnimation(keyPath: "position")
+        animation.values = values
+        animation.duration = duration
+        animation.timingFunction = CAMediaTimingFunction(name: curve)
+        animation.repeatCount = repeatCount
+        animation.fillMode = .forwards
+        animation.isRemovedOnCompletion = true
+        base.add(animation, forKey: nil)
+    }
+    
+    /// 为layer添加缩放动画
+    func scaleAnimation(duration: TimeInterval = 0.25,
+                        repeatCount: Float = .greatestFiniteMagnitude,
+                        curve: CAMediaTimingFunctionName = .linear,
+                        scale: CGFloat = 1.25) {
+        let animation = CAKeyframeAnimation(keyPath: "transform.scale")
+        animation.values = [1, scale, 1]
+        animation.keyTimes = [0, 0.5, 1]
+        animation.duration = duration
+        animation.repeatCount = repeatCount
+        animation.fillMode = .forwards
+        base.add(animation, forKey: nil)
+    }
+    
     enum AnimationType { case opacity, rotation }
     
     /// 为layer添加指定类型的动画

@@ -51,6 +51,7 @@
 		3EFF8E0D243456E700185885 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EFF8E0B243456E700185885 /* LaunchScreen.storyboard */; };
 		3EFF8E18243456E700185885 /* PKExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E17243456E700185885 /* PKExtensionsTests.swift */; };
 		3EFF8E23243456E700185885 /* PKExtensionsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF8E22243456E700185885 /* PKExtensionsUITests.swift */; };
+		61157429250A0338007A7632 /* NSObject+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61157428250A0338007A7632 /* NSObject+PKExtensions.swift */; };
 		614E171824D2B1AB00B39BEF /* UINavigationController+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614E171724D2B1AB00B39BEF /* UINavigationController+PKExtensions.swift */; };
 		618A0E4724BC2CF90043D0C2 /* UITextField+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618A0E4624BC2CF90043D0C2 /* UITextField+PKExtensions.swift */; };
 		61AF761C24C8224700ADB18F /* UITextView+PKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AF761B24C8224700ADB18F /* UITextView+PKExtensions.swift */; };
@@ -126,6 +127,7 @@
 		3EFF8E1E243456E700185885 /* PKExtensionsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PKExtensionsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EFF8E22243456E700185885 /* PKExtensionsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKExtensionsUITests.swift; sourceTree = "<group>"; };
 		3EFF8E24243456E700185885 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		61157428250A0338007A7632 /* NSObject+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+PKExtensions.swift"; sourceTree = "<group>"; };
 		614E171724D2B1AB00B39BEF /* UINavigationController+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+PKExtensions.swift"; sourceTree = "<group>"; };
 		618A0E4624BC2CF90043D0C2 /* UITextField+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+PKExtensions.swift"; sourceTree = "<group>"; };
 		61AF761B24C8224700ADB18F /* UITextView+PKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+PKExtensions.swift"; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 				3E2A476F24A1E3B70021F184 /* UIView+PKToast.swift */,
 				3E35ABBB249A0FE700AFCAA3 /* UIViewController+PKExtensions.swift */,
 				3E3CD5B3249CBE8500F089A3 /* UIWindow+PKExtensions.swift */,
+				61157428250A0338007A7632 /* NSObject+PKExtensions.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -478,6 +481,7 @@
 				3E35ABCE249A0FE700AFCAA3 /* CGGeometry+PKExtensions.swift in Sources */,
 				3E3E69E224BB10F3001C7EC0 /* UIAlertController+PKExtensions.swift in Sources */,
 				3EFF8E05243456E600185885 /* ViewController.swift in Sources */,
+				61157429250A0338007A7632 /* NSObject+PKExtensions.swift in Sources */,
 				3EFF8E01243456E600185885 /* AppDelegate.swift in Sources */,
 				3EFF8E03243456E600185885 /* SceneDelegate.swift in Sources */,
 				3E35ABD5249A0FE700AFCAA3 /* String+PKExtensions.swift in Sources */,

@@ -10,11 +10,13 @@ import UIKit
 
 class NextViewController: UIViewController, UITextFieldDelegate {
     
+    var KVOController: PKObserverController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         buttonTest()
-//        example6()
+        buttonTest2()
     }
     
     func buttonTest() {
@@ -22,20 +24,68 @@ class NextViewController: UIViewController, UITextFieldDelegate {
         button.titleLabel?.font = UIFont.pk.fontName(.pingFangSC)
         button.setTitleColor(.white, for: .normal)
         button.setTitle("请选择", for: .normal)
-        button.setImage(UIImage(named: "shibai"), for: .normal)
-        button.backgroundColor = UIColor.lightGray
+        button.backgroundColor = UIColor.brown
         button.imagePosition = .left
         button.contentHorizontalAlignment = .eachEnd
         button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 20)
         button.imageView?.backgroundColor = .orange
         button.titleLabel?.backgroundColor = .brown
-        button.adjustsRoundedCornersAutomatically = true
+        button.pk.makeCorner(radius: 20, byRoundingCorners: [.topRight, .topLeft])
         view.addSubview(button)
         
         button.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-80)
             make.left.equalTo(20)
             make.right.equalTo(-20)
+        }
+    }
+    
+    private var test2button: PKUIButton!
+    
+    func buttonTest2() {
+        test2button = PKUIButton(type: .custom)
+        test2button.titleLabel?.font = UIFont.pk.fontName(.pingFangSC)
+        test2button.setTitleColor(.white, for: .normal)
+        test2button.setTitle("请选择", for: .normal)
+        test2button.backgroundColor = UIColor.lightGray
+        test2button.imagePosition = .left
+        test2button.contentHorizontalAlignment = .eachEnd
+        test2button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 20)
+        test2button.backgroundColor = .orange
+        test2button.pk.makeCorner(radius: 10, byRoundingCorners: [.topLeft, .bottomRight])
+        test2button.pk.addBorderLayer(width: 10, color: .red, byRectEdge: .left)
+        test2button.pk.addGradientLayer(colors: [.darkGray, .orange], direction: .leftToRight)
+        view.addSubview(test2button)
+        
+        KVOController = PKObserverController(target: test2button)
+        
+        KVOController.addKeyPath("frame") { (_, change) in
+            print("frmae is: \(String(describing: change))")
+        }
+        
+        KVOController.addKeyPath("bounds") { (obj, change) in
+            print("bounds is: \(String(describing: change))")
+        }
+        
+        test2button.snp.makeConstraints { (make) in
+            make.centerY.equalToSuperview().offset(80)
+            make.left.equalTo(20)
+            make.right.equalTo(-20)
+        }
+
+        DispatchQueue.pk.asyncAfter(delay: 2) {
+            self.test2button.pk.makeCorner(radius: 50, byRoundingCorners: .topLeft)
+            self.test2button.snp.remakeConstraints { (make) in
+                make.width.equalTo(300)
+                make.height.equalTo(150)
+                make.left.equalTo(30)
+                make.centerY.equalToSuperview().offset(80)
+            }
+        }
+
+        DispatchQueue.pk.asyncAfter(delay: 5) {
+            self.test2button.pk.makeCorner(radius: 20, byRoundingCorners: [.topRight, .topLeft, .bottomLeft])
+            self.test2button.frame = CGRect(x: 50, y: 300, width: 200, height: 100)
         }
     }
     
